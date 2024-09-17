@@ -94,3 +94,43 @@ exports.activateAccount = async (req, res) => {
       .json({ message: "Account has beeen activated successfully." });
   }
 };
+
+exports.login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    // Kiểm tra xem người dùng có tồn tại không
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ error: "Invalid email or password" });
+    }
+
+    // Kiểm tra mật khẩu
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(400).json({ error: "Invalid email or password" });
+    }
+
+    // Kiểm tra tài khoản đã được kích hoạt chưa
+    if (!user.verified) {
+      return res.status(400).json({ error: "Account is not activated" });
+    }
+
+    // Tạo token
+    const token = generateToken({ id: user._id.toString() }, "7d");
+
+    res.status(200).json({
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      address: user.address,
+      phone: user.phone,
+      token: token,
+      verified: user.verified,
+      message: "Login Success!",
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
