@@ -1,45 +1,62 @@
-import React from 'react'
-import { Col}  from 'antd'
-import { WrapperAccoutHeader, WrapperHeader, WrappertextHeader } from './style'
-import Search from 'antd/es/transfer/search'
+import React from "react";
+import { Col } from "antd";
 import {
-  UserOutlined,
-  DownOutlined
-} from '@ant-design/icons';
+  HeaderContainer,
+  HeaderInner,
+  Logo,
+  SearchBar,
+  NavLinks,
+  ShoppingCart,
+} from "./style";
+import Search from "antd/es/transfer/search";
+import { UserOutlined, DownOutlined } from "@ant-design/icons";
 const HeaderComponent = () => {
   return (
-    <div>
-    <WrapperHeader>
-        <Col span={6}>
-        <WrappertextHeader>tectecshop</WrappertextHeader>
-        </Col>
-        <Col span={12}>
-        <Search
-          placeholder="input search text"
-          allowClear
-          enterButton="Search"
-          size="large"
-          //onSearch={onSearch}
-        />
-        </Col>
-        <Col span={6}>
-        
-        <WrapperAccoutHeader>
-      
-          <UserOutlined />
-          <div>
-          <span>Login/Logout</span>
-          <div>
-          <span>My Account</span>
-          <DownOutlined />
-          </div>
-          </div>
-          
-        </WrapperAccoutHeader>
-        </Col>
-    </WrapperHeader>
-    </div>
-  )
-}
+    <HeaderContainer>
+      <HeaderInner>
+        {/* Logo Section */}
+        <Logo>
+          <a href="/">TechShop</a>
+        </Logo>
 
-export default HeaderComponent
+        {/* Search Bar */}
+        <SearchBar>
+          <input type="text" placeholder="Search for tech products..." />
+          <button type="submit">Search</button>
+        </SearchBar>
+
+        {/* Navigation Links */}
+        <NavLinks>
+          <ul>
+            <li>
+              <a href="/categories">Categories</a>
+            </li>
+            <li>
+              <a href="/deals">Deals</a>
+            </li>
+            <li>
+              <a href="/new-arrivals">New Arrivals</a>
+            </li>
+            <li>
+              <a href="/contact">Contact</a>
+            </li>
+            <li>
+              <a href="/about">About Us</a>
+            </li>
+          </ul>
+        </NavLinks>
+
+        {/* Shopping Cart */}
+        <ShoppingCart>
+          <a href="/cart">
+            <i className="fas fa-shopping-cart"></i>
+            <span className="cart-count">3</span>{" "}
+            {/* Dynamic cart item count */}
+          </a>
+        </ShoppingCart>
+      </HeaderInner>
+    </HeaderContainer>
+  );
+};
+
+export default HeaderComponent;
