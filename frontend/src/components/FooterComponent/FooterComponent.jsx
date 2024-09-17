@@ -7,7 +7,7 @@ import {
   SectionLinks,
   SocialIcons,
   CopyRight,
-} from "./style";
+} from "./styles";
 // Footer Component
 const Footer = () => {
   return (

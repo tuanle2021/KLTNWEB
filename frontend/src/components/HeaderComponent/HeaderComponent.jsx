@@ -7,7 +7,7 @@ import {
   SearchBar,
   NavLinks,
   ShoppingCart,
-} from "./style";
+} from "./styles";
 import Search from "antd/es/transfer/search";
 import { UserOutlined, DownOutlined } from "@ant-design/icons";
 const HeaderComponent = () => {
