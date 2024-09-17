@@ -1,11 +1,8 @@
-import React from 'react'
+import React from "react";
+import { BackgroundImage } from "./style";
 
 const HomePage = () => {
-  return (
-    <div>
-      HomePage
-    </div>
-  )
-}
+  return <BackgroundImage>HomePage</BackgroundImage>;
+};
 
-export default HomePage
+export default HomePage;
