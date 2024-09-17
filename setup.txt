@@ -1,0 +1,16 @@
+tạo file .env trong backend và làm theo video youtube bên dưới để điền thông tin
+-Gửi email: + https://console.cloud.google.com
+	    + https://developers.google.com/oauthplayground
+	    + https://www.youtube.com/watch?v=-rcRf7yswfM
+
+các biến trong file .env:
+PORT=8000
+DATABASE_URL= 
+JWT_SECRET= (lấy một dãy ký tự càng phức tạp càng tốt)
+
+BASE_URL=http://localhost:3000
+EMAIL =  
+CLIENT_ID = 
+CLIENT_SECRET =
+REFRESH_TOKEN =
+ACCESS_TOKEN = 
