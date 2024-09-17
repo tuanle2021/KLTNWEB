@@ -16,7 +16,13 @@ const HeaderComponent = () => {
       <HeaderInner>
         {/* Logo Section */}
         <Logo>
-          <a href="/">TechShop</a>
+          <a href="/">
+            <img
+              src="/images/logo-Ecommerce.png"
+              alt="TechShop Logo"
+              style={{ height: "40px" }}
+            />
+          </a>
         </Logo>
 
         {/* Search Bar */}
