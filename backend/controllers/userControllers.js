@@ -6,7 +6,7 @@ const { sendEmail } = require("../helpers/sendEmail");
 const { generateToken } = require("../helpers/createToken");
 exports.register = async (req, res) => {
   try {
-    const { name, email, password, address, phone } = req.body;
+    const { name, email, password, address, phone, gender } = req.body;
 
     // Validate dữ liệu
     if (!validateLength(name, 3, 50)) {
@@ -44,6 +44,7 @@ exports.register = async (req, res) => {
       password: hashedPassword,
       address,
       phone,
+      gender,
     });
 
     // Lưu người dùng vào cơ sở dữ liệu
@@ -71,6 +72,7 @@ exports.register = async (req, res) => {
       email: newUser.email,
       address: newUser.address,
       phone: newUser.phone,
+      gender: newUser.gender,
       token: token,
       verified: newUser.verified,
       message: "Register Success! Please activate your email to start",
@@ -125,6 +127,7 @@ exports.login = async (req, res) => {
       email: user.email,
       address: user.address,
       phone: user.phone,
+      gender: user.gender,
       token: token,
       verified: user.verified,
       message: "Login Success!",

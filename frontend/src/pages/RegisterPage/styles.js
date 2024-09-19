@@ -36,21 +36,68 @@ export const Title = styled.h2`
   color: #0e0620;
   margin-bottom: 20px;
 `;
+export const RegisterCol = styled.div`
+  position: relative;
+  align-self: flex-start;
+  margin-bottom: 10px;
+  padding: 0 10px;
+`;
 
-// Input fields
-export const Input = styled.input`
-  width: 100%;
-  padding: 15px;
-  margin: 10px 0;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 16px;
-  background-color: #f4f4f4;
+export const RegisterLineHead = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 13px;
+  color: var(--color-secondary);
 
-  &:focus {
-    border-color: #2ccf6d;
-    outline: none;
+  .reg_line_header i {
+    margin-top: 3px;
   }
+`;
+
+// Form itself
+export const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+`;
+
+export const RegGrid = styled.div`
+  margin-top: 5px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  height: 35px;
+  width: 100%;
+`;
+
+export const Select = styled.select`
+  width: 90px;
+  font-size: 16px;
+  color: var(--color-primary);
+  background: var(--bg-primary);
+  border-radius: 5px;
+  cursor: pointer;
+`;
+
+export const Label = styled.label`
+  width: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 16px;
+  color: var(--color-primary);
+  border-radius: 5px;
+  cursor: pointer;
+  border: 1px solid var(--color-secondary);
+  padding: 0 10px;
+`;
+
+export const RegBtnWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20px 0 10px 0;
 `;
 
 // Submit button
@@ -84,10 +131,4 @@ export const Link = styled.a`
   &:hover {
     color: #2ccf6d;
   }
-`;
-
-// Form itself
-export const Form = styled.form`
-  display: flex;
-  flex-direction: column;
 `;
