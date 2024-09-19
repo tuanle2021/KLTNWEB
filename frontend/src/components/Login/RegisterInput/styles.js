@@ -29,6 +29,15 @@ export const Input = styled.input`
   }
 `;
 
+export const ErrorArrowRight = styled.div`
+  border-right: 10px solid #b94a48;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  position: absolute;
+  left: -10px;
+  top: 14px;
+`;
+
 export const ErrorIcon = styled.i`
   position: absolute;
   right: 5px;
@@ -37,7 +46,7 @@ export const ErrorIcon = styled.i`
 `;
 
 export const InputError = styled.div`
-  position: relative;
+  position: absolute;
   padding: 15px 10px;
   background: #b94a48;
   width: 100%;
@@ -76,4 +85,11 @@ export const ErrorArrowLeft = styled.div`
   position: absolute;
   right: -10px;
   top: 13px;
+`;
+export const OpenSignup = styled.div`
+  background: var(--green-color);
+  width: 70% !important;
+  font-weight: 600 !important;
+  font-size: 17px !important;
+  margin-top: 1rem;
 `;
