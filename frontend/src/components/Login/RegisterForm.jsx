@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Form, Formik } from "formik";
-import RegisterInput from "../../components/Login/RegisterInput/RegisterInput";
+import RegisterInput from "./RegisterInput/RegisterInput";
 import * as Yup from "yup";
 import DotLoader from "react-spinners/DotLoader";
 import axios from "axios";
@@ -8,7 +8,6 @@ import { useDispatch } from "react-redux";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import {
-  Container,
   FormWrapper,
   LogoWrapper,
   Title,
@@ -18,7 +17,7 @@ import {
   Label,
   Button,
   Link,
-} from "./styles";
+} from "../../pages/LoginPage/styles";
 
 const userInfos = {
   name: "",
@@ -35,7 +34,7 @@ const userInfos = {
   gender: "",
 };
 
-const RegisterPage = () => {
+const RegisterPage = ({ setVisible }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [user, setUser] = useState(userInfos);
@@ -156,138 +155,136 @@ const RegisterPage = () => {
   };
 
   return (
-    <Container>
-      <FormWrapper>
-        {/* Logo */}
-        <LogoWrapper>
-          <img src="/logo.png" alt="TechStore Logo" />
-        </LogoWrapper>
+    <FormWrapper onClick={() => setVisible(true)}>
+      {/* Logo */}
+      <LogoWrapper>
+        <img src="/logo.png" alt="TechStore Logo" />
+      </LogoWrapper>
 
-        {/* Registration Form */}
-        <Formik
-          enableReinitialize
-          initialValues={{
-            name,
-            email,
-            password,
-            address: {
-              street: user.address.street,
-              city: user.address.city,
-              state: user.address.state,
-              zip: user.address.zip,
-              country: user.address.country,
-            },
-            phone,
-            gender,
-          }}
-          validationSchema={registerValidation}
-          onSubmit={() => {
-            if (gender === "") {
-              setGenderError(
-                "Please choose a gender. You can change who can see this later."
-              );
-            } else {
-              setGenderError("");
-              registerSubmit();
-            }
-          }}
-        >
-          {(formik) => (
-            <Form>
-              <Title>Register New Account</Title>
-              <RegisterInput
-                type="text"
-                placeholder="Name"
-                name="name"
-                onChange={handleRegisterChange}
-              />
-              <RegisterInput
-                type="text"
-                placeholder="Email"
-                name="email"
-                onChange={handleRegisterChange}
-              />
-              <RegisterInput
-                type="password"
-                placeholder="Password"
-                name="password"
-                onChange={handleRegisterChange}
-              />
-              <RegisterInput
-                type="text"
-                placeholder="Street"
-                name="address.street"
-                onChange={handleRegisterChange}
-              />
-              <RegisterInput
-                type="text"
-                placeholder="City"
-                name="address.city"
-                onChange={handleRegisterChange}
-              />
-              <RegisterInput
-                type="text"
-                placeholder="State"
-                name="address.state"
-                onChange={handleRegisterChange}
-              />
-              <RegisterInput
-                type="text"
-                placeholder="Zip"
-                name="address.zip"
-                onChange={handleRegisterChange}
-              />
-              <RegisterInput
-                type="text"
-                placeholder="Country"
-                name="address.country"
-                onChange={handleRegisterChange}
-              />
-              <RegisterInput
-                type="text"
-                placeholder="Phone"
-                name="phone"
-                onChange={handleRegisterChange}
-              />
-              <RegisterCol>
-                <RegisterLineHead>Gender</RegisterLineHead>
-                <RegGrid>
-                  <Label htmlFor="male">
-                    Male
-                    <input
-                      type="radio"
-                      name="gender"
-                      id="male"
-                      value="male"
-                      onChange={handleRegisterChange}
-                    />
-                  </Label>
-                  <Label htmlFor="female">
-                    Female
-                    <input
-                      type="radio"
-                      name="gender"
-                      id="female"
-                      value="female"
-                      onChange={handleRegisterChange}
-                    />
-                  </Label>
-                </RegGrid>
-              </RegisterCol>
-              <Button type="submit">Register</Button>
+      {/* Registration Form */}
+      <Formik
+        enableReinitialize
+        initialValues={{
+          name,
+          email,
+          password,
+          address: {
+            street: user.address.street,
+            city: user.address.city,
+            state: user.address.state,
+            zip: user.address.zip,
+            country: user.address.country,
+          },
+          phone,
+          gender,
+        }}
+        validationSchema={registerValidation}
+        onSubmit={() => {
+          if (gender === "") {
+            setGenderError(
+              "Please choose a gender. You can change who can see this later."
+            );
+          } else {
+            setGenderError("");
+            registerSubmit();
+          }
+        }}
+      >
+        {(formik) => (
+          <Form>
+            <Title>Register New Account</Title>
+            <RegisterInput
+              type="text"
+              placeholder="Name"
+              name="name"
+              onChange={handleRegisterChange}
+            />
+            <RegisterInput
+              type="text"
+              placeholder="Email"
+              name="email"
+              onChange={handleRegisterChange}
+            />
+            <RegisterInput
+              type="password"
+              placeholder="Password"
+              name="password"
+              onChange={handleRegisterChange}
+            />
+            <RegisterInput
+              type="text"
+              placeholder="Street"
+              name="address.street"
+              onChange={handleRegisterChange}
+            />
+            <RegisterInput
+              type="text"
+              placeholder="City"
+              name="address.city"
+              onChange={handleRegisterChange}
+            />
+            <RegisterInput
+              type="text"
+              placeholder="State"
+              name="address.state"
+              onChange={handleRegisterChange}
+            />
+            <RegisterInput
+              type="text"
+              placeholder="Zip"
+              name="address.zip"
+              onChange={handleRegisterChange}
+            />
+            <RegisterInput
+              type="text"
+              placeholder="Country"
+              name="address.country"
+              onChange={handleRegisterChange}
+            />
+            <RegisterInput
+              type="text"
+              placeholder="Phone"
+              name="phone"
+              onChange={handleRegisterChange}
+            />
+            <RegisterCol>
+              <RegisterLineHead>Gender</RegisterLineHead>
+              <RegGrid>
+                <Label htmlFor="male">
+                  Male
+                  <input
+                    type="radio"
+                    name="gender"
+                    id="male"
+                    value="male"
+                    onChange={handleRegisterChange}
+                  />
+                </Label>
+                <Label htmlFor="female">
+                  Female
+                  <input
+                    type="radio"
+                    name="gender"
+                    id="female"
+                    value="female"
+                    onChange={handleRegisterChange}
+                  />
+                </Label>
+              </RegGrid>
+            </RegisterCol>
+            <Button type="submit">Register</Button>
 
-              {/* Additional Links */}
-              <Link href="/login">Đã có tài khoản? Đăng nhập ngay</Link>
-              <DotLoader color="#1876f2" loading={loading} size={30} />
-              {error && <div style={{ color: "#b94a48" }}>{error}</div>}
-              {success && (
-                <div style={{ color: "var(--green-color)" }}>{success}</div>
-              )}
-            </Form>
-          )}
-        </Formik>
-      </FormWrapper>
-    </Container>
+            {/* Additional Links */}
+            <Link href="/login">Đã có tài khoản? Đăng nhập ngay</Link>
+            <DotLoader color="#1876f2" loading={loading} size={30} />
+            {error && <div style={{ color: "#b94a48" }}>{error}</div>}
+            {success && (
+              <div style={{ color: "var(--green-color)" }}>{success}</div>
+            )}
+          </Form>
+        )}
+      </Formik>
+    </FormWrapper>
   );
 };
 

@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 // Container for the entire page
 export const Container = styled.div`
@@ -23,7 +23,7 @@ export const FormWrapper = styled.div`
 // Logo styling
 export const LogoWrapper = styled.div`
   margin-bottom: 20px;
-  
+
   img {
     width: 100px;
   }
@@ -35,22 +35,6 @@ export const Title = styled.h2`
   font-weight: bold;
   color: #0e0620;
   margin-bottom: 20px;
-`;
-
-// Input fields
-export const Input = styled.input`
-  width: 100%;
-  padding: 15px;
-  margin: 10px 0;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 16px;
-  background-color: #f4f4f4;
-
-  &:focus {
-    border-color: #2ccf6d;
-    outline: none;
-  }
 `;
 
 // Submit button
@@ -86,8 +70,60 @@ export const Link = styled.a`
   }
 `;
 
-// Form itself
-export const Form = styled.form`
+export const RegisterCol = styled.div`
+  position: relative;
+  align-self: flex-start;
+  margin-bottom: 10px;
+  padding: 0 10px;
+`;
+
+export const RegisterLineHead = styled.div`
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  font-size: 13px;
+  color: var(--color-secondary);
+
+  .reg_line_header i {
+    margin-top: 3px;
+  }
+`;
+
+export const RegGrid = styled.div`
+  margin-top: 5px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  height: 35px;
+  width: 100%;
+`;
+
+export const Select = styled.select`
+  width: 90px;
+  font-size: 16px;
+  color: var(--color-primary);
+  background: var(--bg-primary);
+  border-radius: 5px;
+  cursor: pointer;
+`;
+
+export const Label = styled.label`
+  width: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 16px;
+  color: var(--color-primary);
+  border-radius: 5px;
+  cursor: pointer;
+  border: 1px solid var(--color-secondary);
+  padding: 0 10px;
+`;
+
+export const RegBtnWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20px 0 10px 0;
 `;
