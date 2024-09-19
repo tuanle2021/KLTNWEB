@@ -35,10 +35,10 @@ const CategoryMenu = () => {
       <CategoryHeader onClick={toggleExpand}>
         <IconWrapper>📂</IconWrapper>
         <CategoryName>All Categories</CategoryName>
-        <ExpandIcon>{isExpanded ? "⬆️" : "⬇️"}</ExpandIcon>
+        <ExpandIcon>{!isExpanded ? "⬆️" : "⬇️"}</ExpandIcon>
       </CategoryHeader>
 
-      {isExpanded && (
+      {!isExpanded && (
         <CategoryList>
           {categories.map((category, index) => (
             <CategoryItem key={index}>
