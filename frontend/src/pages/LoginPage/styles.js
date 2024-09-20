@@ -1,11 +1,12 @@
 import styled from "styled-components";
 
+/*  ------    Login Page  ----------*/
 // Container for the entire page
 export const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  height: calc(100vh - 80px);
   background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
 `;
 
@@ -18,6 +19,10 @@ export const FormWrapper = styled.div`
   max-width: 400px;
   width: 100%;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 `;
 
 // Logo styling
@@ -69,7 +74,15 @@ export const Link = styled.a`
     color: #2ccf6d;
   }
 `;
+export const ForgotPasswordLink = styled(Link)`
+  color: var(--blue-color);
+  font-size: 14px;
+  cursor: pointer;
+`;
 
+/*  ------    Login Page  ----------*/
+
+/* ------- RegisterForm-----*/
 export const RegisterCol = styled.div`
   position: relative;
   align-self: flex-start;
@@ -127,3 +140,4 @@ export const RegBtnWrapper = styled.div`
   justify-content: center;
   margin: 20px 0 10px 0;
 `;
+/* ------- RegisterForm-----*/

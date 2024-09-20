@@ -15,7 +15,6 @@ export const PromoContent = styled.div`
   align-items: center;
   justify-content: flex-start;
   height: 400px;
-  background-image: url(${(props) => props.backgroundImage});
   background-size: cover;
   background-position: center;
   border-radius: 10px;

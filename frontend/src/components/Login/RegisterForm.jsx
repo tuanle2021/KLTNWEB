@@ -26,8 +26,6 @@ const userInfos = {
   address: {
     street: "",
     city: "",
-    state: "",
-    zip: "",
     country: "",
   },
   phone: "",
@@ -85,14 +83,6 @@ const RegisterPage = ({ setVisible }) => {
         .required("City is required.")
         .min(2, "City must be at least 2 characters.")
         .max(50, "City can't be more than 50 characters."),
-      state: Yup.string()
-        .required("State is required.")
-        .min(2, "State must be at least 2 characters.")
-        .max(50, "State can't be more than 50 characters."),
-      zip: Yup.string()
-        .required("Zip code is required.")
-        .min(5, "Zip code must be at least 5 characters.")
-        .max(10, "Zip code can't be more than 10 characters."),
       country: Yup.string()
         .required("Country is required.")
         .min(2, "Country must be at least 2 characters.")
@@ -109,11 +99,11 @@ const RegisterPage = ({ setVisible }) => {
 
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const registerSubmit = async () => {
     try {
-      console.log(process.env.REACT_APP_BACKEND_URL);
+      setLoading(true);
       const { data } = await axios.post(
         `${process.env.REACT_APP_BACKEND_URL}/register`,
         {
@@ -123,8 +113,6 @@ const RegisterPage = ({ setVisible }) => {
           address: {
             street: user.address.street,
             city: user.address.city,
-            state: user.address.state,
-            zip: user.address.zip,
             country: user.address.country,
           },
           phone,
@@ -171,8 +159,6 @@ const RegisterPage = ({ setVisible }) => {
           address: {
             street: user.address.street,
             city: user.address.city,
-            state: user.address.state,
-            zip: user.address.zip,
             country: user.address.country,
           },
           phone,
@@ -221,18 +207,6 @@ const RegisterPage = ({ setVisible }) => {
               type="text"
               placeholder="City"
               name="address.city"
-              onChange={handleRegisterChange}
-            />
-            <RegisterInput
-              type="text"
-              placeholder="State"
-              name="address.state"
-              onChange={handleRegisterChange}
-            />
-            <RegisterInput
-              type="text"
-              placeholder="Zip"
-              name="address.zip"
               onChange={handleRegisterChange}
             />
             <RegisterInput

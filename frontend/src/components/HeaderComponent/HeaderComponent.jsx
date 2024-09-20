@@ -7,8 +7,8 @@ import {
   SearchBar,
   NavLinks,
   ShoppingCart,
+  ProfileMenu,
 } from "./styles";
-import Search from "antd/es/transfer/search";
 import { UserOutlined, DownOutlined } from "@ant-design/icons";
 const HeaderComponent = () => {
   return (
@@ -60,6 +60,17 @@ const HeaderComponent = () => {
             {/* Dynamic cart item count */}
           </a>
         </ShoppingCart>
+
+        {/* Profile Menu */}
+        <ProfileMenu>
+          <UserOutlined className="profile-icon" />
+          <DownOutlined />
+          <div className="profile-dropdown">
+            <a href="/profile">My Profile</a>
+            <a href="/login">Login</a>
+            <a href="/register">Register</a>
+          </div>
+        </ProfileMenu>
       </HeaderInner>
     </HeaderContainer>
   );
