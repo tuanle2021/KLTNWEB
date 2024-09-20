@@ -15,7 +15,9 @@ readdirSync("./routes").map((r) => app.use("/", require("./routes/" + r)));
 //database
 mongoose
   .connect(process.env.DATABASE_URL)
-  .then(() => console.log("database connected successfully"))
+  .then(() => {
+    console.log(`Connected to database: ${mongoose.connection.name}`);
+  })
   .catch((err) => console.log("error connecting to mongodb", err));
 
 const PORT = process.env.PORT || 8000;

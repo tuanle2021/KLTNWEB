@@ -47,7 +47,7 @@ const PromoSlider = () => {
       <Slider {...settings}>
         {promoSlides.map((slide, index) => (
           <div key={index}>
-            <PromoContent backgroundImage={slide.image}>
+            <PromoContent>
               <PromoText>
                 <PromoTitle>{slide.title}</PromoTitle>
                 <p>{slide.description}</p>

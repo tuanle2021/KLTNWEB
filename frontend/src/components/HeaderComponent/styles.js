@@ -120,3 +120,42 @@ export const ShoppingCart = styled.div`
     right: -10px;
   }
 `;
+
+export const ProfileMenu = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  margin-left: 20px;
+  .profile-icon {
+    font-size: 24px;
+    color: #333;
+  }
+
+  .profile-dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    overflow: hidden;
+    z-index: 1000;
+
+    a {
+      display: block;
+      padding: 10px 20px;
+      color: #333;
+      text-decoration: none;
+
+      &:hover {
+        background-color: #f5f5f5;
+      }
+    }
+  }
+
+  &:hover .profile-dropdown {
+    display: block;
+  }
+`;
