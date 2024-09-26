@@ -84,16 +84,35 @@ exports.register = async (req, res) => {
 };
 
 exports.activateAccount = async (req, res) => {
-  const { token } = req.body;
-  const user = jwt.verify(token, process.env.JWT_SECRET);
-  const check = await User.findById(user.id);
-  if (check.verified == true) {
-    return res.status(400).json({ message: "this email is already activated" });
-  } else {
-    await User.findByIdAndUpdate(user.id, { verified: true });
-    return res
+  try {
+    const token = req.params.token; // Lấy token từ URL
+    if (!token) {
+      return res.status(400).json({ message: "Token is required" });
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    const user = await User.findById(decoded.id);
+    if (!user) {
+      return res.status(400).json({ message: "Invalid token" });
+    }
+
+    if (user.verified) {
+      return res.status(400).json({ message: "Account is already activated" });
+    }
+
+    user.verified = true;
+    await user.save();
+
+    res
       .status(200)
-      .json({ message: "Account has beeen activated successfully." });
+      .json({ message: "Account has been activated successfully", user });
+  } catch (error) {
+    if (error.name === "TokenExpiredError") {
+      return res.status(401).json({ message: "Token has expired" });
+    }
+    console.error("Activation error:", error);
+    return res.status(500).json({ message: "Internal server error" });
   }
 };
 
@@ -115,7 +134,10 @@ exports.login = async (req, res) => {
 
     // Kiểm tra tài khoản đã được kích hoạt chưa
     if (!user.verified) {
-      return res.status(400).json({ error: "Account is not activated" });
+      return res.status(400).json({
+        error:
+          "Account is not activated. Please activate your account on the email sent to you.",
+      });
     }
 
     // Tạo token

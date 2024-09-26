@@ -125,7 +125,7 @@ const RegisterPage = ({ setVisible }) => {
       setTimeout(() => {
         dispatch({ type: "LOGIN", payload: rest });
         Cookies.set("user", JSON.stringify(rest));
-        navigate("/");
+        setVisible(false); // Hide the register form and show the login form
       }, 2000);
     } catch (error) {
       setLoading(false);

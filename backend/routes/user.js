@@ -7,7 +7,7 @@ const {
 const router = express.Router();
 
 router.post("/register", register);
-router.post("/activate", activateAccount);
-router.post("/login", login);
+router.get("/activate/:token", activateAccount);
+router.post("/login/", login);
 
 module.exports = router;

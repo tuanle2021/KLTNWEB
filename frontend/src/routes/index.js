@@ -3,6 +3,7 @@ import NotfoundPage from "../pages/NotfoundPage/NotfoundPage";
 import OrderPage from "../pages/OrderPage/OrderPage";
 import ProductPage from "../pages/ProductPage/ProductPage";
 import LoginPage from "../pages/LoginPage/LoginPage";
+import ActivateForm from "../pages/HomePage/ActivateForm";
 export const routes = [
   {
     path: "/",
@@ -17,6 +18,11 @@ export const routes = [
   {
     path: "/login",
     page: LoginPage,
+    isShowHeader: false,
+  },
+  {
+    path: "/activate/:token", // Đảm bảo route này tồn tại
+    page: ActivateForm,
     isShowHeader: false,
   },
   {
