@@ -1,4 +1,7 @@
 exports.validateLength = (text, min, max) => {
+  if (typeof text !== "string") {
+    return false;
+  }
   if (text.length > max || text.length < min) {
     return false;
   }

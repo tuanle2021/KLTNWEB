@@ -19,7 +19,24 @@ exports.authentication = async (req, res, next) => {
     // Tiếp tục xử lý yêu cầu
     next();
   } catch (error) {
-    console.error("Token verification failed:", error);
+    if (error.name === "TokenExpiredError") {
+      // Lấy email người dùng từ token
+      const decoded = jwt.decode(token);
+      const user = await User.findById(decoded.id);
+
+      if (user) {
+        // Gửi lại email xác nhận
+        const newToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+          expiresIn: "1h",
+        });
+        const url = `${process.env.BASE_URL}/activate/${newToken}`;
+        await sendEmail(user.email, user.name, url);
+
+        return res.status(401).json({
+          message: "Token expired. A new activation email has been sent.",
+        });
+      }
+    }
     return res.status(401).json({ message: "Invalid token" });
   }
 };

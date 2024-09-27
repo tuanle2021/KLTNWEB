@@ -5,18 +5,26 @@ import Cookies from "js-cookie";
 // Async thunk for account activation
 export const activateAccount = createAsyncThunk(
   "verify/activateAccount",
-  async (token, { rejectWithValue }) => {
+  async ({ token, userToken }, { rejectWithValue }) => {
     try {
-      const { data } = await axios.get(
-        `${process.env.REACT_APP_BACKEND_URL}/activate/${token}`
+      const { data } = await axios.post(
+        `${process.env.REACT_APP_BACKEND_URL}/activate`,
+        { token },
+        {
+          headers: {
+            Authorization: `Bearer ${userToken}`,
+          },
+        }
       );
       Cookies.set("user", JSON.stringify({ ...data.user, verified: true }));
       return data;
     } catch (error) {
-      return rejectWithValue(error.response.data.error);
+      return rejectWithValue(error.response.data.message);
     }
   }
 );
+
+// Async thunk for requesting new token
 
 const verifySlice = createSlice({
   name: "verify",
