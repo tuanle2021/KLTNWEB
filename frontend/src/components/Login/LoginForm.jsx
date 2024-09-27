@@ -61,7 +61,7 @@ export default function LoginFrom({ setVisible }) {
     } catch (error) {
       setLoading(false);
       if (error.response && error.response.status === 400) {
-        setError("Invalid email or password. Please try again.");
+        setError(error.response.data.error);
       } else {
         setError(
           error.response

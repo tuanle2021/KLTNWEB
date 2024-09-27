@@ -84,16 +84,23 @@ exports.register = async (req, res) => {
 };
 
 exports.activateAccount = async (req, res) => {
-  const { token } = req.body;
-  const user = jwt.verify(token, process.env.JWT_SECRET);
-  const check = await User.findById(user.id);
-  if (check.verified == true) {
-    return res.status(400).json({ message: "this email is already activated" });
-  } else {
-    await User.findByIdAndUpdate(user.id, { verified: true });
-    return res
-      .status(200)
-      .json({ message: "Account has beeen activated successfully." });
+  try {
+    const { token } = req.body;
+    const user = jwt.verify(token, process.env.JWT_SECRET);
+    const check = await User.findById(user.id);
+    if (check.verified == true) {
+      return res
+        .status(400)
+        .json({ message: "This email is already activated" });
+    } else {
+      await User.findByIdAndUpdate(user.id, { verified: true });
+      return res
+        .status(200)
+        .json({ message: "Account has beeen activated successfully." });
+    }
+  } catch (error) {
+    console.error("Error in activateAccount:", error);
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -115,7 +122,10 @@ exports.login = async (req, res) => {
 
     // Kiểm tra tài khoản đã được kích hoạt chưa
     if (!user.verified) {
-      return res.status(400).json({ error: "Account is not activated" });
+      return res.status(400).json({
+        error:
+          "Account is not activated. Please activate your account on the email sent to you.",
+      });
     }
 
     // Tạo token
