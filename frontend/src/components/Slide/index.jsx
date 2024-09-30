@@ -38,7 +38,7 @@ const PromoSlider = () => {
     slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: true,
-    autoplaySpeed: 1800,
+    autoplaySpeed: 3800,
     arrows: false,
   };
 
