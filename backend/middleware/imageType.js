@@ -1,20 +1,7 @@
 const multer = require("multer");
-const fs = require("fs");
-const path = require("path");
 
-// Cấu hình multer để lưu trữ file tạm thời trên đĩa
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const uploadPath = path.join(__dirname, "../tmp");
-    if (!fs.existsSync(uploadPath)) {
-      fs.mkdirSync(uploadPath, { recursive: true });
-    }
-    cb(null, uploadPath);
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));
-  },
-});
+// Cấu hình multer để lưu trữ file trong bộ nhớ
+const storage = multer.memoryStorage();
 
 const upload = multer({
   storage: storage,
@@ -23,7 +10,7 @@ const upload = multer({
       return cb(new Error("No file uploaded"));
     }
 
-    const filetypes = /jpeg|jpg|png|gif/;
+    const filetypes = /jpeg|jpg|png|gif|webp/;
     const mimetype = filetypes.test(file.mimetype);
     const extname = filetypes.test(
       file.originalname.split(".").pop().toLowerCase()
@@ -32,18 +19,23 @@ const upload = multer({
     if (mimetype && extname) {
       return cb(null, true);
     } else {
-      // Xóa tệp tin tạm thời nếu định dạng không hợp lệ
-      fs.unlink(file.path, (err) => {
-        if (err) {
-          console.error(`Error deleting temporary file ${file.path}:`, err);
-        }
-        cb(new Error("Only images are allowed"));
-      });
+      return cb(
+        new Error(
+          "Only images of type jpeg, jpg, png, gif, or webp are allowed"
+        )
+      );
     }
   },
   limits: { fileSize: 5 * 1024 * 1024 }, // Giới hạn kích thước tệp tin là 5MB
 });
 
-const imageType = upload.array("images", 10); // Cho phép upload nhiều file
+const imageType = (req, res, next) => {
+  upload.array("images", 10)(req, res, (err) => {
+    if (err) {
+      return res.status(400).json({ message: err.message });
+    }
+    next();
+  });
+};
 
 module.exports = { imageType };
