@@ -147,3 +147,44 @@ exports.login = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+exports.getAllUsers = async (req, res) => {
+  try {
+    // Kiểm tra quyền hạn của người dùng (chỉ dành cho quản trị viên)
+    // if (!req.user || !req.user.isAdmin) {
+    //   return res.status(403).json({ message: "Access denied" });
+    // }
+
+    // Lấy tất cả người dùng từ cơ sở dữ liệu
+    const users = await User.find();
+
+    res.status(200).json(users);
+  } catch (error) {
+    console.error("Error in getAllUsers:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+exports.getUserById = async (req, res) => {
+  try {
+    const userId = req.params.id;
+
+    // Kiểm tra quyền hạn của người dùng (chỉ dành cho quản trị viên hoặc chính người dùng đó)
+    // if (
+    //   !req.user ||
+    //   (!req.user.isAdmin && req.user._id.toString() !== userId)
+    // ) {
+    //   return res.status(403).json({ message: "Access denied" });
+    // }
+
+    // Tìm người dùng theo ID
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json(user);
+  } catch (error) {
+    console.error("Error in getUserById:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};

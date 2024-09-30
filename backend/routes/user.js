@@ -4,6 +4,8 @@ const {
   activateAccount,
   login,
   requestNewToken,
+  getAllUsers,
+  getUserById,
 } = require("../controllers/userControllers");
 const router = express.Router();
 const { authentication } = require("../middleware/authenUser");
@@ -15,5 +17,7 @@ router.post("/activate", authentication, activateAccount);
 router.post("/login", login);
 router.post("/products", addProduct);
 router.post("/categories", addCategory);
+router.get("/users", authentication, getAllUsers);
+router.get("/users/:id", authentication, getUserById);
 
 module.exports = router;
