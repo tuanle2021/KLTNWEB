@@ -27,6 +27,56 @@ const addCategory = async (req, res) => {
   }
 };
 
+// Controller để lấy danh sách tất cả danh mục
+const getAllCategories = async (req, res) => {
+  try {
+    const categories = await Category.find();
+    res.status(200).json(categories);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+};
+
+// Controller để xóa danh mục theo ID
+const deleteCategoryById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const category = await Category.findByIdAndDelete(id);
+
+    if (!category) {
+      return res.status(404).json({ message: "Category not found" });
+    }
+
+    res.status(200).json({ message: "Category deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+};
+
+// Controller để cập nhật danh mục theo ID
+const updateCategoryById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name } = req.body;
+
+    const category = await Category.findByIdAndUpdate(
+      id,
+      { name },
+      { new: true, runValidators: true }
+    );
+
+    if (!category) {
+      return res.status(404).json({ message: "Category not found" });
+    }
+
+    res.status(200).json(category);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+};
 module.exports = {
   addCategory,
+  getAllCategories,
+  deleteCategoryById,
+  updateCategoryById,
 };
