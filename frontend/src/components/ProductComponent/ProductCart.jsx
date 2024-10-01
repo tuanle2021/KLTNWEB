@@ -16,7 +16,7 @@ import {
 
 const ProductCart = ({ productId }) => {
   const dispatch = useDispatch();
-  const history = useNavigate();
+  const navigate = useNavigate();
   const product = useSelector((state) =>
     state.products.products.find((product) => product._id === productId)
   );
@@ -28,7 +28,7 @@ const ProductCart = ({ productId }) => {
   }, [dispatch, productId, product]);
 
   const handleCardClick = () => {
-    history.push(`/product/${productId}`);
+    navigate(`/product/${productId}`);
   };
 
   if (!product) return <p>Loading...</p>;

@@ -10,14 +10,14 @@ import {
   AddToCartDetailButton,
 } from "./styles";
 
-const ProductDetailPage = ({ product }) => {
+const ProductDetail = ({ product }) => {
   const { id, name, description, price, stock, category_id } = product;
 
   return (
     <ProductDetailContainer>
       {/* Hiển thị hình ảnh lớn của sản phẩm */}
       <ProductDetailImage
-        src={`https://via.placeholder.com/500?text=${name}`}
+        src={`  https://via.placeholder.com/500?text=${name}`}
         alt={name}
       />
 
@@ -37,4 +37,4 @@ const ProductDetailPage = ({ product }) => {
   );
 };
 
-export default ProductDetailPage;
+export default ProductDetail;
