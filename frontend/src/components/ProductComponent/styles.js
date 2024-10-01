@@ -98,11 +98,10 @@ export const ProductDetailContainer = styled.div`
 `;
 // Hình ảnh sản phẩm lớn
 export const ProductDetailImage = styled.img`
-  width: 50%;
+  width: 100%;
   height: auto;
   border-radius: 8px;
   object-fit: cover;
-  margin-right: 40px;
 `;
 
 // Container cho thông tin chi tiết sản phẩm
@@ -155,5 +154,51 @@ export const AddToCartDetailButton = styled.button`
   &:disabled {
     background-color: #ccc;
     cursor: not-allowed;
+  }
+`;
+
+// Container cho hình ảnh nhỏ
+export const ThumbnailContainer = styled.div`
+  display: flex;
+  margin-top: 20px;
+`;
+
+// Hình ảnh nhỏ
+export const ThumbnailImage = styled.img`
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border: ${(props) =>
+    props.isActive ? "2px solid #007bff" : "2px solid transparent"};
+  border-radius: 4px;
+  margin-right: 10px;
+  cursor: pointer;
+  transition: border 0.3s ease;
+
+  &:hover {
+    border: 2px solid #007bff;
+  }
+`;
+
+// Nút mũi tên
+export const ArrowButton = styled.button`
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  font-size: 1.5em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.7);
   }
 `;
