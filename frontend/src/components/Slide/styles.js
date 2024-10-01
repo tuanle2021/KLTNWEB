@@ -1,11 +1,9 @@
 import styled from "styled-components";
 
 export const PromoContainer = styled.div`
-  width: 100%;
+  width: 70%;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 20px;
-  position: relative;
   overflow: hidden;
 `;
 

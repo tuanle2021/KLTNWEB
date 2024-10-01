@@ -6,7 +6,7 @@ export const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: calc(100vh - 80px);
+  height: 100vh;
   background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
 `;
 
@@ -47,7 +47,7 @@ export const Button = styled.button`
   width: 100%;
   padding: 15px;
   margin-top: 20px;
-  background-color: #2ccf6d;
+  background-color: var(--orange-color);
   color: white;
   font-size: 16px;
   border: none;

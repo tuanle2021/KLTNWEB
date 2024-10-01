@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import {
-  Container,
+  Box,
   CategoryHeader,
   CategoryItem,
   CategoryList,
@@ -13,25 +13,17 @@ const categories = [
   { name: "Computers", icon: "💻" },
   { name: "Smartphones", icon: "📱" },
   { name: "Gadgets", icon: "⌚" },
-  { name: "Software", icon: "💽" },
-  { name: "Internet", icon: "🌐" },
-  { name: "Electronics", icon: "🔌" },
-  { name: "Accessories", icon: "🎧" },
-  { name: "Networking", icon: "📡" },
-  { name: "Security", icon: "🔒" },
-  { name: "AI & Machine Learning", icon: "🤖" },
-  { name: "Virtual Reality", icon: "👓" },
 ];
 
 const CategoryMenu = () => {
-  const [isExpanded, setIsExpanded] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const toggleExpand = () => {
     setIsExpanded(!isExpanded);
   };
 
   return (
-    <Container>
+    <Box>
       <CategoryHeader onClick={toggleExpand}>
         <IconWrapper>📂</IconWrapper>
         <CategoryName>All Categories</CategoryName>
@@ -49,7 +41,7 @@ const CategoryMenu = () => {
           ))}
         </CategoryList>
       )}
-    </Container>
+    </Box>
   );
 };
 

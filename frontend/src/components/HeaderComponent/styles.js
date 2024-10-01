@@ -7,19 +7,48 @@ export const HeaderContainer = styled.header`
 `;
 
 export const HeaderInner = styled.div`
-  max-width: 1200px;
-  margin: 0 auto;
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: center;
-  padding: 0 20px;
+  text-align: center;
 
-  @media (max-width: 768px) {
+  @media (min-width: 62em) {
+    flex-direction: row;
+    align-items: center;
+    padding: 0 20px;
     flex-wrap: wrap;
     justify-content: center;
+    text-decoration: none;
   }
 `;
+export const Link = styled.a`
+  display: block;
+  margin: 15px 0;
+  color: #0e0620;
+  font-size: 14px;
+  text-decoration: none;
+  transition: color 0.3s ease;
 
+  &:hover {
+    color: #2ccf6d;
+  }
+`;
+export const Button = styled.button`
+  width: 100%;
+  padding: 15px;
+  background-color: var(--green-color);
+  color: white;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #28b35d;
+  }
+`;
 export const Logo = styled.div`
   a {
     font-size: 24px;
@@ -67,28 +96,37 @@ export const SearchBar = styled.div`
 export const NavLinks = styled.nav`
   ul {
     list-style-type: none;
-    display: flex;
-
-    li {
-      margin: 0 15px;
-
-      a {
-        color: #333;
-        text-decoration: none;
-        font-size: 16px;
-
-        &:hover {
-          color: #666;
-        }
-      }
-    }
-
-    @media (max-width: 768px) {
-      flex-direction: column;
+    align-items: center;
+  }
+  li {
+    margin: 0 15px;
+  }
+  a {
+    color: #333;
+    text-decoration: none;
+    font-size: 16px;
+  }
+  &:hover {
+    color: #666;
+  }
+  @media (min-width: 62em) {
+    ul {
+      list-style-type: none;
+      display: flex;
+      justify-content: space-between;
       align-items: center;
-
       li {
-        margin: 10px 0;
+        margin: 0 15px;
+
+        a {
+          color: #333;
+          text-decoration: none;
+          font-size: 16px;
+
+          &:hover {
+            color: #666;
+          }
+        }
       }
     }
   }
@@ -157,5 +195,23 @@ export const ProfileMenu = styled.div`
 
   &:hover .profile-dropdown {
     display: block;
+  }
+`;
+export const NavItem = styled.li`
+  margin: 0 15px;
+  list-style-type: none;
+
+  a {
+    color: #333;
+    text-decoration: none;
+    font-size: 16px;
+
+    &:hover {
+      color: #666;
+    }
+  }
+
+  @media (max-width: 768px) {
+    margin: 10px 0;
   }
 `;

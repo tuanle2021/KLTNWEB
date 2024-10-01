@@ -11,8 +11,8 @@ export const login = createAsyncThunk(
         `${process.env.REACT_APP_BACKEND_URL}/login`,
         { email, password }
       );
-      Cookies.set("user", JSON.stringify(data));
-      return data;
+      Cookies.set("user", JSON.stringify(data)); // Lưu vào cookie
+      return data; // Trả về dữ liệu cho Redux
     } catch (error) {
       return rejectWithValue(error.response.data.message);
     }
@@ -22,7 +22,7 @@ export const login = createAsyncThunk(
 const authSlice = createSlice({
   name: "auth",
   initialState: {
-    user: null,
+    user: Cookies.get("user") ? JSON.parse(Cookies.get("user")) : null,
     loading: false,
     error: null,
   },
@@ -43,6 +43,7 @@ const authSlice = createSlice({
         state.user = action.payload;
       })
       .addCase(login.rejected, (state, action) => {
+        console.log("Login failed with error: ", action.payload); // Kiểm tra nếu action rejected được gọi
         state.loading = false;
         state.error = action.payload;
       });
