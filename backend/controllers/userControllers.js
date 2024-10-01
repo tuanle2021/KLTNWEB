@@ -51,7 +51,7 @@ exports.register = async (req, res) => {
     await newUser.save();
     const emailVerificationToken = generateToken(
       { id: newUser._id.toString() },
-      "30m"
+      "1h"
     );
     const url = `${process.env.BASE_URL}/activate/${emailVerificationToken}`;
     // Gửi email xác nhận
@@ -140,6 +140,7 @@ exports.login = async (req, res) => {
       gender: user.gender,
       token: token,
       verified: user.verified,
+      isAdmin: user.isAdmin,
       message: "Login Success!",
     });
   } catch (error) {
@@ -150,9 +151,9 @@ exports.login = async (req, res) => {
 exports.getAllUsers = async (req, res) => {
   try {
     // Kiểm tra quyền hạn của người dùng (chỉ dành cho quản trị viên)
-    // if (!req.user || !req.user.isAdmin) {
-    //   return res.status(403).json({ message: "Access denied" });
-    // }
+    if (!req.user || !req.user.isAdmin) {
+      return res.status(403).json({ message: "Access denied" });
+    }
 
     // Lấy tất cả người dùng từ cơ sở dữ liệu
     const users = await User.find();
@@ -168,12 +169,12 @@ exports.getUserById = async (req, res) => {
     const userId = req.params.id;
 
     // Kiểm tra quyền hạn của người dùng (chỉ dành cho quản trị viên hoặc chính người dùng đó)
-    // if (
-    //   !req.user ||
-    //   (!req.user.isAdmin && req.user._id.toString() !== userId)
-    // ) {
-    //   return res.status(403).json({ message: "Access denied" });
-    // }
+    if (
+      !req.user ||
+      (!req.user.isAdmin && req.user._id.toString() !== userId)
+    ) {
+      return res.status(403).json({ message: "Access denied" });
+    }
 
     // Tìm người dùng theo ID
     const user = await User.findById(userId);

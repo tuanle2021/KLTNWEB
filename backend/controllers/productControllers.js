@@ -80,26 +80,55 @@ const getProductById = async (req, res) => {
 };
 const updateProductById = async (req, res) => {
   try {
-    const productId = req.params.id;
-    const { name, description, price, stock, category_id, images } = req.body;
+    imageType(req, res, async (err) => {
+      if (err) {
+        return res.status(400).json({ message: err.message });
+      }
 
-    // Kiểm tra quyền hạn của người dùng (chỉ dành cho quản trị viên)
-    if (!req.user || !req.user.isAdmin) {
-      return res.status(403).json({ message: "Access denied" });
-    }
+      const productId = req.params.id;
 
-    // Tìm sản phẩm theo ID và cập nhật thông tin
-    const updatedProduct = await Product.findByIdAndUpdate(
-      productId,
-      { name, description, price, stock, category_id, images },
-      { new: true, runValidators: true }
-    );
+      console.log("Request body: ", req.body);
+      console.log("ProductId: ", productId);
+      if (!Object.keys(req.body).length) {
+        return res.status(400).json({
+          message:
+            "Request body is empty. Please provide data to update the product.",
+        });
+      }
+      const { name, description, price, stock, category_id } = req.body;
 
-    if (!updatedProduct) {
-      return res.status(404).json({ message: "Product not found" });
-    }
+      // Kiểm tra quyền hạn của người dùng (chỉ dành cho quản trị viên)
+      if (!req.user || !req.user.isAdmin) {
+        return res.status(403).json({ message: "Access denied" });
+      }
 
-    res.status(200).json(updatedProduct);
+      // Xử lý upload hình ảnh lên Cloudinary nếu có
+      let images = req.body.images || [];
+      if (req.files && req.files.length > 0) {
+        images = []; // Reset url images nếu có hình ảnh mới được tải lên
+        for (const file of req.files) {
+          const url = await uploadToCloudinary(
+            file.buffer,
+            file.originalname,
+            "products"
+          );
+          images.push(url);
+        }
+      }
+
+      // Tìm sản phẩm theo ID và cập nhật thông tin
+      const updatedProduct = await Product.findByIdAndUpdate(
+        productId,
+        { name, description, price, stock, category_id, images },
+        { new: true, runValidators: true }
+      );
+
+      if (!updatedProduct) {
+        return res.status(404).json({ message: "Product not found" });
+      }
+      console.log("Updated product: ", updatedProduct);
+      res.status(200).json(updatedProduct);
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });

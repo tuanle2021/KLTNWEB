@@ -17,6 +17,7 @@ router.post("/activate", authentication, activateAccount);
 router.post("/login", login);
 router.post("/products", addProduct);
 router.post("/categories", addCategory);
+router.post("/authen", authentication);
 router.get("/users", authentication, getAllUsers);
 router.get("/users/:id", authentication, getUserById);
 
