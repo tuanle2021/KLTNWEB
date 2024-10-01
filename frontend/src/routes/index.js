@@ -1,7 +1,7 @@
 import HomePage from "../pages/HomePage/HomePage";
 import NotfoundPage from "../pages/NotfoundPage/NotfoundPage";
 import OrderPage from "../pages/OrderPage/OrderPage";
-import ProductPage from "../pages/ProductPage/ProductPage";
+import ProductDetailPage from "../pages/ProductPage/ProductDetailPage";
 import LoginPage from "../pages/LoginPage/LoginPage";
 import ActivateForm from "../pages/HomePage/ActivateForm";
 import ProfilePage from "../pages/ProfilePage/ProfilePage";
@@ -33,7 +33,7 @@ export const routes = [
   },
   {
     path: "/product",
-    page: ProductPage,
+    page: ProductDetailPage,
     isShowHeader: true,
   },
   {
