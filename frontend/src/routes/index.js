@@ -5,6 +5,7 @@ import ProductDetailPage from "../pages/ProductPage/ProductDetailPage";
 import LoginPage from "../pages/LoginPage/LoginPage";
 import ActivateForm from "../pages/HomePage/ActivateForm";
 import ProfilePage from "../pages/ProfilePage/ProfilePage";
+import CartPage from "../pages/CartPage/CartPage";
 export const routes = [
   {
     path: "/",
@@ -25,6 +26,11 @@ export const routes = [
     path: "/login",
     page: LoginPage,
     isShowHeader: false,
+  },
+  {
+    path: "/cart",
+    page: CartPage,
+    isShowHeader: true,
   },
   {
     path: "/activate/:token", // Đảm bảo route này tồn tại
