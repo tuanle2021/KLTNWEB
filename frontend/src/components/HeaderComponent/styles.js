@@ -159,59 +159,81 @@ export const ShoppingCart = styled.div`
   }
 `;
 
+// Container chính cho menu hồ sơ người dùng
 export const ProfileMenu = styled.div`
   position: relative;
+  display: inline-block;
+
+  .dropdown-icon {
+    margin-left: 8px;
+  }
+`;
+
+// Container cho icon người dùng
+export const UserIconWrapper = styled.div`
   display: flex;
   align-items: center;
   cursor: pointer;
-  margin-left: 20px;
-  .profile-icon {
-    font-size: 24px;
-    color: #333;
-  }
+`;
 
-  .profile-dropdown {
-    display: none;
-    position: absolute;
-    top: 100%;
-    right: 0;
-    background-color: #fff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 4px;
-    overflow: hidden;
-    z-index: 1000;
+// Container của dropdown
+export const DropdownContainer = styled.div`
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 200px;
+  background: linear-gradient(135deg, #ffffff, #e0e0e0);
+  border-radius: 8px;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+  padding: 15px 0;
+  margin-top: 10px;
+  display: none;
+  z-index: 1;
 
-    a {
-      display: block;
-      padding: 10px 20px;
-      color: #333;
-      text-decoration: none;
-
-      &:hover {
-        background-color: #f5f5f5;
-      }
-    }
-  }
-
-  &:hover .profile-dropdown {
+  ${ProfileMenu}:hover & {
     display: block;
   }
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: -10px;
+    right: 20px;
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 10px solid #ffffff;
+  }
 `;
-export const NavItem = styled.li`
-  margin: 0 15px;
+
+// Item của dropdown
+export const NavItem = styled.div`
+  margin: 0;
+  padding: 10px 20px;
   list-style-type: none;
+  display: flex;
+  align-items: center;
 
   a {
     color: #333;
     text-decoration: none;
     font-size: 16px;
+    display: flex;
+    align-items: center;
+    width: 100%;
 
     &:hover {
-      color: #666;
+      color: #e74c3c;
     }
   }
 
-  @media (max-width: 768px) {
-    margin: 10px 0;
+  .icon {
+    margin-right: 10px;
+    font-size: 20px;
+  }
+
+  &:not(:last-child) {
+    border-bottom: 1px solid #e0e0e0;
   }
 `;
