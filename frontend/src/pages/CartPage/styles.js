@@ -90,6 +90,7 @@ export const ReturnToShopButton = styled.button`
 // Input mã coupon
 export const CouponInput = styled.input`
   padding: 10px;
+  width: 20em;
   border: 1px solid #e0e0e0;
   margin-right: 10px;
 `;
@@ -120,19 +121,43 @@ export const CouponAndTotalContainer = styled.div`
 
 // Container tính toán tổng giá trị giỏ hàng
 export const CartTotalContainer = styled.div`
-  padding: 20px;
+  padding: 1.25em;
   border: 1px solid #333;
-  width: 300px;
+  width: 29.375em;
   align-self: flex-end;
+  background-color: #ffffff;
+  margin-top: 1.25em;
 
   & > h3 {
-    margin-bottom: 20px;
+    margin-bottom: 1.25em;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+  }
+`;
+
+// Chi tiết từng dòng tổng giá trị giỏ hàng
+export const CartTotalDetail = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #e0e0e0;
+
+  &:last-of-type {
+    border-bottom: none; // Không có đường viền ở phần cuối
+    font-weight: bold;
+  }
+
+  & > span {
+    font-size: 1rem;
+    color: #555;
   }
 `;
 
 // Nút tiến hành thanh toán
 export const ProceedToCheckoutButton = styled.button`
-  background-color: #e91e63;
+  background-color: #e74c3c;
   color: white;
   border: none;
   padding: 15px 30px;
@@ -140,4 +165,11 @@ export const ProceedToCheckoutButton = styled.button`
   margin-top: 20px;
   width: 100%;
   font-weight: bold;
+  font-size: 1rem;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #c0392b; // Màu đậm hơn khi hover
+  }
 `;

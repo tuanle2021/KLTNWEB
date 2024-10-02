@@ -18,6 +18,7 @@ import {
   UpdateCartButton,
   ReturnToShopButton,
   CouponAndTotalContainer,
+  CartTotalDetail,
 } from "./styles";
 
 const CartPage = ({}) => {
@@ -97,9 +98,18 @@ const CartPage = ({}) => {
         </div>
         <CartTotalContainer>
           <h3>Cart Total</h3>
-          <p>Subtotal: ${calculateSubtotal()}</p>
-          <p>Shipping: Free</p>
-          <p>Total: ${calculateSubtotal()}</p>
+          <CartTotalDetail>
+            <span>Subtotal:</span>
+            <span>${calculateSubtotal()}</span>
+          </CartTotalDetail>
+          <CartTotalDetail>
+            <span>Shipping:</span>
+            <span>Free</span>
+          </CartTotalDetail>
+          <CartTotalDetail>
+            <span>Total:</span>
+            <span>${calculateSubtotal()}</span>
+          </CartTotalDetail>
           <ProceedToCheckoutButton>Proceed to checkout</ProceedToCheckoutButton>
         </CartTotalContainer>
       </CouponAndTotalContainer>
