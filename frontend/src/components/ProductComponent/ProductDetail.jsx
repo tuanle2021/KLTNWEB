@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   ProductDetailContainer,
   ProductDetailImage,
@@ -8,18 +8,39 @@ import {
   ProductDetailPrice,
   ProductDetailStock,
   AddToCartDetailButton,
+  ThumbnailContainer,
+  ThumbnailImage,
+  ArrowButton,
 } from "./styles";
 
 const ProductDetail = ({ product }) => {
-  const { id, name, description, price, stock, category_id } = product;
+  const { name, description, price, stock, images } = product;
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  const handleNextImage = () => {
+    setCurrentImageIndex((prevIndex) =>
+      prevIndex === images.length - 1 ? 0 : prevIndex + 1
+    );
+  };
+
+  const handlePrevImage = () => {
+    setCurrentImageIndex((prevIndex) =>
+      prevIndex === 0 ? images.length - 1 : prevIndex - 1
+    );
+  };
 
   return (
     <ProductDetailContainer>
       {/* Hiển thị hình ảnh lớn của sản phẩm */}
-      <ProductDetailImage
-        src={`  https://via.placeholder.com/500?text=${name}`}
-        alt={name}
-      />
+      <div style={{ position: "relative" }}>
+        <ProductDetailImage src={images[currentImageIndex]} alt={name} />
+        <ArrowButton onClick={handlePrevImage} style={{ left: 0 }}>
+          &lt;
+        </ArrowButton>
+        <ArrowButton onClick={handleNextImage} style={{ right: 0 }}>
+          &gt;
+        </ArrowButton>
+      </div>
 
       {/* Hiển thị thông tin chi tiết sản phẩm */}
       <ProductInfo>
@@ -32,6 +53,17 @@ const ProductDetail = ({ product }) => {
         <AddToCartDetailButton disabled={stock <= 0}>
           {stock > 0 ? "Add to Cart" : "Out of Stock"}
         </AddToCartDetailButton>
+        <ThumbnailContainer>
+          {images.map((image, index) => (
+            <ThumbnailImage
+              key={index}
+              src={image}
+              alt={`${name} thumbnail ${index + 1}`}
+              onClick={() => setCurrentImageIndex(index)}
+              isActive={index === currentImageIndex}
+            />
+          ))}
+        </ThumbnailContainer>
       </ProductInfo>
     </ProductDetailContainer>
   );
