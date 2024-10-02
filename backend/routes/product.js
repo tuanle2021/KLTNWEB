@@ -9,6 +9,10 @@ const {
   deleteProductById,
 } = require("../controllers/productControllers");
 const { authentication } = require("../middleware/authenUser");
+const { uploadImages } = require("../controllers/uploadImage");
+const { imageType } = require("../middleware/imageType");
+
+router.post("/images", imageType, uploadImages);
 
 router.post("/products", addProduct);
 router.get("/products", getAllProducts);

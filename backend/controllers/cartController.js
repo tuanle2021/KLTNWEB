@@ -131,7 +131,9 @@ const deleteCartItem = async (req, res) => {
     const userId = req.user._id; // Lấy _id của người dùng từ middleware
 
     // Kiểm tra xem giỏ hàng của người dùng đã tồn tại chưa
-    let cart = await Cart.findOne({ user_id: userId }).populate("items");
+    let cart = await Cart.findOne({ user_id: userId }).populate(
+      "items.product_id"
+    );
     if (!cart) {
       return res.status(404).json({ message: "Cart not found" });
     }
@@ -150,7 +152,7 @@ const deleteCartItem = async (req, res) => {
 
     // Xóa sản phẩm khỏi giỏ hàng
     const cartItem = cart.items[cartItemIndex];
-    await CartItem.findByIdAndRemove(cartItem._id);
+    await CartItem.findByIdAndDelete(cartItem._id);
     cart.items.splice(cartItemIndex, 1);
 
     // Tính lại tổng giá của giỏ hàng
