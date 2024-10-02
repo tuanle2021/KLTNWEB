@@ -6,6 +6,7 @@ import LoginPage from "../pages/LoginPage/LoginPage";
 import ActivateForm from "../pages/HomePage/ActivateForm";
 import ProfilePage from "../pages/ProfilePage/ProfilePage";
 import CheckoutPage from "../pages/CheckoutPage/CheckoutPage";
+import CartPage from "../pages/CartPage/CartPage";
 export const routes = [
   {
     path: "/",
@@ -30,6 +31,11 @@ export const routes = [
   {
     path: "/checkout",
     page: CheckoutPage,
+    isShowHeader: true,
+  },
+  {
+    path: "/cart",
+    page: CartPage,
     isShowHeader: true,
   },
   {
