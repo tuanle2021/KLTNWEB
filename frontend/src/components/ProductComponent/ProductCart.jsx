@@ -2,16 +2,19 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProductById } from "../../redux/slides/productSlice";
+import { FaHeart, FaEye } from "react-icons/fa";
 
 import {
   ProductCardContainer,
   ProductImage,
+  DiscountBadge,
+  ProductActionIcons,
   ProductDetails,
   ProductName,
-  ProductDescription,
   ProductPrice,
-  ProductStock,
   AddToCartButton,
+  ProductRating,
+  ActionIcon,
 } from "./styles";
 
 const ProductCart = ({ productId }) => {
@@ -33,10 +36,24 @@ const ProductCart = ({ productId }) => {
 
   if (!product) return <p>Loading...</p>;
 
-  const { name, description, price, stock, images } = product;
+  const { id, name, price, originalPrice, images, rating, reviews } = product;
+  const discount = 20;
   return (
     <ProductCardContainer onClick={handleCardClick}>
-      {/* Hiển thị hình ảnh sản phẩm (Sử dụng hình ảnh đầu tiên nếu có) */}
+      {/* Nhãn giảm giá */}
+      <DiscountBadge>{`-${discount}%`}</DiscountBadge>
+
+      {/* Các icon hành động (Yêu thích và Xem chi tiết) */}
+      <ProductActionIcons>
+        <ActionIcon>
+          <FaHeart />
+        </ActionIcon>
+        <ActionIcon>
+          <FaEye />
+        </ActionIcon>
+      </ProductActionIcons>
+
+      {/* Hình ảnh sản phẩm */}
       <ProductImage
         src={
           images && images.length > 0
@@ -49,18 +66,18 @@ const ProductCart = ({ productId }) => {
       {/* Thông tin chi tiết sản phẩm */}
       <ProductDetails>
         <ProductName>{name}</ProductName>
-        <ProductDescription>{description}</ProductDescription>
-        <ProductPrice>{`$${price}`}</ProductPrice>
-        <ProductStock>{`Stock: ${
-          stock > 0 ? stock : "Out of stock"
-        }`}</ProductStock>
+        <ProductPrice>
+          <span>${price}</span> <small>${originalPrice}</small>
+        </ProductPrice>
+        <ProductRating>
+          <span>⭐</span> {rating} ({reviews})
+        </ProductRating>
         <AddToCartButton
           onClick={(e) => {
             e.stopPropagation();
           }}
-          disabled={stock <= 0}
         >
-          {stock > 0 ? "Add to Cart" : "Out of Stock"}
+          Add To Cart
         </AddToCartButton>
       </ProductDetails>
     </ProductCardContainer>
