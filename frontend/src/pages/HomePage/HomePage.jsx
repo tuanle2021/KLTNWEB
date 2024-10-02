@@ -7,7 +7,7 @@ import CategoryMenu from "../../components/Category";
 import { TopBanner, ProductGrid } from "./style";
 import ProductCart from "../../components/ProductComponent/ProductCart";
 import { fetchProducts } from "../../redux/slides/productSlice";
-
+import Roadmap from "../../components/RoadmapComponent/Roadmap";
 const HomePage = () => {
   const dispatch = useDispatch(); // Sử dụng useDispatch để dispatch các hành động
   const { products, loading, error } = useSelector((state) => state.products);
@@ -20,16 +20,20 @@ const HomePage = () => {
   if (error) return <p>{error}</p>;
 
   return (
-    <div className="container">
-      <TopBanner>
-        <CategoryMenu />
-        <PromoSlider />
-      </TopBanner>
-      <ProductGrid>
-        {products.map((product) => (
-          <ProductCart key={product._id} productId={product._id} />
-        ))}
-      </ProductGrid>
+    <div>
+      {/* Roadmap hiển thị đường dẫn */}
+      <Roadmap />
+      <div className="container">
+        <TopBanner>
+          <CategoryMenu />
+          <PromoSlider />
+        </TopBanner>
+        <ProductGrid>
+          {products.map((product) => (
+            <ProductCart key={product._id} productId={product._id} />
+          ))}
+        </ProductGrid>
+      </div>
     </div>
   );
 };
