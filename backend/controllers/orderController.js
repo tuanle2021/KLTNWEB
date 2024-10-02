@@ -172,10 +172,51 @@ const updateOrderItems = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+
+const deleteOrder = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Kiểm tra quyền hạn của người dùng (chỉ admin mới được phép cập nhật)
+    if (!req.user || !req.user.isAdmin) {
+      return res.status(403).json({ message: "Access denied" });
+    }
+
+    // Tìm và xóa đơn hàng theo ID
+    const order = await Order.findByIdAndDelete(id);
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    res.status(200).json({ message: "Order deleted successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+const getAllOrders = async (req, res) => {
+  try {
+    // Kiểm tra quyền hạn của người dùng (chỉ admin mới được phép truy cập)
+    if (!req.user || !req.user.isAdmin) {
+      return res.status(403).json({ message: "Access denied. Admins only." });
+    }
+
+    // Lấy danh sách tất cả các đơn hàng
+    const orders = await Order.find().populate("items.product_id");
+
+    res.status(200).json(orders);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
 module.exports = {
   createOrder,
   getOrderById,
   getOrdersByUserId,
   updateOrderStatus,
   updateOrderItems,
+  deleteOrder,
+  getAllOrders,
 };
