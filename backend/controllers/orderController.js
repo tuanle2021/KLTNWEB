@@ -90,9 +90,92 @@ const getOrdersByUserId = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+const updateOrderStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
 
+    // Kiểm tra quyền hạn của người dùng (chỉ admin mới được phép cập nhật)
+    if (!req.user || !req.user.isAdmin) {
+      return res.status(403).json({ message: "Access denied" });
+    }
+
+    // Tìm đơn hàng theo ID
+    const order = await Order.findById(id);
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    // Cập nhật trạng thái đơn hàng
+    order.status = status;
+    const updatedOrder = await order.save();
+
+    res.status(200).json(updatedOrder);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+const updateOrderItems = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { items, shipping_address } = req.body;
+
+    // Kiểm tra quyền hạn của người dùng (chỉ admin mới được phép cập nhật)
+    if (!req.user || !req.user.isAdmin) {
+      return res.status(403).json({ message: "Access denied" });
+    }
+
+    // Tìm đơn hàng theo ID
+    const order = await Order.findById(id);
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    // Cập nhật các sản phẩm trong đơn hàng nếu có
+    if (items && items.length > 0) {
+      let total_price = 0;
+      const updatedItems = [];
+
+      for (const item of items) {
+        const product = await Product.findById(item.product_id);
+        if (!product) {
+          return res
+            .status(404)
+            .json({ message: `Product not found: ${item.product_id}` });
+        }
+        const itemTotalPrice = product.price * item.quantity;
+        total_price += itemTotalPrice;
+
+        updatedItems.push({
+          product_id: item.product_id,
+          quantity: item.quantity,
+          price: product.price,
+        });
+      }
+
+      order.items = updatedItems;
+      order.total_price = total_price;
+    }
+
+    // Cập nhật địa chỉ giao hàng nếu có
+    if (shipping_address) {
+      order.shipping_address = shipping_address;
+    }
+
+    const updatedOrder = await order.save();
+
+    res.status(200).json(updatedOrder);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
 module.exports = {
   createOrder,
   getOrderById,
   getOrdersByUserId,
+  updateOrderStatus,
+  updateOrderItems,
 };
