@@ -15,7 +15,8 @@ export const CategoryHeader = styled.div`
   padding: 15px;
   cursor: pointer;
   border-bottom: 1px solid #eaeaea;
-  background-color: #f9f9f9;
+  background-color: ${(props) => (props.isExpanded ? "#e0e0e0" : "#f9f9f9")};
+  transition: background-color 0.3s ease;
 `;
 
 export const CategoryList = styled.div`
@@ -25,7 +26,7 @@ export const CategoryList = styled.div`
 export const CategoryItem = styled.div`
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   padding: 15px;
   cursor: pointer;
   border-bottom: 1px solid #eaeaea;

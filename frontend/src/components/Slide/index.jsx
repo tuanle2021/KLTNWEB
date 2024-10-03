@@ -11,19 +11,22 @@ import {
 // Array of promo slides with image, title, and description
 const promoSlides = [
   {
-    image: "https://example.com/promo1.jpg",
+    image:
+      "https://res.cloudinary.com/dihhw7jo1/image/upload/v1727940034/banner/banner%203.png.png",
     title: "Giảm giá 20% cho tất cả các sản phẩm",
     description: "Chỉ trong tuần này! Nhanh tay đặt hàng.",
     link: "/promotions",
   },
   {
-    image: "https://example.com/promo2.jpg",
+    image:
+      "https://res.cloudinary.com/dihhw7jo1/image/upload/v1727940035/banner/banner%202.png.png",
     title: "Mua 1 tặng 1 - Sản phẩm công nghệ",
     description: "Khuyến mãi có hạn cho các sản phẩm công nghệ hàng đầu.",
     link: "/tech-deals",
   },
   {
-    image: "https://example.com/promo3.jpg",
+    image:
+      "https://res.cloudinary.com/dihhw7jo1/image/upload/v1727940037/banner/banner%201.png.png",
     title: "Giảm giá cuối mùa",
     description: "Sản phẩm giảm giá đến 50%.",
     link: "/clearance-sale",
@@ -47,7 +50,7 @@ const PromoSlider = () => {
       <Slider {...settings}>
         {promoSlides.map((slide, index) => (
           <div key={index}>
-            <PromoContent>
+            <PromoContent style={{ backgroundImage: `url(${slide.image})` }}>
               <PromoText>
                 <PromoTitle>{slide.title}</PromoTitle>
                 <p>{slide.description}</p>

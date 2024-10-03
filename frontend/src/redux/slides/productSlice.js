@@ -6,7 +6,7 @@ export const fetchProducts = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const { data } = await axios.get(
-        `${process.env.REACT_APP_BACKEND_URL}/products`
+        `${process.env.REACT_APP_BACKEND_URL}/products/all`
       );
       return data;
     } catch (error) {
@@ -14,7 +14,21 @@ export const fetchProducts = createAsyncThunk(
     }
   }
 );
-
+export const fetchProduct = createAsyncThunk(
+  "products/fetchProduct",
+  async ({ page, limit }, { rejectWithValue }) => {
+    try {
+      const { data } = await axios.get(
+        `${process.env.REACT_APP_BACKEND_URL}/products?page=${page}&limit=${limit}`
+      );
+      console.log("Fetched products:", data);
+      return data;
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      return rejectWithValue(error.response.data.message);
+    }
+  }
+);
 // Async thunk để lấy chi tiết sản phẩm
 export const fetchProductById = createAsyncThunk(
   "products/fetchProductById",
@@ -66,6 +80,18 @@ const productSlice = createSlice({
         state.products = action.payload;
       })
       .addCase(fetchProducts.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(fetchProduct.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchProduct.fulfilled, (state, action) => {
+        state.loading = false;
+        state.products = action.payload;
+      })
+      .addCase(fetchProduct.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })

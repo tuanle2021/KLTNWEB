@@ -1,6 +1,6 @@
 import styled from "styled-components";
 export const HeaderContainer = styled.header`
-  background-color: #ffcc00;
+  background-color: var(--light-blue-color);
   color: #333;
   padding: 15px 0;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -49,16 +49,14 @@ export const Button = styled.button`
     background-color: #28b35d;
   }
 `;
-export const Logo = styled.div`
-  a {
-    font-size: 24px;
-    color: #333;
-    text-decoration: none;
-    font-weight: bold;
+export const Logo = styled.a`
+  font-size: 24px;
+  color: #333;
+  text-decoration: none;
+  font-weight: bold;
 
-    &:hover {
-      color: #666;
-    }
+  &:hover {
+    color: #666;
   }
 `;
 

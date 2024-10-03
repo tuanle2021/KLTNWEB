@@ -23,6 +23,7 @@ import {
   UserOutlined,
   DownOutlined,
   ShoppingCartOutlined,
+  ShopOutlined,
 } from "@ant-design/icons";
 
 const HeaderComponent = () => {
@@ -36,14 +37,8 @@ const HeaderComponent = () => {
     <HeaderContainer>
       <div className="container">
         <HeaderInner>
-          <Logo>
-            <a href="/">
-              <img
-                src="/images/logo-Ecommerce.png"
-                alt="TechShop Logo"
-                style={{ height: "40px" }}
-              />
-            </a>
+          <Logo href="/">
+            <ShopOutlined style={{ fontSize: "2em", marginRight: "10px" }} />
           </Logo>
 
           {/* Search Bar */}

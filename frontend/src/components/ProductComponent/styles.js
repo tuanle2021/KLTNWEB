@@ -242,3 +242,54 @@ export const ArrowButton = styled.button`
     background-color: rgba(0, 0, 0, 0.7);
   }
 `;
+// Styled Components
+export const Container = styled.div`
+  width: 80%;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+`;
+
+export const Title = styled.h1`
+  text-align: center;
+  margin-bottom: 20px;
+`;
+
+export const ProductListContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+`;
+
+export const Pagination = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+`;
+
+export const PaginationButton = styled.button`
+  background-color: #000;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  margin: 0 10px;
+
+  &:hover {
+    background-color: #ff0000;
+  }
+
+  &:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+`;
+
+export const PaginationInfo = styled.span`
+  font-size: 1.2em;
+`;
