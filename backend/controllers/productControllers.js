@@ -155,11 +155,58 @@ const deleteProductById = async (req, res) => {
     res.status(500).json({ message: "Server error", error });
   }
 };
+// Controller để lấy sản phẩm với phân trang
+const getProducts = async (req, res) => {
+  const { page, limit, category, filter, minPrice, maxPrice, sortByPrice } =
+    req.query;
 
+  const skip = (page - 1) * limit;
+  const query = {};
+
+  if (category) {
+    query.category_id = category;
+  }
+
+  if (filter) {
+    query.name = { $regex: filter, $options: "i" }; // Lọc theo tên sản phẩm, không phân biệt chữ hoa chữ thường
+  }
+
+  if (minPrice) {
+    query.price = { ...query.price, $gte: parseFloat(minPrice) };
+  }
+
+  if (maxPrice) {
+    query.price = { ...query.price, $lte: parseFloat(maxPrice) };
+  }
+
+  const sort = {};
+  if (sortByPrice) {
+    sort.price = sortByPrice === "asc" ? 1 : -1;
+  }
+
+  try {
+    const count = await Product.countDocuments(query);
+    const products = await Product.find(query)
+      .limit(parseInt(limit))
+      .skip(skip)
+      .sort(sort);
+
+    res.json({
+      totalItems: count,
+      products,
+      totalPages: Math.ceil(count / limit),
+      currentPage: parseInt(page),
+    });
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    res.status(500).json({ message: "Error fetching products" });
+  }
+};
 module.exports = {
   addProduct,
   getAllProducts,
   getProductById,
   updateProductById,
   deleteProductById,
+  getProducts,
 };

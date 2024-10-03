@@ -36,7 +36,6 @@ const CategoryMenu = () => {
             <CategoryItem key={index}>
               <IconWrapper>{category.icon}</IconWrapper>
               <CategoryName>{category.name}</CategoryName>
-              <ExpandIcon>➡️</ExpandIcon>
             </CategoryItem>
           ))}
         </CategoryList>

@@ -12,11 +12,18 @@ import {
   ShoppingCart,
   ProfileMenu,
   Button,
+  UserIconWrapper,
+  DropdownContainer,
 } from "./styles";
 import {
+  InboxOutlined,
+  CloseCircleOutlined,
+  StarOutlined,
+  LogoutOutlined,
   UserOutlined,
   DownOutlined,
   ShoppingCartOutlined,
+  ShopOutlined,
 } from "@ant-design/icons";
 
 const HeaderComponent = () => {
@@ -30,14 +37,8 @@ const HeaderComponent = () => {
     <HeaderContainer>
       <div className="container">
         <HeaderInner>
-          <Logo>
-            <a href="/">
-              <img
-                src="/images/logo-Ecommerce.png"
-                alt="TechShop Logo"
-                style={{ height: "40px" }}
-              />
-            </a>
+          <Logo href="/">
+            <ShopOutlined style={{ fontSize: "2em", marginRight: "10px" }} />
           </Logo>
 
           {/* Search Bar */}
@@ -79,16 +80,54 @@ const HeaderComponent = () => {
           <ProfileMenu>
             {user ? (
               <>
-                <UserOutlined className="profile-icon" />
-                <DownOutlined />
-                <div className="profile-dropdown">
-                  <NavItem>
-                    <Link to="/" onClick={handleLogout}>
-                      Logout
-                    </Link>
-                    <Link to="/profile">Profile</Link>
-                  </NavItem>
-                </div>
+                <ProfileMenu>
+                  <UserIconWrapper>
+                    <UserOutlined />
+                    <DownOutlined className="dropdown-icon" />
+                  </UserIconWrapper>
+                  <DropdownContainer className="profile-dropdown">
+                    <NavItem>
+                      <Link to="/profile">
+                        <i className="icon">
+                          <UserOutlined />
+                        </i>{" "}
+                        My Account
+                      </Link>
+                    </NavItem>
+                    <NavItem>
+                      <Link to="/orders">
+                        <i className="icon">
+                          <InboxOutlined />
+                        </i>{" "}
+                        My Order
+                      </Link>
+                    </NavItem>
+                    <NavItem>
+                      <Link to="/cancellations">
+                        <i className="icon">
+                          <CloseCircleOutlined />
+                        </i>{" "}
+                        My Cancellations
+                      </Link>
+                    </NavItem>
+                    <NavItem>
+                      <Link to="/reviews">
+                        <i className="icon">
+                          <StarOutlined />
+                        </i>{" "}
+                        My Reviews
+                      </Link>
+                    </NavItem>
+                    <NavItem>
+                      <Link to="/" onClick={handleLogout}>
+                        <i className="icon">
+                          <LogoutOutlined />
+                        </i>{" "}
+                        Logout
+                      </Link>
+                    </NavItem>
+                  </DropdownContainer>
+                </ProfileMenu>
               </>
             ) : (
               <>

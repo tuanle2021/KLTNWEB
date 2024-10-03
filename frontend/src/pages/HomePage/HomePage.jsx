@@ -6,17 +6,18 @@ import PromoSlider from "../../components/Slide";
 import CategoryMenu from "../../components/Category";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
-import {
-  TopBanner,
-  ProductGrid,
-  ProductCardContainer,
-  LeftArrowButton,
-  RightArrowButton,
-} from "./style";
 import ProductCart from "../../components/ProductComponent/ProductCart";
 import { fetchProducts } from "../../redux/slides/productSlice";
 import Roadmap from "../../components/RoadmapComponent/Roadmap";
 import FlashSale from "../../components/QuickviewComponent/QuickView";
+import ProductList from "../../components/ProductComponent/ProductList";
+
+import {
+  TopBanner,
+  ProductGrid,
+  LeftArrowButton,
+  RightArrowButton,
+} from "./style";
 const HomePage = () => {
   const dispatch = useDispatch(); // Sử dụng useDispatch để dispatch các hành động
   const { products, loading, error } = useSelector((state) => state.products);
@@ -34,8 +35,8 @@ const HomePage = () => {
   const scrollRight = () => {
     gridRef.current.scrollBy({ left: 300, behavior: "smooth" });
   };
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>{error}</p>;
+  if (loading) return console.log("Loading products...");
+  if (error) return console.log("Error loading products:", error);
 
   return (
     <div>
@@ -46,6 +47,7 @@ const HomePage = () => {
           <CategoryMenu />
           <PromoSlider />
         </TopBanner>
+
         <div style={{ position: "relative" }}>
           <LeftArrowButton onClick={scrollLeft}>
             <FaArrowLeft />
@@ -59,7 +61,9 @@ const HomePage = () => {
             <FaArrowRight />
           </RightArrowButton>
         </div>
-        <FlashSale></FlashSale>
+
+        <ProductList />
+        <FlashSale />
       </div>
     </div>
   );
