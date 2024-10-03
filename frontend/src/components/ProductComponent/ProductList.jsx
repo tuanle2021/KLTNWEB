@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import ProductCart from "./ProductCart"; // Import component ProductCart
-import { fetchProduct } from "../../redux/slides/productSlice"; // Đường dẫn tới file productSlice.js
+import React, { useEffect } from "react";
+import ProductCart from "./ProductCart";
+import { fetchFilterProduct, setPage } from "../../redux/slides/productSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
@@ -14,27 +14,39 @@ import {
 
 const ProductList = () => {
   const dispatch = useDispatch();
-  const { products, loading, error } = useSelector((state) => state.products);
-  const [currentPage, setCurrentPage] = useState(1);
-  const productsPerPage = 5;
-
+  const {
+    products,
+    loading,
+    error,
+    currentPage,
+    totalProducts,
+    productsPerPage,
+  } = useSelector((state) => state.products);
+  // Chỉ gọi API khi `currentPage` hoặc `productsPerPage` thay đổi.
+  // Thêm kiểm tra nếu `products` chưa có dữ liệu, tránh gọi API liên tục.
   useEffect(() => {
-    dispatch(fetchProduct({ page: currentPage, limit: productsPerPage }));
-  }, [dispatch, currentPage]);
+    if (products.length === 0) {
+      dispatch(
+        fetchFilterProduct({ page: currentPage, limit: productsPerPage })
+      );
+    }
+  }, [dispatch, currentPage, productsPerPage]);
 
+  // Chuyển trang trước
   const handlePreviousPage = () => {
     if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
+      dispatch(setPage(currentPage - 1));
     }
   };
 
+  // Chuyển trang sau
   const handleNextPage = () => {
-    if (products.length < productsPerPage) return;
-    setCurrentPage(currentPage + 1);
+    if (currentPage * productsPerPage < totalProducts) {
+      dispatch(setPage(currentPage + 1));
+    }
   };
 
   if (loading) {
-    console.log("Loading products...");
     return <p>Loading...</p>;
   }
   if (error) {
@@ -42,12 +54,17 @@ const ProductList = () => {
     return <p>Error: {error}</p>;
   }
 
+  if (!Array.isArray(products)) {
+    console.error("Products is not an array:", products);
+    return <p>Error: Products data is invalid</p>;
+  }
+
   return (
     <Container>
       <Title>Product List</Title>
       <ProductListContainer>
         {products.map((product) => (
-          <ProductCart key={product._id} productId={product._id} />
+          <ProductCart key={product._id} product={product} />
         ))}
       </ProductListContainer>
       <Pagination>
@@ -60,7 +77,7 @@ const ProductList = () => {
         <PaginationInfo>Page {currentPage}</PaginationInfo>
         <PaginationButton
           onClick={handleNextPage}
-          disabled={products.length < productsPerPage}
+          disabled={currentPage * productsPerPage >= totalProducts}
         >
           Next
         </PaginationButton>
@@ -68,4 +85,5 @@ const ProductList = () => {
     </Container>
   );
 };
+
 export default ProductList;

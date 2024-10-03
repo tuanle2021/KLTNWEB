@@ -54,7 +54,7 @@ const HomePage = () => {
           </LeftArrowButton>
           <ProductGrid ref={gridRef}>
             {products.map((product) => (
-              <ProductCart key={product._id} productId={product._id} />
+              <ProductCart key={product._id} product={product} />
             ))}
           </ProductGrid>
           <RightArrowButton onClick={scrollRight}>

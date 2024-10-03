@@ -1,7 +1,5 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchProductById } from "../../redux/slides/productSlice";
 import { FaHeart, FaEye } from "react-icons/fa";
 
 import {
@@ -17,31 +15,29 @@ import {
   ActionIcon,
 } from "./styles";
 
-const ProductCart = ({ productId }) => {
-  const dispatch = useDispatch();
+const ProductCart = ({ product }) => {
   const navigate = useNavigate();
-  const product = useSelector((state) =>
-    state.products.products.find((product) => product._id === productId)
-  );
 
-  useEffect(() => {
-    if (!product) {
-      dispatch(fetchProductById(productId));
-    }
-  }, [dispatch, productId, product]);
-
-  const handleCardClick = () => {
-    navigate(`/product/${productId}`);
-  };
-
+  // Nếu không có sản phẩm được truyền vào, hiển thị "Loading..."
   if (!product) return <p>Loading...</p>;
 
-  const { id, name, price, originalPrice, images, rating, reviews } = product;
-  const discount = 20;
+  // Destructure các thuộc tính của sản phẩm để sử dụng dễ dàng hơn
+  const { _id, name, price, originalPrice, images, rating, reviews } = product;
+
+  // Tính toán giảm giá nếu có giá gốc (originalPrice)
+  const discount = originalPrice
+    ? Math.round(((originalPrice - price) / originalPrice) * 100)
+    : 0;
+
+  // Điều hướng đến trang chi tiết sản phẩm khi click vào card
+  const handleCardClick = () => {
+    navigate(`/product/${_id}`);
+  };
+
   return (
     <ProductCardContainer onClick={handleCardClick}>
-      {/* Nhãn giảm giá */}
-      <DiscountBadge>{`-${discount}%`}</DiscountBadge>
+      {/* Nhãn giảm giá nếu có giảm giá */}
+      {discount > 0 && <DiscountBadge>{`-${discount}%`}</DiscountBadge>}
 
       {/* Các icon hành động (Yêu thích và Xem chi tiết) */}
       <ProductActionIcons>
@@ -67,14 +63,15 @@ const ProductCart = ({ productId }) => {
       <ProductDetails>
         <ProductName>{name}</ProductName>
         <ProductPrice>
-          <span>${price}</span> <small>${originalPrice}</small>
+          <span>${price}</span>{" "}
+          {originalPrice && <small>${originalPrice}</small>}
         </ProductPrice>
         <ProductRating>
           <span>⭐</span> {rating} ({reviews})
         </ProductRating>
         <AddToCartButton
           onClick={(e) => {
-            e.stopPropagation();
+            e.stopPropagation(); // Ngăn chặn việc click chuyển hướng trang khi click vào nút
           }}
         >
           Add To Cart
