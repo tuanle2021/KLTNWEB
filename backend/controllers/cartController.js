@@ -118,6 +118,7 @@ const getCart = async (req, res) => {
       user_id: cart.user_id,
       items: items,
       total_price: total_price,
+      total_items: items.length,
     };
 
     res.status(200).json(cartResponse); // Trả về thông tin giỏ hàng

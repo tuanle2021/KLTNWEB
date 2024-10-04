@@ -1,7 +1,8 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { FaHeart, FaEye } from "react-icons/fa";
-
+import { useDispatch } from "react-redux";
+import { addToCart } from "../../redux/slides/cartSlice";
 import {
   ProductCardContainer,
   ProductImage,
@@ -17,6 +18,7 @@ import {
 
 const ProductCart = ({ product }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   // Nếu không có sản phẩm được truyền vào, hiển thị "Loading..."
   if (!product) return <p>Loading...</p>;
@@ -33,7 +35,11 @@ const ProductCart = ({ product }) => {
   const handleCardClick = () => {
     navigate(`/product/${_id}`);
   };
-
+  // Xử lý thêm sản phẩm vào giỏ hàng
+  const handleAddToCart = (e) => {
+    e.stopPropagation(); // Ngăn chặn việc click chuyển hướng trang khi click vào nút
+    dispatch(addToCart({ productId: _id, quantity: 1 }));
+  };
   return (
     <ProductCardContainer onClick={handleCardClick}>
       {/* Nhãn giảm giá nếu có giảm giá */}
@@ -69,13 +75,7 @@ const ProductCart = ({ product }) => {
         <ProductRating>
           <span>⭐</span> {rating} ({reviews})
         </ProductRating>
-        <AddToCartButton
-          onClick={(e) => {
-            e.stopPropagation(); // Ngăn chặn việc click chuyển hướng trang khi click vào nút
-          }}
-        >
-          Add To Cart
-        </AddToCartButton>
+        <AddToCartButton onClick={handleAddToCart}>Add To Cart</AddToCartButton>
       </ProductDetails>
     </ProductCardContainer>
   );
