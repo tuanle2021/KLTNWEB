@@ -121,6 +121,7 @@ const productSlice = createSlice({
         state.products = action.payload.products;
         state.totalPages = action.payload.totalPages;
         state.currentPage = action.payload.currentPage;
+        state.totalProducts = action.payload.totalProducts;
       })
       .addCase(fetchFilterProduct.rejected, (state, action) => {
         state.loading = false;

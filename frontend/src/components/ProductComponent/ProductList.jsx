@@ -21,9 +21,9 @@ const ProductList = () => {
     currentPage,
     totalProducts,
     productsPerPage,
+    totalPages,
   } = useSelector((state) => state.products);
-  // Chỉ gọi API khi `currentPage` hoặc `productsPerPage` thay đổi.
-  // Thêm kiểm tra nếu `products` chưa có dữ liệu, tránh gọi API liên tục.
+
   useEffect(() => {
     if (products.length === 0) {
       dispatch(
@@ -41,7 +41,7 @@ const ProductList = () => {
 
   // Chuyển trang sau
   const handleNextPage = () => {
-    if (currentPage * productsPerPage < totalProducts) {
+    if (currentPage < totalPages) {
       dispatch(setPage(currentPage + 1));
     }
   };
@@ -77,7 +77,7 @@ const ProductList = () => {
         <PaginationInfo>Page {currentPage}</PaginationInfo>
         <PaginationButton
           onClick={handleNextPage}
-          disabled={currentPage * productsPerPage >= totalProducts}
+          disabled={currentPage === totalPages}
         >
           Next
         </PaginationButton>

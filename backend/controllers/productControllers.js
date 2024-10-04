@@ -193,7 +193,6 @@ const getProducts = async (req, res) => {
   }
 
   try {
-    const count = await Product.countDocuments(query);
     const products = await Product.find(query)
       .skip((page - 1) * limit)
       .limit(Number(limit))
@@ -203,6 +202,7 @@ const getProducts = async (req, res) => {
     const totalPages = Math.ceil(totalProducts / limit);
 
     res.json({
+      totalProducts,
       products,
       totalPages,
       currentPage: Number(page),
