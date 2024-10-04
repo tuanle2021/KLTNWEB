@@ -4,11 +4,24 @@ import axios from "axios";
 // Async thunk để thêm sản phẩm vào giỏ hàng
 export const addToCart = createAsyncThunk(
   "cart/addToCart",
-  async ({ productId, quantity }, { rejectWithValue }) => {
+  async ({ productId, quantity }, { rejectWithValue, getState }) => {
     try {
+      const state = getState();
+      const token = state.auth.user.token;
+      console.log(
+        "Adding product to cart with id:",
+        productId,
+        "and quantity:",
+        quantity
+      );
       const response = await axios.post(
-        `${process.env.REACT_APP_BACKEND_URL}/cart/add `,
-        { productId, quantity }
+        `${process.env.REACT_APP_BACKEND_URL}/cart/add`,
+        { productId, quantity },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       return response.data;
     } catch (error) {
