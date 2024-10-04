@@ -6,7 +6,10 @@ export const addToCart = createAsyncThunk(
   "cart/addToCart",
   async ({ productId, quantity }, { rejectWithValue }) => {
     try {
-      const response = await axios.post("/cart/add", { productId, quantity });
+      const response = await axios.post(
+        `${process.env.REACT_APP_BACKEND_URL}/cart/add `,
+        { productId, quantity }
+      );
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -17,9 +20,18 @@ export const addToCart = createAsyncThunk(
 // Async thunk để lấy giỏ hàng
 export const getCart = createAsyncThunk(
   "cart/getCart",
-  async (_, { rejectWithValue }) => {
+  async (_, { rejectWithValue, getState }) => {
     try {
-      const response = await axios.get("/cart");
+      const state = getState();
+      const token = state.auth.user.token;
+      const response = await axios.get(
+        `${process.env.REACT_APP_BACKEND_URL}/cart`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);

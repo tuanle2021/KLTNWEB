@@ -7,7 +7,7 @@ import CategoryMenu from "../../components/Category";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
 import ProductCart from "../../components/ProductComponent/ProductCart";
-import { fetchProducts } from "../../redux/slides/productSlice";
+import { fetchProducts } from "../../redux/slices/productSlice";
 import Roadmap from "../../components/RoadmapComponent/Roadmap";
 import FlashSale from "../../components/QuickviewComponent/QuickView";
 import ProductList from "../../components/ProductComponent/ProductList";
@@ -62,7 +62,7 @@ const HomePage = () => {
           </RightArrowButton>
         </div>
 
-        <ProductList />
+        {/* <ProductList /> */}
         <FlashSale />
       </div>
     </div>

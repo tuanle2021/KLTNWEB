@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { FaHeart, FaEye } from "react-icons/fa";
 import { useDispatch } from "react-redux";
-import { addToCart } from "../../redux/slides/cartSlice";
+import { addToCart } from "../../redux/slices/cartSlice";
 import {
   ProductCardContainer,
   ProductImage,

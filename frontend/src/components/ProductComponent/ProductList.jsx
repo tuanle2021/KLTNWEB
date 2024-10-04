@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import ProductCart from "./ProductCart";
-import { fetchFilterProduct, setPage } from "../../redux/slides/productSlice";
+import { fetchFilterProduct, setPage } from "../../redux/slices/productSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 import {

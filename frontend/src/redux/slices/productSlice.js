@@ -18,24 +18,31 @@ export const fetchProducts = createAsyncThunk(
 export const fetchFilterProduct = createAsyncThunk(
   "products/fetchFilterProduct",
   async (
-    { page, limit, category, filter, minPrice, maxPrice, sortByPrice },
+    {
+      page = 1,
+      limit = 10,
+      category = "",
+      filter = "",
+      minPrice = "",
+      maxPrice = "",
+      sortByPrice = "",
+    },
     { rejectWithValue }
   ) => {
     try {
-      const queryParams = new URLSearchParams();
-
-      if (page) queryParams.append("page", page);
-      if (limit) queryParams.append("limit", limit);
-      if (category) queryParams.append("category", category);
-      if (filter) queryParams.append("filter", filter);
-      if (minPrice) queryParams.append("minPrice", minPrice);
-      if (maxPrice) queryParams.append("maxPrice", maxPrice);
-      if (sortByPrice) queryParams.append("sortByPrice", sortByPrice);
-
       const { data } = await axios.get(
-        `${
-          process.env.REACT_APP_BACKEND_URL
-        }/products?${queryParams.toString()}`
+        `${process.env.REACT_APP_BACKEND_URL}/products?`,
+        {
+          params: {
+            page,
+            limit,
+            category,
+            filter,
+            minPrice,
+            maxPrice,
+            sortByPrice,
+          },
+        }
       );
 
       console.log("Fetched products:", data);

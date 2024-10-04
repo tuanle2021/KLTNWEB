@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { logout } from "../../redux/slides/authSlice";
+import { logout } from "../../redux/slices/authSlice";
 import { Link } from "react-router-dom";
 import {
   HeaderContainer,
