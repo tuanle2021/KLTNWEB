@@ -8,6 +8,7 @@ import {
   toggleSelectItem,
   clearSelectedItems,
   updateCartItem,
+  deleteCartItem,
 } from "../../redux/slices/cartSlice";
 import { setOrderItems } from "../../redux/slices/orderSlice";
 import {
@@ -85,6 +86,14 @@ const CartPage = () => {
     navigate("/checkout");
   };
 
+  // Hàm để xóa sản phẩm khỏi giỏ hàng
+  const handleRemoveItem = (id) => {
+    dispatch(deleteCartItem(id));
+    window.location.reload();
+  };
+  const handleReturnShop = () => {
+    navigate("/");
+  };
   if (loading) {
     return <p>Loading...</p>;
   }
@@ -112,7 +121,7 @@ const CartPage = () => {
             checked={selectedItems.includes(index)}
             onChange={() => handleSelectItem(index)}
           />
-          <RemoveButton onClick={() => console.log("Remove item")}>
+          <RemoveButton onClick={() => handleRemoveItem(item._id)}>
             <IoIosCloseCircle size={20} color="#e74c3c" />
           </RemoveButton>
           <ProductImage src={item.product.images[0]} alt={item.product.name} />
@@ -135,7 +144,9 @@ const CartPage = () => {
 
       {/* Các hành động như mã coupon và quay lại shop */}
       <CartActions>
-        <ReturnToShopButton>Return To Shop</ReturnToShopButton>
+        <ReturnToShopButton onClick={handleReturnShop}>
+          Return To Shop
+        </ReturnToShopButton>
         <UpdateCartButton onClick={handleUpdateCart}>
           Update Cart
         </UpdateCartButton>

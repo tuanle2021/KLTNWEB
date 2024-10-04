@@ -74,6 +74,29 @@ export const updateCartItem = createAsyncThunk(
     }
   }
 );
+// Async thunk để xóa sản phẩm khỏi giỏ hàng
+export const deleteCartItem = createAsyncThunk(
+  "cart/deleteCartItem",
+  async (id, { rejectWithValue, getState }) => {
+    try {
+      const state = getState();
+      const token = state.auth.user.token;
+
+      const response = await axios.delete(
+        `${process.env.REACT_APP_BACKEND_URL}/cart/item/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 const cartSlice = createSlice({
   name: "cart",
   initialState: {
@@ -148,6 +171,20 @@ const cartSlice = createSlice({
       .addCase(updateCartItem.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+      .addCase(deleteCartItem.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteCartItem.fulfilled, (state, action) => {
+        state.loading = false;
+        state.items = action.payload.items;
+        state.total_price = action.payload.total_price;
+        state.total_items = action.payload.total_items;
+      })
+      .addCase(deleteCartItem.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload.message;
       });
   },
 });
