@@ -107,6 +107,7 @@ const getCart = async (req, res) => {
       }
       total_price += product.price * item.quantity;
       items.push({
+        _id: item._id,
         product: product,
         quantity: item.quantity,
       });
@@ -181,8 +182,8 @@ const deleteCartItem = async (req, res) => {
 
 const updateCartItem = async (req, res) => {
   try {
-    const { id } = req.params;
-    const { quantity } = req.body;
+    const { id, quantity } = req.body;
+    console.log("Backend received id:", id, "and quantity:", quantity);
 
     // Tìm sản phẩm trong giỏ hàng theo ID
     const cartItem = await CartItem.findById(id);
