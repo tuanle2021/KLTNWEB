@@ -5,7 +5,7 @@ import { useState } from "react";
 import DotLoader from "react-spinners/DotLoader";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { login } from "../../redux/slides/authSlice";
+import { login } from "../../redux/slices/authSlice";
 import {
   FormWrapper,
   Title,

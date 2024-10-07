@@ -14,32 +14,34 @@ export const fetchProducts = createAsyncThunk(
     }
   }
 );
-export const fetchProduct = createAsyncThunk(
-  "products/fetchProduct",
-  async ({ page, limit }, { rejectWithValue }) => {
+// Async thunk để lấy sản phẩm với bộ lọc
+export const fetchFilterProduct = createAsyncThunk(
+  "products/fetchFilterProduct",
+  async (filters, { rejectWithValue }) => {
     try {
       const { data } = await axios.get(
-        `${process.env.REACT_APP_BACKEND_URL}/products?page=${page}&limit=${limit}`
+        `${process.env.REACT_APP_BACKEND_URL}/products`,
+        { params: filters }
       );
-      console.log("Fetched products:", data);
       return data;
     } catch (error) {
-      console.error("Error fetching products:", error);
       return rejectWithValue(error.response.data.message);
     }
   }
 );
+
 // Async thunk để lấy chi tiết sản phẩm
 export const fetchProductById = createAsyncThunk(
-  "products/fetchProductById",
-  async (productId, { rejectWithValue }) => {
+  "product/fetchById",
+  async (id, thunkAPI) => {
     try {
-      const { data } = await axios.get(
-        `${process.env.REACT_APP_BACKEND_URL}/products/${productId}`
+      console.log("Fetching product with ID:", id); // Add this line to log the ID
+      const response = await axios.get(
+        `${process.env.REACT_APP_BACKEND_URL}/products/${id}`
       );
-      return data;
+      return response.data;
     } catch (error) {
-      return rejectWithValue(error.response.data.message);
+      return thunkAPI.rejectWithValue(error.response.data);
     }
   }
 );
@@ -67,8 +69,16 @@ const productSlice = createSlice({
     product: null,
     loading: false,
     error: null,
+    currentPage: 1,
+    totalPages: 1,
+    productsPerPage: 6,
+    totalProducts: 0,
   },
-  reducers: {},
+  reducers: {
+    setPage: (state, action) => {
+      state.currentPage = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchProducts.pending, (state) => {
@@ -78,20 +88,24 @@ const productSlice = createSlice({
       .addCase(fetchProducts.fulfilled, (state, action) => {
         state.loading = false;
         state.products = action.payload;
+        state.totalProducts = action.payload.length;
       })
       .addCase(fetchProducts.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-      .addCase(fetchProduct.pending, (state) => {
+      .addCase(fetchFilterProduct.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchProduct.fulfilled, (state, action) => {
+      .addCase(fetchFilterProduct.fulfilled, (state, action) => {
         state.loading = false;
-        state.products = action.payload;
+        state.products = action.payload.products;
+        state.totalPages = action.payload.totalPages;
+        state.currentPage = action.payload.currentPage;
+        state.totalProducts = action.payload.totalProducts;
       })
-      .addCase(fetchProduct.rejected, (state, action) => {
+      .addCase(fetchFilterProduct.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
@@ -126,5 +140,5 @@ const productSlice = createSlice({
       });
   },
 });
-
+export const { setPage } = productSlice.actions;
 export default productSlice.reducer;

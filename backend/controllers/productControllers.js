@@ -1,7 +1,7 @@
 const Product = require("../models/Product");
 const { uploadToCloudinary } = require("../controllers/uploadImage");
 const { imageType } = require("../middleware/imageType");
-
+const mongoose = require("mongoose");
 // Controller để thêm sản phẩm mới
 const addProduct = async (req, res) => {
   try {
@@ -65,9 +65,14 @@ const getAllProducts = async (req, res) => {
 };
 const getProductById = async (req, res) => {
   try {
-    const productId = req.params.id;
-    const product = await Product.findById(productId);
+    const { id } = req.params;
 
+    // Validate the id parameter
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: "Invalid product ID" });
+    }
+
+    const product = await Product.findById(id);
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
     }
@@ -75,7 +80,7 @@ const getProductById = async (req, res) => {
     res.status(200).json(product);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 const updateProductById = async (req, res) => {
@@ -159,7 +164,13 @@ const deleteProductById = async (req, res) => {
 const getProducts = async (req, res) => {
   const { page, limit, category, filter, minPrice, maxPrice, sortByPrice } =
     req.query;
-
+  // Validate price fields
+  if (minPrice && isNaN(Number(minPrice))) {
+    return res.status(400).json({ message: "Invalid minPrice value" });
+  }
+  if (maxPrice && isNaN(Number(maxPrice))) {
+    return res.status(400).json({ message: "Invalid maxPrice value" });
+  }
   const skip = (page - 1) * limit;
   const query = {};
 
@@ -168,34 +179,33 @@ const getProducts = async (req, res) => {
   }
 
   if (filter) {
-    query.name = { $regex: filter, $options: "i" }; // Lọc theo tên sản phẩm, không phân biệt chữ hoa chữ thường
+    query.filter = filter;
   }
-
   if (minPrice) {
-    query.price = { ...query.price, $gte: parseFloat(minPrice) };
+    query.price = { ...query.price, $gte: Number(minPrice) };
   }
-
   if (maxPrice) {
-    query.price = { ...query.price, $lte: parseFloat(maxPrice) };
+    query.price = { ...query.price, $lte: Number(maxPrice) };
   }
-
   const sort = {};
   if (sortByPrice) {
     sort.price = sortByPrice === "asc" ? 1 : -1;
   }
 
   try {
-    const count = await Product.countDocuments(query);
     const products = await Product.find(query)
-      .limit(parseInt(limit))
-      .skip(skip)
-      .sort(sort);
+      .skip((page - 1) * limit)
+      .limit(Number(limit))
+      .sort(sortByPrice ? { price: sortByPrice } : {});
+
+    const totalProducts = await Product.countDocuments(query);
+    const totalPages = Math.ceil(totalProducts / limit);
 
     res.json({
-      totalItems: count,
+      totalProducts,
       products,
-      totalPages: Math.ceil(count / limit),
-      currentPage: parseInt(page),
+      totalPages,
+      currentPage: Number(page),
     });
   } catch (error) {
     console.error("Error fetching products:", error);

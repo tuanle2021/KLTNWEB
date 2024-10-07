@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchProductById } from "../../redux/slides/productSlice";
+import { fetchProductById } from "../../redux/slices/productSlice";
 import ProductDetail from "../../components/ProductComponent/ProductDetail";
 import Roadmap from "../../components/RoadmapComponent/Roadmap";
 const ProductDetailPage = () => {
