@@ -24,10 +24,9 @@ const CheckoutPage = () => {
     emailAddress: "",
   });
 
-  const orderSummary = useSelector((state) => state.order) || {
-    items: [],
-    shipping_address: "",
-  };
+  const { orderSummary, items, shipping_address } = useSelector(
+    (state) => state.order
+  );
 
   useEffect(() => {
     const userData = Cookies.get("user") ? JSON.parse(Cookies.get("user")) : {};
@@ -53,14 +52,16 @@ const CheckoutPage = () => {
   };
 
   const calculateSubtotal = () => {
-    return orderSummary.items.reduce(
-      (acc, item) => acc + item.product.price * item.quantity,
-      0
+    return (
+      orderSummary?.items?.reduce(
+        (acc, item) => acc + item.product.price * item.quantity,
+        0
+      ) || 0
     );
   };
 
   const calculateTotal = () => {
-    return calculateSubtotal() + (orderSummary.shipping || 0);
+    return calculateSubtotal() + (orderSummary?.shipping || 0);
   };
 
   return (
@@ -140,7 +141,7 @@ const CheckoutPage = () => {
         {/* Order Summary Section */}
         <OrderSummary>
           <h3>Order Summary</h3>
-          {orderSummary.items.map((item, index) => (
+          {orderSummary?.items?.map((item, index) => (
             <SummaryItem key={index}>
               <span>{item.product.name}</span>
               <span>${item.product.price}</span>
@@ -152,7 +153,7 @@ const CheckoutPage = () => {
           </SummaryItem>
           <SummaryItem>
             <span>Shipping:</span>
-            <span>{orderSummary.shipping}</span>
+            <span>{orderSummary?.shipping}</span>
           </SummaryItem>
           <SummaryItem>
             <span>Total:</span>

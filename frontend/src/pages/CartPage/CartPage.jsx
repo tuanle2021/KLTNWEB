@@ -10,7 +10,7 @@ import {
   updateCartItem,
   deleteCartItem,
 } from "../../redux/slices/cartSlice";
-import { setOrderItems } from "../../redux/slices/orderSlice";
+import { setOrderItems, createOrder } from "../../redux/slices/orderSlice";
 import {
   CartContainer,
   CartHeader,
@@ -79,11 +79,25 @@ const CartPage = () => {
   };
 
   // Hàm xử lý sự kiện checkout
-  const handleCheckout = () => {
-    const selectedProducts = selectedItems.map((index) => items[index]);
-    dispatch(setOrderItems({ items: selectedProducts, shipping_address: "" }));
-    dispatch(clearSelectedItems());
-    navigate("/checkout");
+  const handleCheckout = async () => {
+    const selectedProducts = selectedItems.map((index) => ({
+      product_id: items[index].product._id,
+      quantity: items[index].quantity,
+    }));
+    console.log("Selected products:", selectedProducts);
+    const orderData = {
+      items: selectedProducts,
+      shipping_address: " ", // Cập nhật địa chỉ giao hàng nếu có
+    };
+    console.log("Order data:", orderData);
+    dispatch(setOrderItems(selectedProducts));
+    try {
+      await dispatch(createOrder(orderData)).unwrap();
+      dispatch(clearSelectedItems());
+      navigate("/checkout");
+    } catch (error) {
+      console.error("Failed to create order:", error);
+    }
   };
 
   // Hàm để xóa sản phẩm khỏi giỏ hàng
