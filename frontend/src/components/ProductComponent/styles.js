@@ -1,17 +1,34 @@
 import styled from "styled-components";
 
+// Nút thêm sản phẩm vào giỏ hàng
+export const AddToCartButton = styled.button`
+  display: none;
+  position: absolute;
+  background-color: #000;
+  color: #fff;
+  width: 100%;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 2px;
+  cursor: pointer;
+  &:hover {
+    background-color: #ff0000;
+  }
+`;
+
 // Container của toàn bộ card sản phẩm
 export const ProductCardContainer = styled.div`
   width: 220px;
   padding: 2px;
-  // border: 1px solid #ddd;
   border-radius: 10px;
-  text-align: center;
+  // text-align: center;
   background: #fff;
   position: relative;
   transition: box-shadow 0.3s ease;
   cursor: pointer;
-
+  &:hover ${AddToCartButton} {
+    display: block;
+  }
   &:hover {
     box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
   }
@@ -19,8 +36,7 @@ export const ProductCardContainer = styled.div`
 export const ProductImage = styled.div`
   width: 100%;
   height: auto;
-  prosition: relative;
-  margin-bottom: 15px;
+  margin-bottom: 38px;
   backgound-color: var(--bg-primary);
 `;
 
@@ -29,20 +45,6 @@ export const Image = styled.img`
   width: 100%;
   height: auto;
   padding: 5px 15px;
-`;
-// Nút thêm sản phẩm vào giỏ hàng
-export const AddToCartButton = styled.button`
-  background-color: #000;
-  color: #fff;
-  border: none;
-  width: 100%;
-  padding: 10px 20px;
-  border-radius: 2px;
-  cursor: pointer;
-  // margin-top: 10px;
-  &:hover {
-    background-color: #ff0000;
-  }
 `;
 
 // Nhãn giảm giá
@@ -87,23 +89,27 @@ export const ActionIcon = styled.div`
     }
   }
 `;
-
+export const Line = styled.div`
+  width: 90%;
+  height: 1px;
+  background: #ccc;
+`;
 // Container cho thông tin chi tiết sản phẩm
 export const ProductDetails = styled.div`
-  margin-top: 10px;
+  margin-top: 5px;
 `;
 
 // Tên sản phẩm
 export const ProductName = styled.h3`
   font-size: 1.2em;
-  margin: 10px 0;
+  margin: 5px 0 10px;
   color: #333;
 `;
 
 // Giá sản phẩm
 export const ProductPrice = styled.div`
   display: flex;
-  justify-content: center;
+  // justify-content: center;
   gap: 10px;
   align-items: center;
 

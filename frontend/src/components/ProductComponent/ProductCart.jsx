@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchProductById } from "../../redux/slides/productSlice";
+import { fetchProductById } from "../../redux/slices/productSlice";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
+import { addToCart } from "../../redux/slices/cartSlice";
 
 import {
   ProductCardContainer,
@@ -16,24 +17,28 @@ import {
   AddToCartButton,
   ProductRating,
   ActionIcon,
+  Line,
 } from "./styles";
 
 const ProductCart = ({ product }) => {
   const navigate = useNavigate();
-  const product = useSelector((state) =>
-    state.products.products.find((product) => product._id === productId)
+  const dispatch = useDispatch();
+  const Product = useSelector((state) =>
+    state.products.products.find((Product) => Product._id === product)
   );
   const [isFavorited, setIsFavorited] = useState(false);
   useEffect(() => {
     if (!product) {
-      dispatch(fetchProductById(productId));
+      dispatch(fetchProductById(product));
     }
-  }, [dispatch, productId, product]);
+  }, [dispatch, product, Product]);
 
   const handleFavoriteClick = (e) => {
     e.stopPropagation();
     setIsFavorited(!isFavorited);
   };
+
+  // Nếu không có sản phẩm được truyền vào, hiển thị "Loading..."
   if (!product) return <p>Loading...</p>;
 
   // Destructure các thuộc tính của sản phẩm để sử dụng dễ dàng hơn
@@ -78,6 +83,7 @@ const ProductCart = ({ product }) => {
         <AddToCartButton onClick={handleAddToCart}>Add To Cart</AddToCartButton>
       </ProductImage>
 
+      <Line />
       {/* Thông tin chi tiết sản phẩm */}
       <ProductDetails>
         <ProductName>{name}</ProductName>
