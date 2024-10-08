@@ -3,8 +3,8 @@ import styled from "styled-components";
 // Container của toàn bộ card sản phẩm
 export const ProductCardContainer = styled.div`
   width: 220px;
-  padding: 20px;
-  border: 1px solid #ddd;
+  padding: 2px;
+  // border: 1px solid #ddd;
   border-radius: 10px;
   text-align: center;
   background: #fff;
@@ -16,12 +16,33 @@ export const ProductCardContainer = styled.div`
     box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
   }
 `;
-
-// Hình ảnh sản phẩm
-export const ProductImage = styled.img`
+export const ProductImage = styled.div`
   width: 100%;
   height: auto;
+  prosition: relative;
   margin-bottom: 15px;
+  backgound-color: var(--bg-primary);
+`;
+
+// Hình ảnh sản phẩm
+export const Image = styled.img`
+  width: 100%;
+  height: auto;
+  padding: 5px 15px;
+`;
+// Nút thêm sản phẩm vào giỏ hàng
+export const AddToCartButton = styled.button`
+  background-color: #000;
+  color: #fff;
+  border: none;
+  width: 100%;
+  padding: 10px 20px;
+  border-radius: 2px;
+  cursor: pointer;
+  // margin-top: 10px;
+  &:hover {
+    background-color: #ff0000;
+  }
 `;
 
 // Nhãn giảm giá
@@ -40,28 +61,29 @@ export const DiscountBadge = styled.div`
 export const ProductActionIcons = styled.div`
   position: absolute;
   top: 10px;
-  right: 10px;
-  display: flex;
+  right: 1px;
+  display: inline;
   gap: 10px;
 `;
 
 export const ActionIcon = styled.div`
   background: #fff;
-  padding: 5px;
+  padding: 3px 5px;
   border-radius: 50%;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
   cursor: pointer;
 
   svg {
-    color: #ff0000;
+    margin-top: 3px;
+    color: var(--color-secondary);
     font-size: 1.2em;
   }
 
   &:hover {
-    background: #ff0000;
+    background: var(--color-secondary);
 
     svg {
-      color: #fff;
+      color: var(--bg-secondary);
     }
   }
 `;
@@ -94,21 +116,6 @@ export const ProductPrice = styled.div`
     font-size: 1em;
     text-decoration: line-through;
     color: #aaa;
-  }
-`;
-
-// Nút thêm sản phẩm vào giỏ hàng
-export const AddToCartButton = styled.button`
-  background-color: #000;
-  color: #fff;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 20px;
-  cursor: pointer;
-  margin-top: 10px;
-
-  &:hover {
-    background-color: #ff0000;
   }
 `;
 
