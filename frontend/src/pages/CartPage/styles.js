@@ -19,11 +19,13 @@ export const CartHeader = styled.div`
 // Container cho từng mục trong giỏ hàng
 export const CartItemContainer = styled.div`
   display: grid;
+  padding-left: 30px;
   grid-template-columns: 2fr 1fr 1fr 1fr 50px;
   align-items: center;
   padding: 15px 0;
   border-bottom: 1px solid #e0e0e0;
   position: relative;
+  cursor: pointer;
 `;
 
 // Hình ảnh sản phẩm
@@ -69,6 +71,19 @@ export const RemoveButton = styled.button`
   position: absolute;
   top: 0;
   left: -15px;
+`;
+
+// Nút để lưu số lượng sản phẩm
+export const SaveButton = styled.button`
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  position: absolute;
+  right: -60px; // Đặt vị trí bên cạnh trường số lượng
+  top: 50%;
+  transform: translateY(-50%);
 `;
 
 // Các hành động cho giỏ hàng như mã coupon, cập nhật giỏ hàng
@@ -172,4 +187,11 @@ export const ProceedToCheckoutButton = styled.button`
   &:hover {
     background-color: #c0392b; // Màu đậm hơn khi hover
   }
+`;
+
+export const SelectItemCheckbox = styled.input`
+  position: absolute;
+  left: -2%;
+  top: 50%;
+  transform: translateY(-50%);
 `;

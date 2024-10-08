@@ -215,8 +215,7 @@ export const ThumbnailImage = styled.img`
   width: 60px;
   height: 60px;
   object-fit: cover;
-  border: ${(props) =>
-    props.isActive ? "2px solid #007bff" : "2px solid transparent"};
+  border: ${(props) => (props.isActive ? "2px solid #000" : "none")};
   border-radius: 4px;
   margin-right: 10px;
   cursor: pointer;
@@ -248,4 +247,13 @@ export const ArrowButton = styled.button`
   &:hover {
     background-color: rgba(0, 0, 0, 0.7);
   }
+`;
+// Styled Components
+export const Container = styled.div`
+  width: 80%;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 `;

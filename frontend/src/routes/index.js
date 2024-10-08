@@ -5,6 +5,7 @@ import ProductDetailPage from "../pages/ProductPage/ProductDetailPage";
 import LoginPage from "../pages/LoginPage/LoginPage";
 import ActivateForm from "../pages/HomePage/ActivateForm";
 import ProfilePage from "../pages/ProfilePage/ProfilePage";
+import CheckoutPage from "../pages/CheckoutPage/CheckoutPage";
 import CartPage from "../pages/CartPage/CartPage";
 export const routes = [
   {
@@ -26,6 +27,11 @@ export const routes = [
     path: "/login",
     page: LoginPage,
     isShowHeader: false,
+  },
+  {
+    path: "/checkout",
+    page: CheckoutPage,
+    isShowHeader: true,
   },
   {
     path: "/cart",

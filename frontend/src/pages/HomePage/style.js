@@ -64,3 +64,44 @@ export const RightArrowButton = styled.button`
     font-size: 1.2em;
   }
 `;
+export const Title = styled.h1`
+  text-align: center;
+  margin-bottom: 20px;
+`;
+
+export const ProductListContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+`;
+
+export const Pagination = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+`;
+
+export const PaginationButton = styled.button`
+  background-color: #000;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  margin: 0 10px;
+
+  &:hover {
+    background-color: #ff0000;
+  }
+
+  &:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+`;
+
+export const PaginationInfo = styled.span`
+  font-size: 1.2em;
+`;

@@ -18,8 +18,7 @@ import {
   ActionIcon,
 } from "./styles";
 
-const ProductCart = ({ productId }) => {
-  const dispatch = useDispatch();
+const ProductCart = ({ product }) => {
   const navigate = useNavigate();
   const product = useSelector((state) =>
     state.products.products.find((product) => product._id === productId)
@@ -31,17 +30,29 @@ const ProductCart = ({ productId }) => {
     }
   }, [dispatch, productId, product]);
 
-  const handleCardClick = () => {
-    navigate(`/product/${productId}`);
-  };
   const handleFavoriteClick = (e) => {
     e.stopPropagation();
     setIsFavorited(!isFavorited);
   };
   if (!product) return <p>Loading...</p>;
 
-  const { id, name, price, originalPrice, images, rating, reviews } = product;
-  const discount = 20;
+  // Destructure các thuộc tính của sản phẩm để sử dụng dễ dàng hơn
+  const { _id, name, price, originalPrice, images, rating, reviews } = product;
+
+  // Tính toán giảm giá nếu có giá gốc (originalPrice)
+  const discount = originalPrice
+    ? Math.round(((originalPrice - price) / originalPrice) * 100)
+    : 0;
+
+  // Điều hướng đến trang chi tiết sản phẩm khi click vào card
+  const handleCardClick = () => {
+    navigate(`/product/${_id}`);
+  };
+  // Xử lý thêm sản phẩm vào giỏ hàng
+  const handleAddToCart = (e) => {
+    e.stopPropagation(); // Ngăn chặn việc click chuyển hướng trang khi click vào nút
+    dispatch(addToCart({ productId: _id, quantity: 1 }));
+  };
   return (
     <ProductCardContainer onClick={handleCardClick}>
       <ProductImage>
@@ -64,20 +75,15 @@ const ProductCart = ({ productId }) => {
           }
           alt={name}
         />
-        <AddToCartButton
-          onClick={(e) => {
-            e.stopPropagation();
-          }}
-        >
-          Add To Cart
-        </AddToCartButton>
+        <AddToCartButton onClick={handleAddToCart}>Add To Cart</AddToCartButton>
       </ProductImage>
 
       {/* Thông tin chi tiết sản phẩm */}
       <ProductDetails>
         <ProductName>{name}</ProductName>
         <ProductPrice>
-          <span>${price}</span> <small>${originalPrice}</small>
+          <span>${price}</span>{" "}
+          {originalPrice && <small>${originalPrice}</small>}
         </ProductPrice>
         <ProductRating>
           <span>⭐</span> {rating} ({reviews})
