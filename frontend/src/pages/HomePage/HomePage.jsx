@@ -1,64 +1,38 @@
-import React, { useEffect, useRef } from "react";
-import { useDispatch, useSelector } from "react-redux"; // Thêm import useDispatch từ react-redux
+import React, { useEffect, useRef, useCallback, useMemo } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import PromoSlider from "../../components/Slide";
 import CategoryMenu from "../../components/Category";
-import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
-import { FiWatch } from "react-icons/fi";
-import { LuGamepad } from "react-icons/lu";
 import { fetchFilterProduct, setPage } from "../../redux/slices/productSlice";
-import {
-  PhoneOutlined,
-  DesktopOutlined,
-  CameraOutlined,
-  AudioOutlined,
-  ClockCircleOutlined,
-} from "@ant-design/icons";
-
-import ProductCart from "../../components/ProductComponent/ProductCart";
-import { fetchProducts } from "../../redux/slices/productSlice";
 import Roadmap from "../../components/RoadmapComponent/Roadmap";
 import FlashSale from "../../components/QuickviewComponent/QuickView";
-import ProductList from "../../components/ProductComponent/ProductList";
-
+import ArrowButtons from "./ArrowButtons";
+import ProductGrid from "./ProductGrid";
+import ProductListSection from "./ProductListSection";
+import CategorySection from "./CategorySection";
 import {
   TopBanner,
-  ProductGrid,
-  ArrowButton,
-  LeftArrowButton,
-  RightArrowButton,
-  ProductLists,
-  ProductListContainer,
-  Pagination,
-  PaginationButton,
-  PaginationInfo,
   Header,
   Countdown,
   CountdownItem,
   Line,
-  CategoryCard,
-  CategoryContainer,
-  CategoryList,
+  Pagination,
+  PaginationButton,
+  PaginationInfo,
 } from "./style";
 
 const HomePage = () => {
-  const dispatch = useDispatch(); // Sử dụng useDispatch để dispatch các hành động
-  // const { products, loading, error } = useSelector((state) => state.products);
-
-  useEffect(() => {
-    dispatch(fetchProducts());
-  }, [dispatch]);
-
+  const dispatch = useDispatch();
   const gridRef = useRef();
 
-  const scrollLeft = () => {
+  const scrollLeft = useCallback(() => {
     gridRef.current.scrollBy({ left: -300, behavior: "smooth" });
-  };
+  }, []);
 
-  const scrollRight = () => {
+  const scrollRight = useCallback(() => {
     gridRef.current.scrollBy({ left: 300, behavior: "smooth" });
-  };
+  }, []);
 
   const {
     products,
@@ -72,27 +46,27 @@ const HomePage = () => {
 
   useEffect(() => {
     dispatch(fetchFilterProduct({ page: currentPage, limit: productsPerPage }));
-  }, [dispatch, currentPage]);
+  }, [dispatch, currentPage, productsPerPage]);
 
-  // Chuyển trang trước
-  const handlePreviousPage = () => {
+  const handlePreviousPage = useCallback(() => {
     if (currentPage > 1) {
       dispatch(setPage(currentPage - 1));
     }
-  };
+  }, [dispatch, currentPage]);
 
-  // Chuyển trang sau
-  const handleNextPage = () => {
+  const handleNextPage = useCallback(() => {
     if (currentPage < totalPages) {
       dispatch(setPage(currentPage + 1));
     }
-  };
-  if (loading) return console.log("Loading products...");
-  if (error) return console.log("Error loading products:", error);
+  }, [dispatch, currentPage, totalPages]);
+
+  const memoizedProducts = useMemo(() => products, [products]);
+
+  if (loading) return <p>Loading products...</p>;
+  if (error) return <p>Error loading products: {error}</p>;
 
   return (
     <div>
-      {/* Roadmap hiển thị đường dẫn */}
       <Roadmap />
       <div className="container">
         <TopBanner>
@@ -123,88 +97,20 @@ const HomePage = () => {
                 <span>56</span>
                 <small>Seconds</small>
               </CountdownItem>
-              <ArrowButton>
-                <LeftArrowButton onClick={scrollLeft}>
-                  <FaArrowLeft />
-                </LeftArrowButton>
-                <RightArrowButton onClick={scrollRight}>
-                  <FaArrowRight />
-                </RightArrowButton>
-              </ArrowButton>
+              <ArrowButtons scrollLeft={scrollLeft} scrollRight={scrollRight} />
             </Countdown>
           </Header>
-          <ProductGrid ref={gridRef}>
-            {products.map((product) => (
-              <ProductCart key={product._id} product={product} />
-            ))}
-          </ProductGrid>
+          <ProductGrid ref={gridRef} products={memoizedProducts} />
         </div>
-        <Line />
-        <ProductLists>
-          <Header>
-            <div>
-              <h3>Category</h3>
-              <h1>Brower By Category</h1>
-            </div>
-          </Header>
-          <ProductListContainer>
-            {products.map((product) => (
-              <ProductCart key={product._id} product={product} />
-            ))}
-          </ProductListContainer>
-          <Pagination>
-            <PaginationButton
-              onClick={handlePreviousPage}
-              disabled={currentPage === 1}
-            >
-              Previous
-            </PaginationButton>
-            <PaginationInfo>Page {currentPage}</PaginationInfo>
-            <PaginationButton
-              onClick={handleNextPage}
-              disabled={currentPage === totalPages}
-            >
-              Next
-            </PaginationButton>
-          </Pagination>
-        </ProductLists>
+        <ProductListSection
+          products={memoizedProducts}
+          handlePreviousPage={handlePreviousPage}
+          handleNextPage={handleNextPage}
+          currentPage={currentPage}
+          totalPages={totalPages}
+        />
         <FlashSale />
-
-        <CategoryContainer>
-          <Header>
-            <div>
-              <h3>Category</h3>
-              <h1>Brower By Category</h1>
-            </div>
-          </Header>
-
-          <CategoryList>
-            <CategoryCard>
-              <PhoneOutlined />
-              <span>Phones</span>
-            </CategoryCard>
-            <CategoryCard>
-              <DesktopOutlined />
-              <span>Phones</span>
-            </CategoryCard>
-            <CategoryCard>
-              <FiWatch />
-              <span>Phones</span>
-            </CategoryCard>
-            <CategoryCard>
-              <CameraOutlined />
-              <span>Phones</span>
-            </CategoryCard>
-            <CategoryCard>
-              <AudioOutlined />
-              <span>Phones</span>
-            </CategoryCard>
-            <CategoryCard>
-              <LuGamepad />
-              <span>Phones</span>
-            </CategoryCard>
-          </CategoryList>
-        </CategoryContainer>
+        <CategorySection />
       </div>
     </div>
   );
