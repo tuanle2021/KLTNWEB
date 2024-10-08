@@ -5,6 +5,7 @@ export const AddToCartButton = styled.button`
   display: none;
   position: absolute;
   background-color: #000;
+
   color: #fff;
   width: 100%;
   border: none;
@@ -18,7 +19,7 @@ export const AddToCartButton = styled.button`
 
 // Container của toàn bộ card sản phẩm
 export const ProductCardContainer = styled.div`
-  width: 220px;
+  width: 200px;
   padding: 2px;
   border-radius: 10px;
   // text-align: center;
@@ -89,11 +90,7 @@ export const ActionIcon = styled.div`
     }
   }
 `;
-export const Line = styled.div`
-  width: 90%;
-  height: 1px;
-  background: #ccc;
-`;
+
 // Container cho thông tin chi tiết sản phẩm
 export const ProductDetails = styled.div`
   margin-top: 5px;

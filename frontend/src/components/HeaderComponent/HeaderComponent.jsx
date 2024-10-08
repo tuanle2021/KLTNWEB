@@ -69,7 +69,11 @@ const HeaderComponent = () => {
           <ShoppingCart>
             <a href="/cart">
               <ShoppingCartOutlined
-                style={{ fontSize: "1.7em", marginRight: "10px" }}
+                style={{
+                  fontSize: "1.5em",
+                  marginRight: "10px",
+                  color: "var(--dark-bg-third)",
+                }}
               />
               <span className="cart-count">3</span>
               {/* Dynamic cart item count */}
@@ -130,7 +134,7 @@ const HeaderComponent = () => {
                 </ProfileMenu>
               </>
             ) : (
-              <>
+              <div style={{ display: "flex" }}>
                 <NavItem>
                   <Link to="/login">
                     <Button>Login</Button>
@@ -141,7 +145,7 @@ const HeaderComponent = () => {
                     <Button>Register</Button>
                   </Link>
                 </NavItem>
-              </>
+              </div>
             )}
           </ProfileMenu>
         </HeaderInner>

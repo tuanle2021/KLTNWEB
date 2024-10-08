@@ -19,55 +19,7 @@ export const ProductGrid = styled.div`
     flex: 0 0 auto;
   }
 `;
-// Nút điều hướng trái
-export const LeftArrowButton = styled.button`
-  position: absolute;
-  top: 50%;
-  left: 10px;
-  transform: translateY(-50%);
-  background-color: #ffffff;
-  border: none;
-  padding: 10px;
-  border-radius: 50%;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
-  z-index: 1;
-
-  &:hover {
-    background-color: #e0e0e0;
-  }
-
-  svg {
-    font-size: 1.2em;
-  }
-`;
-
-// Nút điều hướng phải
-export const RightArrowButton = styled.button`
-  position: absolute;
-  top: 50%;
-  right: 10px;
-  transform: translateY(-50%);
-  background-color: #ffffff;
-  border: none;
-  padding: 10px;
-  border-radius: 50%;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
-  z-index: 1;
-
-  &:hover {
-    background-color: #e0e0e0;
-  }
-
-  svg {
-    font-size: 1.2em;
-  }
-`;
-export const Title = styled.h1`
-  text-align: center;
-  margin-bottom: 20px;
-`;
+export const ProductLists = styled.div``;
 
 export const ProductListContainer = styled.div`
   display: flex;
@@ -104,4 +56,139 @@ export const PaginationButton = styled.button`
 
 export const PaginationInfo = styled.span`
   font-size: 1.2em;
+`;
+
+export const Header = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  h3 {
+    color: #ff0000;
+    font-size: 1.2em;
+    margin: 0;
+    &::before {
+      content: "";
+      display: inline-block;
+      width: 17px;
+      height: 30px;
+      background-color: #ff0000;
+      margin-right: 8px;
+      border-radius: 5px;
+    }
+  }
+
+  h1 {
+    font-size: 2.5em;
+    margin: 0;
+  }
+`;
+
+export const Countdown = styled.div`
+  display: flex;
+  gap: 15px;
+`;
+
+export const CountdownItem = styled.div`
+  text-align: center;
+  span {
+    font-size: 2em;
+    color: #ff0000;
+  }
+  small {
+    display: block;
+    font-size: 0.75em;
+  }
+`;
+export const ArrowButton = styled.button`
+  padding-left: 40px;
+  padding-top: 30px;
+  display: inline-flex;
+  align-items: center;
+  border: none;
+  background-color: rgba(255, 255, 255, 0);
+`;
+// Nút điều hướng trái
+export const LeftArrowButton = styled.button`
+  transform: translateY(-50%);
+  background-color: #ffffff;
+  border: none;
+  padding: 10px;
+  border-radius: 50%;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  z-index: 1;
+
+  &:hover {
+    background-color: #e0e0e0;
+  }
+
+  svg {
+    font-size: 1.2em;
+  }
+`;
+
+// Nút điều hướng phải
+export const RightArrowButton = styled.button`
+  transform: translateY(-50%);
+  background-color: #ffffff;
+  border: none;
+  padding: 10px;
+  border-radius: 50%;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  z-index: 1;
+
+  &:hover {
+    background-color: #e0e0e0;
+  }
+
+  svg {
+    font-size: 1.2em;
+  }
+`;
+
+export const Line = styled.div`
+  width: 100%;
+  height: 1px;
+  background-color: #ccc;
+  margin: 50px 0;
+`;
+
+export const CategoryContainer = styled.div`
+  display: block;
+`;
+export const CategoryList = styled.div`
+  gap: 20px;
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+  margin: 0 auto;
+`;
+
+export const CategoryCard = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 160px;
+  height: 150px;
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+
+  &:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  & svg {
+    font-size: 32px;
+    margin-bottom: 8px;
+  }
+
+  & span {
+    font-size: 16px;
+    font-weight: 500;
+  }
 `;

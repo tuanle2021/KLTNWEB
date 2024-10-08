@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProductById } from "../../redux/slices/productSlice";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
+import { FiShoppingCart } from "react-icons/fi";
 import { addToCart } from "../../redux/slices/cartSlice";
 
 import {
@@ -17,7 +18,6 @@ import {
   AddToCartButton,
   ProductRating,
   ActionIcon,
-  Line,
 } from "./styles";
 
 const ProductCart = ({ product }) => {
@@ -80,10 +80,14 @@ const ProductCart = ({ product }) => {
           }
           alt={name}
         />
-        <AddToCartButton onClick={handleAddToCart}>Add To Cart</AddToCartButton>
+        <AddToCartButton onClick={handleAddToCart}>
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <FiShoppingCart size={16} />
+            <p style={{ marginLeft: "8px" }}> Add To Cart</p>
+          </div>
+        </AddToCartButton>
       </ProductImage>
 
-      <Line />
       {/* Thông tin chi tiết sản phẩm */}
       <ProductDetails>
         <ProductName>{name}</ProductName>
