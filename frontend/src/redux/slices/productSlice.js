@@ -65,6 +65,7 @@ export const updateProduct = createAsyncThunk(
 const productSlice = createSlice({
   name: "products",
   initialState: {
+    featuredProducts: [],
     products: [],
     product: null,
     loading: false,
@@ -100,7 +101,7 @@ const productSlice = createSlice({
       })
       .addCase(fetchFilterProduct.fulfilled, (state, action) => {
         state.loading = false;
-        state.products = action.payload.products;
+        state.featuredProducts = action.payload.products;
         state.totalPages = action.payload.totalPages;
         state.currentPage = action.payload.currentPage;
         state.totalProducts = action.payload.totalProducts;
