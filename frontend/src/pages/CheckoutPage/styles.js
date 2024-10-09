@@ -147,3 +147,36 @@ export const PlaceOrderButton = styled.button`
     background-color: #c0392b;
   }
 `;
+export const OrderSuccessContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  text-align: center;
+`;
+
+export const SuccessMessage = styled.h1`
+  color: #2ecc71;
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+`;
+
+export const OrderDetails = styled.p`
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+`;
+
+export const BackToHomeButton = styled.link`
+  background-color: #3498db;
+  color: white;
+  padding: 10px 20px;
+  text-decoration: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #2980b9;
+  }
+`;
