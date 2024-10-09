@@ -76,10 +76,10 @@ const HomePage = () => {
       <Roadmap />
       <div className="container">
         <TopBanner>
-          <CategoryMenu />
           <PromoSlider />
         </TopBanner>
-        <ProductGrid ref={gridRef} products={memoizedProducts} />
+        <CategorySection />
+
         <ProductListSection
           products={memoizedFilterProducts}
           handlePreviousPage={handlePreviousPage}
@@ -87,8 +87,8 @@ const HomePage = () => {
           currentPage={currentPage}
           totalPages={totalPages}
         />
+        <ProductGrid ref={gridRef} products={memoizedProducts} />
         <FlashSale />
-        <CategorySection />
       </div>
     </div>
   );

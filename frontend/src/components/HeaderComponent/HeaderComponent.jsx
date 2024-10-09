@@ -1,6 +1,7 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../../redux/slices/authSlice";
+import CategoryMenu from "../Category/CategoryMenu";
 import { Link } from "react-router-dom";
 import {
   HeaderContainer,
@@ -46,6 +47,7 @@ const HeaderComponent = () => {
             <input type="text" placeholder="Search for tech products..." />
             <button type="submit">Search</button>
           </SearchBar>
+          <CategoryMenu />
 
           {/* Navigation Links */}
           <NavLinks>

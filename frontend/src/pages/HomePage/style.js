@@ -156,6 +156,7 @@ export const Line = styled.div`
 
 export const CategoryContainer = styled.div`
   display: block;
+  margin: 40px auto;
 `;
 export const CategoryList = styled.div`
   gap: 20px;

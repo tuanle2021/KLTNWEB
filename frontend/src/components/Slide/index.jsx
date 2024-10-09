@@ -50,7 +50,9 @@ const PromoSlider = () => {
       <Slider {...settings}>
         {promoSlides.map((slide, index) => (
           <div key={index}>
-            <PromoContent style={{ backgroundImage: `url(${slide.image})` }}>
+            <PromoContent
+              style={{ backgroundImage: `url(${slide.image})`, width: "100%" }}
+            >
               <PromoText>
                 <PromoTitle>{slide.title}</PromoTitle>
                 <p>{slide.description}</p>

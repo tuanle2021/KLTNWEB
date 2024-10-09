@@ -167,7 +167,7 @@ export const OrderDetails = styled.p`
   margin-bottom: 20px;
 `;
 
-export const BackToHomeButton = styled.link`
+export const BackToHomeButton = styled.button`
   background-color: #3498db;
   color: white;
   padding: 10px 20px;
