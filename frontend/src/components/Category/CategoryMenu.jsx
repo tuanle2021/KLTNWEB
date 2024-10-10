@@ -86,7 +86,7 @@ const CategoryMenu = () => {
 
   return (
     <div>
-      <Catalog onClick={toggleMenu}>Danh mục</Catalog>
+      <Catalog onClick={toggleMenu}>Categories</Catalog>
 
       {isOpen && (
         <>

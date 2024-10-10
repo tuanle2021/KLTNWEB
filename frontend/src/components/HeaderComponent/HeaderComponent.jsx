@@ -53,9 +53,6 @@ const HeaderComponent = () => {
           <NavLinks>
             <ul>
               <li>
-                <a href="/categories">Categories</a>
-              </li>
-              <li>
                 <a href="/deals">Deals</a>
               </li>
               <li>

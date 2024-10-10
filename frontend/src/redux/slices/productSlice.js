@@ -72,7 +72,7 @@ const productSlice = createSlice({
     error: null,
     currentPage: 1,
     totalPages: 1,
-    productsPerPage: 6,
+    productsPerPage: 10,
     totalProducts: 0,
   },
   reducers: {

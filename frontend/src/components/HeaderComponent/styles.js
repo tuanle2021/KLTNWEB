@@ -208,7 +208,7 @@ export const DropdownContainer = styled.div`
 // Item của dropdown
 export const NavItem = styled.div`
   margin: 0;
-  padding: 10px 20px;
+  padding-left: 20px;
   list-style-type: none;
   display: flex;
   align-items: center;
