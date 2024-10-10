@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Roadmap from "../../components/RoadmapComponent/Roadmap";
 import {
   ProfileContainer,
@@ -6,12 +6,81 @@ import {
   SidebarGroup,
   SidebarItem,
   ProfileForm,
-  FormGroup,
-  Input,
-  ButtonGroup,
-  SaveButton,
-  CancelButton,
 } from "./styles";
+import { MyProfile, AddressBook, PaymentOptions } from "./Account";
+import OrderListComponent from "./Order";
+
+const ordersData = [
+  {
+    status: "processing",
+    product: [
+      {
+        name: "Mô hình con chuột",
+        price: "15.000",
+        stock: "12",
+        ratings: "0",
+        image:
+          "https://res.cloudinary.com/dihhw7jo1/image/upload/v1727766681/products/laptop%20asus%20vivobook%203.jpg.jpg",
+      },
+      {
+        name: "Mô hình toy con chuột cao su",
+        price: "15.000",
+        stock: "12",
+        ratings: "0",
+        image:
+          "https://res.cloudinary.com/dihhw7jo1/image/upload/v1727766681/products/laptop%20asus%20vivobook%203.jpg.jpg",
+      },
+    ],
+    total: "29.000",
+    createdAt: "2021-09-01",
+  },
+  {
+    status: "processing",
+    product: [
+      {
+        name: "Mô hình con chuột",
+        price: "15.000",
+        stock: "12",
+        ratings: "0",
+        image:
+          "https://res.cloudinary.com/dihhw7jo1/image/upload/v1727766681/products/laptop%20asus%20vivobook%203.jpg.jpg",
+      },
+      {
+        name: "Mô hình toy con chuột cao su",
+        price: "15.000",
+        stock: "12",
+        ratings: "0",
+        image:
+          "https://res.cloudinary.com/dihhw7jo1/image/upload/v1727766681/products/laptop%20asus%20vivobook%203.jpg.jpg",
+      },
+    ],
+    total: "29.000",
+    createdAt: "2021-09-01",
+  },
+  {
+    status: "shipped",
+    product: [
+      {
+        name: "Mô hình con chuột giả trang trí halloween, đồ chơi cho bé, trẻ em, toy con chuột cao su",
+        price: "15.000",
+        stock: "12",
+        ratings: "0",
+        image:
+          "https://res.cloudinary.com/dihhw7jo1/image/upload/v1727766681/products/laptop%20asus%20vivobook%203.jpg.jpg",
+      },
+      {
+        name: "Mô hình con chuột giả trang trí halloween, đồ chơi cho bé, trẻ em, toy con chuột cao su",
+        price: "15.000",
+        stock: "12",
+        ratings: "0",
+        image:
+          "https://res.cloudinary.com/dihhw7jo1/image/upload/v1727766681/products/laptop%20asus%20vivobook%203.jpg.jpg",
+      },
+    ],
+    total: "29.000",
+    createdAt: "2021-09-01",
+  },
+];
 
 const ProfilePage = () => {
   const [profile, setProfile] = useState({
@@ -24,6 +93,8 @@ const ProfilePage = () => {
     confirmPassword: "",
   });
 
+  const [selectedItem, setSelectedItem] = useState("My Profile");
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setProfile({ ...profile, [name]: value });
@@ -31,6 +102,48 @@ const ProfilePage = () => {
 
   const handleSaveChanges = () => {
     console.log("Saving changes...", profile);
+  };
+
+  const [orders, setOrders] = useState([]);
+
+  useEffect(() => {
+    // Simulate fetching data from an API
+    setOrders(ordersData);
+  }, []);
+
+  const renderForm = () => {
+    const filteredOrders = orders.filter(
+      (order) => order.status === selectedItem.toLowerCase()
+    );
+    switch (selectedItem) {
+      case "My Profile":
+        return (
+          <MyProfile
+            profile={profile}
+            handleChange={handleChange}
+            handleSaveChanges={handleSaveChanges}
+          />
+        );
+      case "Address Book":
+        return <AddressBook />;
+      case "My Payment Options":
+        return <PaymentOptions />;
+      case "Processing":
+      case "Shipped":
+      case "Cancelled":
+      case "Returned":
+        return (
+          <OrderListComponent title={selectedItem} orders={filteredOrders} />
+        );
+      case "My WishList":
+        return (
+          <ProfileForm>
+            <h2>My WishList</h2>
+          </ProfileForm>
+        );
+      default:
+        return null;
+    }
   };
 
   return (
@@ -41,95 +154,68 @@ const ProfilePage = () => {
         {/* Sidebar chứa các mục quản lý tài khoản */}
         <Sidebar>
           <SidebarGroup>
-            <h4>Manage My Account</h4>
-            <SidebarItem className="active">My Profile</SidebarItem>
-            <SidebarItem>Address Book</SidebarItem>
-            <SidebarItem>My Payment Options</SidebarItem>
+            <h4>My Account</h4>
+            <SidebarItem
+              className={selectedItem === "My Profile" ? "active" : ""}
+              onClick={() => setSelectedItem("My Profile")}
+            >
+              My Profile
+            </SidebarItem>
+            <SidebarItem
+              className={selectedItem === "Address Book" ? "active" : ""}
+              onClick={() => setSelectedItem("Address Book")}
+            >
+              Address Book
+            </SidebarItem>
+            <SidebarItem
+              className={selectedItem === "My Payment Options" ? "active" : ""}
+              onClick={() => setSelectedItem("My Payment Options")}
+            >
+              My Payment Options
+            </SidebarItem>
           </SidebarGroup>
 
           <SidebarGroup>
             <h4>My Orders</h4>
-            <SidebarItem>My Returns</SidebarItem>
-            <SidebarItem>My Cancellations</SidebarItem>
+            <SidebarItem
+              className={selectedItem === "Processing" ? "active" : ""}
+              onClick={() => setSelectedItem("Processing")}
+            >
+              Processing
+            </SidebarItem>
+            <SidebarItem
+              className={selectedItem === "Shipped" ? "active" : ""}
+              onClick={() => setSelectedItem("Shipped")}
+            >
+              Shipped
+            </SidebarItem>
+            <SidebarItem
+              className={selectedItem === "Cancelled" ? "active" : ""}
+              onClick={() => setSelectedItem("Cancelled")}
+            >
+              Cancelled
+            </SidebarItem>
+            <SidebarItem
+              className={selectedItem === "Returned" ? "active" : ""}
+              onClick={() => setSelectedItem("Returned")}
+            >
+              Returned
+            </SidebarItem>
           </SidebarGroup>
 
           <SidebarGroup>
             <h4>My WishList</h4>
-            <SidebarItem>My WishList</SidebarItem>
+            <SidebarItem
+              className={selectedItem === "My WishList" ? "active" : ""}
+              onClick={() => setSelectedItem("My WishList")}
+            >
+              My WishList
+            </SidebarItem>
           </SidebarGroup>
         </Sidebar>
 
         {/* Form chỉnh sửa thông tin tài khoản */}
-        <ProfileForm>
-          <h2>Edit Your Profile</h2>
-
-          <FormGroup>
-            <Input
-              type="text"
-              name="firstName"
-              value={profile.firstName}
-              onChange={handleChange}
-              placeholder="First Name*"
-            />
-            <Input
-              type="text"
-              name="lastName"
-              value={profile.lastName}
-              onChange={handleChange}
-              placeholder="Last Name*"
-            />
-          </FormGroup>
-
-          <FormGroup>
-            <Input
-              type="email"
-              name="email"
-              value={profile.email}
-              onChange={handleChange}
-              placeholder="Email"
-            />
-            <Input
-              type="text"
-              name="address"
-              value={profile.address}
-              onChange={handleChange}
-              placeholder="Address"
-            />
-          </FormGroup>
-
-          <h3>Password Changes</h3>
-          <FormGroup>
-            <Input
-              type="password"
-              name="currentPassword"
-              value={profile.currentPassword}
-              onChange={handleChange}
-              placeholder="Current Password"
-            />
-          </FormGroup>
-
-          <FormGroup>
-            <Input
-              type="password"
-              name="newPassword"
-              value={profile.newPassword}
-              onChange={handleChange}
-              placeholder="New Password"
-            />
-            <Input
-              type="password"
-              name="confirmPassword"
-              value={profile.confirmPassword}
-              onChange={handleChange}
-              placeholder="Confirm New Password"
-            />
-          </FormGroup>
-
-          <ButtonGroup>
-            <CancelButton>Cancel</CancelButton>
-            <SaveButton onClick={handleSaveChanges}>Save Changes</SaveButton>
-          </ButtonGroup>
-        </ProfileForm>
+        {renderForm()}
       </ProfileContainer>
     </div>
   );
