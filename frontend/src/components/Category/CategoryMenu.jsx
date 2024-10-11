@@ -9,6 +9,7 @@ import {
   BestSellingContainer,
   BestSellingItem,
   Catalog,
+  MenuIcon,
 } from "./styles"; // Import các styled-component từ file style
 
 const categories = [
@@ -86,7 +87,9 @@ const CategoryMenu = () => {
 
   return (
     <div>
-      <Catalog onClick={toggleMenu}>Categories</Catalog>
+      <Catalog onClick={toggleMenu}>
+        <MenuIcon />
+      </Catalog>
 
       {isOpen && (
         <>

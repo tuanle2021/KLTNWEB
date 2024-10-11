@@ -4,7 +4,7 @@ import { useLocation } from "react-router-dom";
 import { fetchFilterProduct, setPage } from "../../redux/slices/productSlice";
 import CategorySection from "../HomePage/CategorySection";
 import ProductListSection from "../HomePage/ProductListSection";
-
+import FilterSidebar from "../../components/Category/index";
 const useQuery = () => {
   return new URLSearchParams(useLocation().search);
 };
@@ -39,6 +39,7 @@ const ProductPage = () => {
   return (
     <div className="container">
       <CategorySection />
+      <FilterSidebar />
       <ProductListSection
         products={products}
         handlePreviousPage={handlePreviousPage}

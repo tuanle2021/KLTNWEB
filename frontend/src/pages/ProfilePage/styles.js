@@ -205,6 +205,11 @@ export const Button = styled.button`
   &.reorder-btn {
     background-color: #4caf50;
   }
+  &.hide {
+    background-color: #fff;
+    border: none;
+    transition: var(--smooth);
+  }
 `;
 
 export const StatusBadge = styled.span`

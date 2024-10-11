@@ -19,24 +19,6 @@ export const CategoryHeader = styled.div`
   transition: background-color 0.3s ease;
 `;
 
-// export const CategoryList = styled.div`
-//   max-height: 100%;
-// `;
-
-// export const CategoryItem = styled.div`
-//   display: flex;
-//   align-items: center;
-//   justify-content: flex-start;
-//   padding: 15px;
-//   cursor: pointer;
-//   border-bottom: 1px solid #eaeaea;
-//   transition: background-color 0.3s ease;
-
-//   &:hover {
-//     background-color: #f0f0f0;
-//   }
-// `;
-
 export const IconWrapper = styled.span`
   font-size: 20px;
   margin-right: 10px;
@@ -54,11 +36,42 @@ export const CategoryName = styled.span`
 `;
 
 export const Catalog = styled.div`
-  cursor: pointer;
+  display: flex;
   padding: 13px;
+  justify-content: center;
+  align-items: center;
+  width: 80px;
+  height: 80px;
+  cursor: pointer;
+  transition: var(--smooth);
+  z-index: 6;
+`;
+export const MenuIcon = styled.div`
+  width: 35px;
+  height: 5px;
+  background-color: var(--gray);
+  border-radius: 5px;
+  transition: var(--smooth);
+  position: relative;
 
-  background-color: white;
-  border: 1px solid #000;
+  &:before,
+  &:after {
+    content: "";
+    position: absolute;
+    width: 35px;
+    height: 5px;
+    background-color: var(--gray);
+    border-radius: 5px;
+    transition: var(--smooth);
+    margin-left: -17px;
+  }
+  &:before {
+    transform: translateY(-12px);
+  }
+
+  &:after {
+    transform: translateY(12px);
+  }
 `;
 export const Overlay = styled.div`
   position: fixed;
@@ -146,5 +159,86 @@ export const BestSellingItem = styled.div`
 
   & div {
     margin-bottom: 3px;
+  }
+`;
+
+export const SidebarContainer = styled.div`
+  width: 250px;
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+`;
+
+export const Section = styled.div`
+  margin-bottom: 20px;
+`;
+
+export const SectionHeader = styled.h2`
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+`;
+
+export const FilterGroup = styled.div`
+  margin-bottom: 20px;
+
+  h3 {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+
+  .options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .view-more {
+    display: block;
+    margin-top: 10px;
+    font-size: 14px;
+    color: #007bff;
+    cursor: pointer;
+  }
+`;
+
+export const FilterOption = styled.button`
+  background-color: #fff;
+  border: 1px solid #ddd;
+  padding: 8px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+
+  &:hover {
+    border-color: #007bff;
+  }
+`;
+
+export const PriceInput = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+
+  input {
+    width: 100px;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    text-align: center;
+  }
+
+  span {
+    margin: 0 5px;
+  }
+`;
+
+export const PriceRange = styled.div`
+  input[type="range"] {
+    width: 100%;
   }
 `;

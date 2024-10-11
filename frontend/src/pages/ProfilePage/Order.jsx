@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { RiArrowDropDownLine, RiArrowDropUpLine } from "react-icons/ri";
+
 import {
   OrderContainer,
   OrderInfo,
@@ -50,8 +52,15 @@ const OrderListComponent = ({ title, orders }) => {
               <StatusBadge status={order.status}>{order.status}</StatusBadge>
             </div>
             <div className="flex">
-              <Button onClick={() => toggleOrderDetails(index)}>
-                {expandedOrderIndex === index ? "Hide Details" : "Show Details"}
+              <Button
+                className="hide"
+                onClick={() => toggleOrderDetails(index)}
+              >
+                {expandedOrderIndex === index ? (
+                  <RiArrowDropUpLine fontSize={40} color="black" />
+                ) : (
+                  <RiArrowDropDownLine fontSize={40} color="black" />
+                )}
               </Button>
             </div>
           </OrderInfo>

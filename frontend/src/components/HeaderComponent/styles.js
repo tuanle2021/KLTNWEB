@@ -12,7 +12,7 @@ export const HeaderInner = styled.div`
   align-items: center;
   text-align: center;
 
-  @media (min-width: 62em) {
+  @media (min-width: 320px) {
     flex-direction: row;
     align-items: center;
     padding: 0 20px;
@@ -71,10 +71,6 @@ export const SearchBar = styled.div`
     border-radius: 4px;
     border: 1px solid #ccc;
     margin-right: 10px;
-
-    @media (max-width: 768px) {
-      width: 100%;
-    }
   }
 
   button {
@@ -89,44 +85,8 @@ export const SearchBar = styled.div`
       background-color: #218838;
     }
   }
-`;
-
-export const NavLinks = styled.nav`
-  ul {
-    list-style-type: none;
-    align-items: center;
-  }
-  li {
-    margin: 0 15px;
-  }
-  a {
-    color: #333;
-    text-decoration: none;
-    font-size: 16px;
-  }
-  &:hover {
-    color: #666;
-  }
-  @media (min-width: 62em) {
-    ul {
-      list-style-type: none;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      li {
-        margin: 0 15px;
-
-        a {
-          color: #333;
-          text-decoration: none;
-          font-size: 16px;
-
-          &:hover {
-            color: #666;
-          }
-        }
-      }
-    }
+  @media (max-width: 768px) {
+    display: none;
   }
 `;
 
@@ -150,10 +110,10 @@ export const ShoppingCart = styled.div`
     color: #fff;
     font-size: 14px;
     border-radius: 50%;
-    padding: 2px 8px;
+    padding: 1px 6px;
     position: absolute;
     top: -5px;
-    right: -10px;
+    right: 0px;
   }
 `;
 
@@ -161,10 +121,6 @@ export const ShoppingCart = styled.div`
 export const ProfileMenu = styled.div`
   position: relative;
   display: inline-block;
-
-  .dropdown-icon {
-    margin-left: 8px;
-  }
 `;
 
 // Container cho icon người dùng
@@ -204,7 +160,13 @@ export const DropdownContainer = styled.div`
     border-bottom: 10px solid #ffffff;
   }
 `;
+export const NavButton = styled.div`
+  display: flex;
 
+  @media (max-width: 320px) {
+    display: inline;
+  }
+`;
 // Item của dropdown
 export const NavItem = styled.div`
   margin: 0;
