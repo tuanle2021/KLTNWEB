@@ -115,84 +115,121 @@ export const Text = styled.span`
 `;
 
 /* ------------- header styles ----------- */
-export const HeaderContainer = styled.header`
+// Header container
+export const HeaderContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 3%;
-  min-height: 72px;
   background-color: #fff;
-  border-bottom: 1px solid rgba(108, 117, 125, 0.25);
-`;
+  padding: 10px 20px;
+  box-shadow: 0 10px 10px 10px rgba(0, 0, 0, 0.1);
 
-export const ColSearch = styled.div`
-  flex-grow: 0.5;
-`;
-
-export const SearchForm = styled.form`
-  display: flex;
-  align-items: center;
-`;
-
-export const InputGroup = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
-export const SearchInput = styled.input`
-  flex-grow: 1;
-  padding: 0.5rem;
-  border: 1px solid #ced4da;
-  border-radius: 0.25rem;
-`;
-
-export const SearchButton = styled.button`
-  background: none;
-  border: none;
-  padding: 0.5rem;
-  cursor: pointer;
-`;
-
-export const ColNav = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
-export const NavList = styled.ul`
-  display: flex;
-  align-items: center;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-`;
-
-export const NavItem = styled.li`
-  margin-left: 1rem;
-`;
-
-export const DropdownMenu = styled.div`
-  position: absolute;
-  top: 100%;
-  right: 0;
-  background-color: #fff;
-  border: 1px solid rgba(108, 117, 125, 0.25);
-  border-radius: 0.25rem;
-  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-  display: none;
-
-  ${NavItem}:hover & {
-    display: block;
+  @media (max-width: 768px) {
+    flex-direction: column;
   }
 `;
 
-export const DropdownItem = styled(Link)`
-  display: block;
-  padding: 0.5rem 1rem;
-  color: #29335d;
-  text-decoration: none;
+export const TopHeader = styled.div`
+  @media (max-width: 768px) {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+`;
+// Phần chứa thanh tìm kiếm
+export const SearchContainer = styled.div`
+  display: flex;
+  width: 100%;
+  max-width: 32em;
+  margin-top: 10px;
+
+  @media (max-width: 768px) {
+    max-width: 100%;
+    justify-content: flex-end;
+  }
+`;
+
+// Thanh tìm kiếm
+export const SearchInput = styled.input`
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  outline: none;
+
+  &:focus {
+    border-color: #007bff;
+  }
+`;
+
+export const SearchButton = styled.button`
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-left: none;
+  border-radius: 0 4px 4px 0;
+  padding: 10px;
+  cursor: pointer;
+
+  i {
+    color: #007bff;
+  }
+
+  &:hover i {
+    color: #0056b3;
+  }
+`;
+
+// Phần icon bên phải
+export const IconContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 20px;
+
+  span {
+    font-size: 14px;
+    color: #555;
+  }
+
+  // @media (max-width: 768px) {
+  //   width: 100%;
+  // }
+`;
+
+export const HeaderIcon = styled.div`
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  color: #555;
+  cursor: pointer;
+  transition: all 0.3s;
 
   &:hover {
-    background-color: #e9ecef;
-    color: #4fa607;
+    color: #007bff;
+    border-color: #007bff;
+  }
+`;
+
+// Phần chứa hình ảnh profile
+export const ProfileIconContainer = styled.div`
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 1px solid #ddd;
+  cursor: pointer;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &:hover {
+    border-color: #007bff;
   }
 `;

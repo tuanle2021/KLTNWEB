@@ -13,7 +13,6 @@ import {
   SidebarContainer,
   AsideTop,
   BrandWrap,
-  Logo,
   MinimizeButton,
   Nav,
   MenuItem,
