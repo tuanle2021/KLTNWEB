@@ -1,16 +1,7 @@
 import React from "react";
-import Sidebar from "../components/SideBar";
-import Header from "../components/Header";
-import { ContentWrap } from "./styles/HomePage";
+
 const OrderScreen = () => {
-  return (
-    <div>
-      <Sidebar />
-      <ContentWrap>
-        <Header />
-      </ContentWrap>
-    </div>
-  );
+  return <div></div>;
 };
 
 export default OrderScreen;

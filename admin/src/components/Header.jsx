@@ -1,5 +1,5 @@
 import React from "react";
-import { FaSearch, FaBars, FaMoon, FaBell } from "react-icons/fa";
+import { FaSearch, FaBars, FaMoon, FaBell, FaStream } from "react-icons/fa";
 import {
   HeaderContainer,
   ColSearch,
@@ -11,11 +11,15 @@ import {
   NavList,
   NavItem,
   MenuLink,
+  Button,
 } from "./styles";
 
-const Header = () => {
+const Header = ({ toggleSidebar }) => {
   return (
     <HeaderContainer>
+      <Button onClick={toggleSidebar}>
+        <FaStream />
+      </Button>
       <ColSearch>
         <SearchForm>
           <InputGroup>
@@ -27,12 +31,6 @@ const Header = () => {
         </SearchForm>
       </ColSearch>
       <ColNav>
-        <button
-          className="btn btn-icon btn-mobile me-auto"
-          data-trigger="#offcanvas_aside"
-        >
-          <FaBars className="md-28" />
-        </button>
         <NavList>
           <NavItem>
             <MenuLink to="#" title="Dark mode">

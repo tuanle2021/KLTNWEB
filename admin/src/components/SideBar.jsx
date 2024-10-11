@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   FaHome,
   FaCartPlus,
@@ -6,10 +6,8 @@ import {
   FaShoppingBag,
   FaUser,
   FaStream,
-  FaStoreAlt,
 } from "react-icons/fa";
 import { BiSolidShoppingBags } from "react-icons/bi";
-import { IoLogoUsd } from "react-icons/io";
 
 import {
   SidebarContainer,
@@ -22,92 +20,90 @@ import {
   MenuLink,
   Icon,
   Text,
+  Overlay,
 } from "./styles";
-const Sidebar = () => {
-  return (
-    <SidebarContainer>
-      <AsideTop>
-        <BrandWrap to="/">
-          <Logo src="../../../public/logo192.png" alt="Ecommerce dashboard " />
-        </BrandWrap>
-        <div>
-          <MinimizeButton>
-            <FaStream />
-          </MinimizeButton>
-        </div>
-      </AsideTop>
 
-      <Nav>
-        <ul>
-          <MenuItem>
-            <MenuLink to="/" exact>
-              <Icon>
-                <FaHome />
-              </Icon>
-              <Text>Dashboard</Text>
-            </MenuLink>
-          </MenuItem>
-          <MenuItem>
-            <MenuLink to="/products">
-              <Icon>
-                <FaShoppingBag />
-              </Icon>
-              <Text>Products</Text>
-            </MenuLink>
-          </MenuItem>
-          <MenuItem>
-            <MenuLink to="/addproduct">
-              <Icon>
-                <FaCartPlus />
-              </Icon>
-              <Text>Add product</Text>
-            </MenuLink>
-          </MenuItem>
-          <MenuItem>
-            <MenuLink to="/category">
-              <Icon>
-                <FaList />
-              </Icon>
-              <Text>Categories</Text>
-            </MenuLink>
-          </MenuItem>
-          <MenuItem>
-            <MenuLink to="/orders">
-              <Icon>
-                <BiSolidShoppingBags />
-              </Icon>
-              <Text>Orders</Text>
-            </MenuLink>
-          </MenuItem>
-          <MenuItem>
-            <MenuLink to="/users">
-              <Icon>
-                {" "}
-                <FaUser />
-              </Icon>
-              <Text>Users</Text>
-            </MenuLink>
-          </MenuItem>
-          {/* <MenuItem>
-            <MenuLink to="/sellers" className="disabled">
-              <Icon>
-                {" "}
-                <FaStoreAlt />
-              </Icon>
-              <Text>Sellers</Text>
-            </MenuLink>
-          </MenuItem>
-          <MenuItem>
-            <MenuLink to="/transaction" className="disabled">
-              <Icon>
-                <IoLogoUsd />
-              </Icon>
-              <Text>Transactions</Text>
-            </MenuLink>
-          </MenuItem> */}
-        </ul>
-      </Nav>
-    </SidebarContainer>
+const Sidebar = ({ isMobile, isMinimized, toggleSidebar, toggleMinimize }) => {
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 768 && isMobile) {
+        toggleSidebar();
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [isMobile, toggleSidebar]);
+
+  return (
+    <>
+      <SidebarContainer isMinimized={isMinimized} isMobile={isMobile}>
+        <AsideTop>
+          {!isMinimized && <BrandWrap to="/">Admin</BrandWrap>}
+          <div>
+            <MinimizeButton onClick={toggleMinimize}>
+              <FaStream fontSize={25} />
+            </MinimizeButton>
+          </div>
+        </AsideTop>
+
+        <Nav>
+          <ul>
+            <MenuItem>
+              <MenuLink isMinimized={isMinimized} to="/" exact>
+                <Icon>
+                  <FaHome fontSize={25} />
+                </Icon>
+                {!isMinimized && <Text>Dashboard</Text>}
+              </MenuLink>
+            </MenuItem>
+            <MenuItem>
+              <MenuLink isMinimized={isMinimized} to="/products">
+                <Icon>
+                  <FaShoppingBag fontSize={25} />
+                </Icon>
+                {!isMinimized && <Text>Products</Text>}
+              </MenuLink>
+            </MenuItem>
+            <MenuItem>
+              <MenuLink isMinimized={isMinimized} to="/addproduct">
+                <Icon>
+                  <FaCartPlus fontSize={25} />
+                </Icon>
+                {!isMinimized && <Text>Add product</Text>}
+              </MenuLink>
+            </MenuItem>
+            <MenuItem>
+              <MenuLink isMinimized={isMinimized} to="/category">
+                <Icon>
+                  <FaList fontSize={25} />
+                </Icon>
+                {!isMinimized && <Text>Categories</Text>}
+              </MenuLink>
+            </MenuItem>
+            <MenuItem>
+              <MenuLink isMinimized={isMinimized} to="/orders">
+                <Icon>
+                  <BiSolidShoppingBags fontSize={25} />
+                </Icon>
+                {!isMinimized && <Text>Orders</Text>}
+              </MenuLink>
+            </MenuItem>
+            <MenuItem>
+              <MenuLink isMinimized={isMinimized} to="/users">
+                <Icon>
+                  <FaUser fontSize={25} />
+                </Icon>
+                {!isMinimized && <Text>Users</Text>}
+              </MenuLink>
+            </MenuItem>
+          </ul>
+        </Nav>
+      </SidebarContainer>
+      {isMobile && <Overlay onClick={toggleSidebar} />}
+    </>
   );
 };
 
