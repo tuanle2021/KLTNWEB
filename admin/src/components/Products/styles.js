@@ -212,3 +212,154 @@ export const PaginationLink = styled(Link)`
     border-color: #dee2e6;
   }
 `;
+/* -------- Add item form */
+
+// Container form chính
+export const FormContainer = styled.div`
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 600px;
+  margin: auto;
+
+  h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+  }
+`;
+
+// Group từng phần trong form
+export const FormGroup = styled.div`
+  margin-bottom: 20px;
+`;
+
+// Label cho từng phần form
+export const FormLabel = styled.label`
+  display: block;
+  margin-bottom: 5px;
+  font-size: 14px;
+  color: #333;
+`;
+
+// Input cơ bản
+export const FormInput = styled.input`
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  outline: none;
+  box-sizing: border-box;
+  &:focus {
+    border-color: #007bff;
+  }
+`;
+
+// Textarea
+export const FormTextarea = styled.textarea`
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  height: 80px;
+  resize: none;
+  outline: none;
+  box-sizing: border-box;
+  &:focus {
+    border-color: #007bff;
+  }
+`;
+
+// Container upload ảnh sản phẩm
+export const ImageUploadContainer = styled.div`
+  display: flex;
+  gap: 10px;
+
+  img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 4px;
+  }
+
+  .upload-box {
+    width: 50px;
+    height: 50px;
+    border: 1px dashed #ccc;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+
+    i {
+      font-size: 20px;
+      color: #007bff;
+    }
+
+    span {
+      font-size: 12px;
+      color: #666;
+    }
+  }
+`;
+
+// Input tags
+export const TagInput = styled.input`
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  outline: none;
+  box-sizing: border-box;
+  &:focus {
+    border-color: #007bff;
+  }
+`;
+
+// Select box
+export const FormSelect = styled.select`
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  outline: none;
+
+  &:focus {
+    border-color: #007bff;
+  }
+`;
+
+// Checkbox group
+export const CheckboxGroup = styled.div`
+  display: flex;
+  align-items: center;
+
+  label {
+    margin-left: 10px;
+    font-size: 14px;
+    color: #333;
+  }
+`;
+
+// Nút submit
+export const SubmitButton = styled.button`
+  width: 100%;
+  padding: 12px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+`;

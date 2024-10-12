@@ -1,5 +1,6 @@
 import React from "react";
-import { FaSearch, FaBars, FaMoon, FaBell, FaStream } from "react-icons/fa";
+import { FaSearch, FaMoon, FaBell, FaStream } from "react-icons/fa";
+import { FcShop } from "react-icons/fc";
 import {
   HeaderContainer,
   SearchInput,
@@ -37,10 +38,7 @@ const Header = ({ toggleSidebar }) => {
           </HeaderIcon>
           <span>English</span>
           <ProfileIconContainer>
-            <img
-              src="https://res.cloudinary.com/dihhw7jo1/image/upload/v1727766768/products/MacBook%20Air%2013%20inch%20M1%204.jpg.jpg"
-              alt="Profile"
-            />
+            <FcShop fontSize={30} />
           </ProfileIconContainer>
         </IconContainer>
       </TopHeader>

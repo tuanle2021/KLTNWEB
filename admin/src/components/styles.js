@@ -121,8 +121,10 @@ export const HeaderContainer = styled.div`
   justify-content: space-between;
   align-items: center;
   background-color: #fff;
-  padding: 10px 20px;
-  box-shadow: 0 10px 10px 10px rgba(0, 0, 0, 0.1);
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #ddd;
+  box-shadow: 0 10px rgba (0, 0, 0, 0.1);
 
   @media (max-width: 768px) {
     flex-direction: column;
@@ -190,10 +192,6 @@ export const IconContainer = styled.div`
     font-size: 14px;
     color: #555;
   }
-
-  // @media (max-width: 768px) {
-  //   width: 100%;
-  // }
 `;
 
 export const HeaderIcon = styled.div`
@@ -222,12 +220,10 @@ export const ProfileIconContainer = styled.div`
   overflow: hidden;
   border: 1px solid #ddd;
   cursor: pointer;
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  object-fit: cover;
 
   &:hover {
     border-color: #007bff;
