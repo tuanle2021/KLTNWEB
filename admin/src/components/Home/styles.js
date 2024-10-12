@@ -99,6 +99,10 @@ export const Table = styled.table`
 
 export const TableRow = styled.tr`
   border-bottom: 1px solid #dee2e6;
+  .eye {
+    display: flex;
+    justify-content: flex-end;
+  }
 `;
 
 export const TableCell = styled.td`
@@ -109,7 +113,7 @@ export const TableCell = styled.td`
 
 export const Badge = styled.span`
   display: inline-block;
-  padding: 0.25em 0.4em;
+  padding: 0.3em 0.45em;
   font-size: 75%;
   font-weight: 700;
   line-height: 1;

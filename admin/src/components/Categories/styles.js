@@ -7,16 +7,14 @@ export const CategoryContainer = styled.div`
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   width: 100%;
-  max-width: 1200px;
+  //   max-width: 1200px;
+  max-width: 95%;
   margin: auto;
 
   h2 {
     margin-bottom: 20px;
     font-size: 24px;
     font-weight: 500;
-  }
-
-  .category-form {
   }
 `;
 export const CategoryForm = styled.div`

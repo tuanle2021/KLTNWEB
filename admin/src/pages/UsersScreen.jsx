@@ -1,7 +1,12 @@
 import React from "react";
+import User from "../components/Users/User";
 
 const UsersScreen = () => {
-  return <div></div>;
+  return (
+    <div>
+      <User />
+    </div>
+  );
 };
 
 export default UsersScreen;

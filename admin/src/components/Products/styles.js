@@ -60,8 +60,12 @@ export const ActionButton = styled.button`
 /* ---------  product ----------*/
 export const ProductContainer = styled.div`
   padding: 20px;
-  background-color: #f9f9f9;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   width: 100%;
+  max-width: 97%;
+  margin: auto;
 `;
 
 export const ProductHeader = styled.div`
@@ -86,7 +90,7 @@ export const ProductHeader = styled.div`
 // Grid sản phẩm
 export const ProductGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 10px;
   margin-top: 10px;
 `;

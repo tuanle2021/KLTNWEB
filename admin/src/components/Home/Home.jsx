@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import moment from "moment";
 import {
   ContentMain,
   ContentHeader,
@@ -13,19 +12,13 @@ import {
   Text,
   Title,
   Value,
-  TableResponsive,
-  Table,
-  TableRow,
-  TableCell,
-  Badge,
-  IconLink,
 } from "./styles";
 import { FaShoppingBag } from "react-icons/fa";
 import { BiSolidShoppingBags } from "react-icons/bi";
 import { IoLogoUsd } from "react-icons/io";
-import { FaEye } from "react-icons/fa";
+import TableOrder from "./TableOrder";
 const Home = () => {
-  const [orders, setOrders] = useState([]);
+  const [order, setOrders] = useState([]);
 
   useEffect(() => {
     // Mock data for orders
@@ -37,6 +30,7 @@ const Home = () => {
         isPaid: true,
         paidAt: new Date(),
         createdAt: new Date(),
+        status: "Delivered",
       },
       {
         _id: "2",
@@ -44,6 +38,7 @@ const Home = () => {
         totalPrice: 200,
         isPaid: false,
         createdAt: new Date(),
+        status: "Pending",
       },
       {
         _id: "3",
@@ -52,6 +47,7 @@ const Home = () => {
         isPaid: true,
         paidAt: new Date(),
         createdAt: new Date(),
+        status: "Pending",
       },
       {
         _id: "4",
@@ -59,6 +55,7 @@ const Home = () => {
         totalPrice: 250,
         isPaid: false,
         createdAt: new Date(),
+        status: "Pending",
       },
       {
         _id: "5",
@@ -67,6 +64,7 @@ const Home = () => {
         isPaid: true,
         paidAt: new Date(),
         createdAt: new Date(),
+        status: "Delivered",
       },
     ];
     setOrders(mockOrders);
@@ -126,38 +124,7 @@ const Home = () => {
         </TotalCol>
       </TotalRow>
 
-      <CardBody>
-        <TableResponsive>
-          <Table>
-            <tbody>
-              {orders.slice(0, 5).map((order) => (
-                <TableRow key={order._id}>
-                  <TableCell>
-                    <b>{order.user.name}</b>
-                  </TableCell>
-                  <TableCell>{order.user.email}</TableCell>
-                  <TableCell>${order.totalPrice}</TableCell>
-                  <TableCell>
-                    {order.isPaid ? (
-                      <Badge variant="success">
-                        Paid At {moment(order.paidAt).format("MMM Do YY")}
-                      </Badge>
-                    ) : (
-                      <Badge variant="danger">Not Paid</Badge>
-                    )}
-                  </TableCell>
-                  <TableCell>{moment(order.createdAt).calendar()}</TableCell>
-                  <TableCell>
-                    <IconLink to={`/order/${order._id}`}>
-                      <FaEye />
-                    </IconLink>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </tbody>
-          </Table>
-        </TableResponsive>
-      </CardBody>
+      <TableOrder orders={order} status={false} />
     </ContentMain>
   );
 };
