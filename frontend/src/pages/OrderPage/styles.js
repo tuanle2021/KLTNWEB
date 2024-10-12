@@ -180,3 +180,53 @@ export const BackToHomeButton = styled.button`
     background-color: #2980b9;
   }
 `;
+export const OrderDetailRow = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+  background-color: #e5fee9;
+`;
+
+export const OrderDetailCol = styled.div`
+  flex: 1;
+  display: flex;
+  max-width: 33.3333%;
+  padding: 0 15px;
+  margin: 20px;
+`;
+
+export const OrderBox = styled.div`
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #c3e6cb;
+  padding: 20px;
+  border-radius: 50%;
+  background-color: #d1e7dd;
+`;
+
+export const OrderBoxIcon = styled.i`
+  font-size: 2rem;
+  color: #155724;
+`;
+
+export const OrderBoxContent = styled.div`
+  margin-left: 20px;
+`;
+
+export const OrderBoxTitle = styled.h5`
+  font-weight: bold;
+  font-size: 1.7rem;
+  margin-bottom: 10px;
+`;
+
+export const OrderBoxText = styled.p`
+  margin: 0;
+`;
+
+export const PayPalButtonContainer = styled.div`
+  width: 100%;
+  margin-top: 20px;
+`;

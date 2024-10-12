@@ -1,19 +1,21 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../../redux/slices/authSlice";
+import CategoryMenu from "../Category/CategoryMenu";
 import { Link } from "react-router-dom";
+import { IoSearch } from "react-icons/io5";
 import {
   HeaderContainer,
   HeaderInner,
   Logo,
   SearchBar,
-  NavLinks,
   NavItem,
   ShoppingCart,
   ProfileMenu,
   Button,
   UserIconWrapper,
   DropdownContainer,
+  NavButton,
 } from "./styles";
 import {
   InboxOutlined,
@@ -40,30 +42,14 @@ const HeaderComponent = () => {
           <Logo href="/">
             <ShopOutlined style={{ fontSize: "2em", marginRight: "10px" }} />
           </Logo>
-
+          <CategoryMenu />
           {/* Search Bar */}
           <SearchBar>
             <input type="text" placeholder="Search for tech products..." />
-            <button type="submit">Search</button>
+            <button type="submit">
+              <IoSearch />
+            </button>
           </SearchBar>
-
-          {/* Navigation Links */}
-          <NavLinks>
-            <ul>
-              <li>
-                <a href="/categories">Categories</a>
-              </li>
-              <li>
-                <a href="/deals">Deals</a>
-              </li>
-              <li>
-                <a href="/contact">Contact</a>
-              </li>
-              <li>
-                <a href="/about">About Us</a>
-              </li>
-            </ul>
-          </NavLinks>
 
           {/* Shopping Cart */}
           <ShoppingCart>
@@ -134,7 +120,7 @@ const HeaderComponent = () => {
                 </ProfileMenu>
               </>
             ) : (
-              <div style={{ display: "flex" }}>
+              <NavButton>
                 <NavItem>
                   <Link to="/login">
                     <Button>Login</Button>
@@ -145,7 +131,7 @@ const HeaderComponent = () => {
                     <Button>Register</Button>
                   </Link>
                 </NavItem>
-              </div>
+              </NavButton>
             )}
           </ProfileMenu>
         </HeaderInner>
