@@ -1,4 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { login } from "../redux/slices/authSlice";
 import {
   LoginContainer,
   ImageSection,
@@ -10,6 +13,22 @@ import {
 } from "./styles/LoginScreen";
 
 const LoginPage = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { loading, error, user } = useSelector((state) => state.auth); // Lấy trạng thái từ Redux
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    dispatch(login({ email, password }));
+  };
+
+  React.useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, [user, navigate]);
   return (
     <LoginContainer>
       {/* Hình ảnh bên trái */}
@@ -25,10 +44,24 @@ const LoginPage = () => {
         <h2>Log in to Exclusive</h2>
         <p>Enter your details below</p>
 
-        <Form>
-          <Input type="text" placeholder="Email or Phone Number" />
-          <Input type="password" placeholder="Password" />
-          <Button>Log In</Button>
+        {error && <p style={{ color: "red" }}>{error}</p>}
+
+        <Form onSubmit={handleLogin}>
+          <Input
+            type="text"
+            placeholder="Email or Phone Number"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)} // Cập nhật state email
+          />
+          <Input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)} // Cập nhật state password
+          />
+          <Button type="submit" disabled={loading}>
+            {loading ? "Logging in..." : "Log In"}
+          </Button>
         </Form>
 
         <ForgotPassword href="#">Forgot Password?</ForgotPassword>

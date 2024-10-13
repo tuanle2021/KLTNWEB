@@ -16,6 +16,8 @@ import Sidebar from "./components/SideBar";
 import Header from "./components/Header";
 import { ContentWrapper } from "./components/styles";
 import OrderScreen from "./pages/OrderScreen";
+import ProtectedRoute from "./components/ProtectedRoute";
+
 const Layout = ({ children }) => {
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
@@ -48,19 +50,25 @@ const Layout = ({ children }) => {
     </>
   );
 };
+
 const AppRoutes = () => {
   return (
     <Router>
       <Layout>
         <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/category" element={<CategoriesScreen />} />
-          <Route path="/products" element={<ProductScreen />} />
-          <Route path="/orders" element={<OrderScreen />} />
+          {/* Route không cần bảo vệ */}
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/addproduct" element={<AddProduct />} />
-          <Route path="/users" element={<UsersScreen />} />
-          <Route path="/product/:id/edit" element={<ProductEditScreen />} />
+
+          {/* Các route được bảo vệ */}
+          <Route element={<ProtectedRoute />}>
+            <Route path="/categories" element={<CategoriesScreen />} />
+            <Route path="/products" element={<ProductScreen />} />
+            <Route path="/product/edit/:id" element={<ProductEditScreen />} />
+            <Route path="/addproduct" element={<AddProduct />} />
+            <Route path="/users" element={<UsersScreen />} />
+            <Route path="/orders" element={<OrderScreen />} />
+            <Route path="/" element={<HomePage />} />
+          </Route>
         </Routes>
       </Layout>
     </Router>
