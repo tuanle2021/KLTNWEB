@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchProducts, setPage } from "../../redux/slices/productSlice";
 import ProductCard from "./ProductCard";
 import {
   ProductContainer,
@@ -9,92 +11,22 @@ import {
   ProductHeader,
 } from "./styles";
 
-const fakeProducts = [
-  {
-    _id: "1",
-    name: "Product 1",
-    category: "Electronics",
-    price: 100,
-    countInStock: 10,
-    rating: 4.5,
-    numReviews: 12,
-    image:
-      "https://res.cloudinary.com/dihhw7jo1/image/upload/v1727766768/products/MacBook%20Air%2013%20inch%20M1%204.jpg.jpg",
-  },
-  {
-    _id: "2",
-    name: "Product 2",
-    category: "Clothings",
-    price: 50,
-    countInStock: 20,
-    rating: 4.0,
-    numReviews: 8,
-    image:
-      "https://res.cloudinary.com/dihhw7jo1/image/upload/v1727766768/products/MacBook%20Air%2013%20inch%20M1%204.jpg.jpg",
-  },
-  {
-    _id: "3",
-    name: "Product 1",
-    category: "Electronics",
-    price: 100,
-    countInStock: 10,
-    rating: 4.5,
-    numReviews: 12,
-    image:
-      "https://res.cloudinary.com/dihhw7jo1/image/upload/v1727766768/products/MacBook%20Air%2013%20inch%20M1%204.jpg.jpg",
-  },
-  {
-    _id: "4",
-    name: "Product 1",
-    category: "Electronics",
-    price: 100,
-    countInStock: 10,
-    rating: 4.5,
-    numReviews: 12,
-    image:
-      "https://res.cloudinary.com/dihhw7jo1/image/upload/v1727766768/products/MacBook%20Air%2013%20inch%20M1%204.jpg.jpg",
-  },
-  {
-    _id: "5",
-    name: "Product 1",
-    category: "Electronics",
-    price: 100,
-    countInStock: 10,
-    rating: 4.5,
-    numReviews: 12,
-    image:
-      "https://res.cloudinary.com/dihhw7jo1/image/upload/v1727766768/products/MacBook%20Air%2013%20inch%20M1%204.jpg.jpg",
-  },
-  {
-    _id: "6",
-    name: "Product 1",
-    category: "Electronics",
-    price: 100,
-    countInStock: 10,
-    rating: 4.5,
-    numReviews: 12,
-    image:
-      "https://res.cloudinary.com/dihhw7jo1/image/upload/v1727766768/products/MacBook%20Air%2013%20inch%20M1%204.jpg.jpg",
-  },
-  {
-    _id: "7",
-    name: "Product 1",
-    category: "Electronics",
-    price: 100,
-    countInStock: 10,
-    rating: 4.5,
-    numReviews: 12,
-    image:
-      "https://res.cloudinary.com/dihhw7jo1/image/upload/v1727766768/products/MacBook%20Air%2013%20inch%20M1%204.jpg.jpg",
-  },
-];
-
 const MainProducts = () => {
-  const [products, setProducts] = useState(fakeProducts);
+  const dispatch = useDispatch();
+  const { products, totalPages, currentPage, loading, error } = useSelector(
+    (state) => state.products
+  );
 
   useEffect(() => {
-    setProducts(fakeProducts);
-  }, []);
+    dispatch(fetchProducts({ page: currentPage, limit: 10 }));
+  }, [dispatch, currentPage]);
+
+  const handlePageChange = (page) => {
+    dispatch(setPage(page));
+  };
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error}</p>;
 
   return (
     <ProductContainer>
@@ -128,11 +60,27 @@ const MainProducts = () => {
       </ProductGrid>
 
       <Pagination>
-        <button>Previous</button>
-        <button className="active">1</button>
-        <button>2</button>
-        <button>3</button>
-        <button>Next</button>
+        <button
+          onClick={() => handlePageChange(currentPage - 1)}
+          disabled={currentPage === 1}
+        >
+          Previous
+        </button>
+        {[...Array(totalPages).keys()].map((page) => (
+          <button
+            key={page + 1}
+            className={currentPage === page + 1 ? "active" : ""}
+            onClick={() => handlePageChange(page + 1)}
+          >
+            {page + 1}
+          </button>
+        ))}
+        <button
+          onClick={() => handlePageChange(currentPage + 1)}
+          disabled={currentPage === totalPages}
+        >
+          Next
+        </button>
       </Pagination>
     </ProductContainer>
   );

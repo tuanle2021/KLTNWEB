@@ -14,7 +14,7 @@ import {
   ActionButton,
   CategoryInner,
   CategoryForm,
-} from "./styles"; // Import các styled-components từ file styles
+} from "./styles";
 
 const Categories = () => {
   const [categories, setCategories] = useState([

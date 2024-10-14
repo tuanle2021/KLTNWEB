@@ -1,59 +1,19 @@
-import React, { useState, useEffect } from "react";
-import { OrderContainer,SearchBar,SelectGroup } from "./styles";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchOrders } from "../../redux/slices/orderSlice";
+import { OrderContainer, SearchBar, SelectGroup } from "./styles";
 import TableOrder from "../Home/TableOrder";
 
 const Order = () => {
-  const [orders, setOrders] = useState([]);
+  const dispatch = useDispatch();
+  const { orders, loading, error } = useSelector((state) => state.orders);
 
   useEffect(() => {
-    // Mock data for orders
-    const mockOrders = [
-      {
-        _id: "1",
-        user: { name: "John Doe", email: "john@example.com" },
-        totalPrice: 100,
-        isPaid: true,
-        paidAt: new Date(),
-        createdAt: new Date(),
-        status: "Delivered",
-      },
-      {
-        _id: "2",
-        user: { name: "Jane Smith", email: "jane@example.com" },
-        totalPrice: 200,
-        isPaid: false,
-        createdAt: new Date(),
-        status: "Pending",
-      },
-      {
-        _id: "3",
-        user: { name: "Alice Johnson", email: "alice@example.com" },
-        totalPrice: 150,
-        isPaid: true,
-        paidAt: new Date(),
-        createdAt: new Date(),
-        status: "Shipped",
-      },
-      {
-        _id: "4",
-        user: { name: "Bob Brown", email: "bob@example.com" },
-        totalPrice: 250,
-        isPaid: false,
-        createdAt: new Date(),
-        status: "Cancelled",
-      },
-      {
-        _id: "5",
-        user: { name: "Charlie Davis", email: "charlie@example.com" },
-        totalPrice: 300,
-        isPaid: true,
-        paidAt: new Date(),
-        createdAt: new Date(),
-        status: "Delivered",
-      },
-    ];
-    setOrders(mockOrders);
-  }, []);
+    dispatch(fetchOrders());
+  }, [dispatch]);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error}</p>;
   return (
     <OrderContainer>
       <h4>Order</h4>

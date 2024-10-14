@@ -75,7 +75,7 @@ const Sidebar = ({ isMobile, isMinimized, toggleSidebar, toggleMinimize }) => {
               </MenuLink>
             </MenuItem>
             <MenuItem>
-              <MenuLink isMinimized={isMinimized} to="/category">
+              <MenuLink isMinimized={isMinimized} to="/categories">
                 <Icon>
                   <FaList fontSize={25} />
                 </Icon>

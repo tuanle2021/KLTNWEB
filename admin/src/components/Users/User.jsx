@@ -1,4 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUsers } from "../../redux/slices/userSlice";
+import styled from "styled-components";
 import {
   SellersContainer,
   SellersGrid,
@@ -15,52 +18,16 @@ import {
   CreateButton,
 } from "./styles";
 
-const sellersData = [
-  {
-    id: 478,
-    name: "Leslie Alexander",
-    email: "leslie@example.com",
-    image:
-      "https://res.cloudinary.com/dihhw7jo1/image/upload/v1727766768/products/MacBook%20Air%2013%20inch%20M1%204.jpg.jpg",
-  },
-  {
-    id: 122,
-    name: "John Mike",
-    email: "john@mysite.com",
-    image:
-      "https://res.cloudinary.com/dihhw7jo1/image/upload/v1727766768/products/MacBook%20Air%2013%20inch%20M1%204.jpg.jpg",
-  },
-  {
-    id: 478,
-    name: "Leslie Alexander",
-    email: "leslie@example.com",
-    image:
-      "https://res.cloudinary.com/dihhw7jo1/image/upload/v1727766768/products/MacBook%20Air%2013%20inch%20M1%204.jpg.jpg",
-  },
-  {
-    id: 478,
-    name: "Leslie Alexander",
-    email: "leslie@example.com",
-    image:
-      "https://res.cloudinary.com/dihhw7jo1/image/upload/v1727766768/products/MacBook%20Air%2013%20inch%20M1%204.jpg.jpg",
-  },
-  {
-    id: 478,
-    name: "Leslie Alexander",
-    email: "leslie@example.com",
-    image:
-      "https://res.cloudinary.com/dihhw7jo1/image/upload/v1727766768/products/MacBook%20Air%2013%20inch%20M1%204.jpg.jpg",
-  },
-  {
-    id: 478,
-    name: "Leslie Alexander",
-    email: "leslie@example.com",
-    image:
-      "https://res.cloudinary.com/dihhw7jo1/image/upload/v1727766768/products/MacBook%20Air%2013%20inch%20M1%204.jpg.jpg",
-  },
-];
-
 const User = () => {
+  const dispatch = useDispatch();
+  const { users, loading, error } = useSelector((state) => state.users);
+
+  useEffect(() => {
+    dispatch(fetchUsers());
+  }, [dispatch]);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error}</p>;
   return (
     <SellersContainer>
       <div className="header">
@@ -83,13 +50,16 @@ const User = () => {
 
       {/* Danh sách người bán */}
       <SellersGrid>
-        {sellersData.map((seller, index) => (
+        {users.map((seller, index) => (
           <SellerCard key={index}>
             <SellerHeader />
-            <SellerImage src={seller.image} alt={seller.name} />
+            <SellerImage
+              src="https://res.cloudinary.com/dihhw7jo1/image/upload/v1727766768/products/MacBook%20Air%2013%20inch%20M1%204.jpg.jpg"
+              alt={seller.name}
+            />
             <SellerInfo>
               <SellerName>{seller.name}</SellerName>
-              <SellerID>Seller ID: #{seller.id}</SellerID>
+              <SellerID>ID: {seller._id}</SellerID>
               <SellerEmail>{seller.email}</SellerEmail>
               <ProfileButton>Profile</ProfileButton>
             </SellerInfo>

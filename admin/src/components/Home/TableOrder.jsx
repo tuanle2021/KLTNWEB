@@ -28,15 +28,15 @@ const TableOrder = ({ orders, status }) => {
             </TableRow>
           </thead>
           <tbody>
-            {orders.slice(0, 5).map((order) => (
+            {orders.slice(0, 14).map((order) => (
               <TableRow key={order._id}>
                 <TableCell>
-                  <b>{order.user.name}</b>
+                  <b>{order.user_id?.name || "N/A"}</b>{" "}
                 </TableCell>
-                <TableCell>{order.user.email}</TableCell>
-                <TableCell>${order.totalPrice}</TableCell>
+                <TableCell>{order.user_id?.email || "N/A"}</TableCell>
+                <TableCell>${order.total_price}</TableCell>
                 <TableCell>
-                  {order.isPaid ? (
+                  {order.payment_status === "pending" ? (
                     <Badge variant="success">
                       Paid At {moment(order.paidAt).format("MMM Do YY")}
                     </Badge>

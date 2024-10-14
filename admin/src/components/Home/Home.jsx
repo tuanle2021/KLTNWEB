@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchOrders } from "../../redux/slices/orderSlice";
 import {
   ContentMain,
   ContentHeader,
@@ -18,57 +20,12 @@ import { BiSolidShoppingBags } from "react-icons/bi";
 import { IoLogoUsd } from "react-icons/io";
 import TableOrder from "./TableOrder";
 const Home = () => {
-  const [order, setOrders] = useState([]);
+  const dispatch = useDispatch();
+  const { orders, loading, error } = useSelector((state) => state.orders);
 
   useEffect(() => {
-    // Mock data for orders
-    const mockOrders = [
-      {
-        _id: "1",
-        user: { name: "John Doe", email: "john@example.com" },
-        totalPrice: 100,
-        isPaid: true,
-        paidAt: new Date(),
-        createdAt: new Date(),
-        status: "Delivered",
-      },
-      {
-        _id: "2",
-        user: { name: "Jane Smith", email: "jane@example.com" },
-        totalPrice: 200,
-        isPaid: false,
-        createdAt: new Date(),
-        status: "Pending",
-      },
-      {
-        _id: "3",
-        user: { name: "Alice Johnson", email: "alice@example.com" },
-        totalPrice: 150,
-        isPaid: true,
-        paidAt: new Date(),
-        createdAt: new Date(),
-        status: "Pending",
-      },
-      {
-        _id: "4",
-        user: { name: "Bob Brown", email: "bob@example.com" },
-        totalPrice: 250,
-        isPaid: false,
-        createdAt: new Date(),
-        status: "Pending",
-      },
-      {
-        _id: "5",
-        user: { name: "Charlie Davis", email: "charlie@example.com" },
-        totalPrice: 300,
-        isPaid: true,
-        paidAt: new Date(),
-        createdAt: new Date(),
-        status: "Delivered",
-      },
-    ];
-    setOrders(mockOrders);
-  }, []);
+    dispatch(fetchOrders());
+  }, [dispatch]);
 
   return (
     <ContentMain>
@@ -124,7 +81,7 @@ const Home = () => {
         </TotalCol>
       </TotalRow>
 
-      <TableOrder orders={order} status={false} />
+      <TableOrder orders={orders} status={false} />
     </ContentMain>
   );
 };
