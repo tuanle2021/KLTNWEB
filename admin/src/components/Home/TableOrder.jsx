@@ -45,13 +45,15 @@ const TableOrder = ({ orders, status }) => {
                   )}
                 </TableCell>
                 <TableCell>{moment(order.createdAt).calendar()}</TableCell>
-                {status && order.status === "Delivered" ? (
+                {status && (
                   <TableCell>
-                    <Badge variant="success"> {order.status}</Badge>
-                  </TableCell>
-                ) : (
-                  <TableCell>
-                    <Badge variant="danger"> {order.status}</Badge>
+                    <Badge
+                      variant={
+                        order.status === "processing" ? "success" : "danger"
+                      }
+                    >
+                      {order.status}
+                    </Badge>
                   </TableCell>
                 )}
                 <TableCell className="eye">
