@@ -133,16 +133,22 @@ export const TableCell = styled.td`
   padding: 10px;
   border-bottom: 1px solid #ddd;
   font-size: 14px;
+  .edit {
+    color: #007bff;
+  }
+  .delete {
+    color: #dc3545;
+  }
 `;
 
 // Nút hành động
 export const ActionButton = styled.button`
-  //   padding: 0px 10px;
+  padding: 5px 10px;
   border: none;
   background-color: transparent;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 36px;
+  text-decoration: underline;
   &:hover {
     background-color: #e0e0e0;
   }
