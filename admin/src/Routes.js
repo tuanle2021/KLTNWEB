@@ -17,7 +17,7 @@ import Header from "./components/Header";
 import { ContentWrapper } from "./components/styles";
 import OrderScreen from "./pages/OrderScreen";
 import ProtectedRoute from "./components/ProtectedRoute";
-
+import OrderDetailScreen from "./pages/OrderDetailScreen";
 const Layout = ({ children }) => {
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
@@ -67,6 +67,7 @@ const AppRoutes = () => {
             <Route path="/addproduct" element={<AddProduct />} />
             <Route path="/users" element={<UsersScreen />} />
             <Route path="/orders" element={<OrderScreen />} />
+            <Route path="/orders/:id" element={<OrderDetailScreen />} />
             <Route path="/" element={<HomePage />} />
           </Route>
         </Routes>

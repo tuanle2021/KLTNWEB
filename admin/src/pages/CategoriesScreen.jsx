@@ -1,5 +1,5 @@
 import React from "react";
-import Categories from "../components/Categories/AddCategory";
+import Categories from "../components/Categories/Category";
 
 const CategoriesScreen = () => {
   return (

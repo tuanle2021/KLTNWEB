@@ -57,7 +57,7 @@ const TableOrder = ({ orders, status }) => {
                   </TableCell>
                 )}
                 <TableCell className="eye">
-                  <IconLink to={`/order/${order._id}`}>
+                  <IconLink to={`/orders/${order._id}`}>
                     <FaEye />
                   </IconLink>
                 </TableCell>
