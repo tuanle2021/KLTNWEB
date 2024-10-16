@@ -11,7 +11,6 @@ import {
   Button,
   NoteInput,
   OrderBox,
-  OrderBoxContent,
   OrderDetailCol,
   OrderSummary,
   SelectGroup,
@@ -20,7 +19,9 @@ import {
 const OrderDetail = () => {
   return (
     <Container>
-      <h2>Order details</h2>
+      <Button className="back-order-list-btn">
+        <a href="/orders">Orders List</a>
+      </Button>
       <Header>
         <div>
           <div className="date">
@@ -56,7 +57,7 @@ const OrderDetail = () => {
           <OrderBox>
             <FaTruck style={{ color: "#0F5132", fontSize: "27px" }} />
           </OrderBox>
-          <OrderBoxContent>
+          <div className="box-content">
             <h3>Shipping</h3>
             <p>Fargo express</p>
             <p>Payment method: Card</p>
@@ -64,19 +65,19 @@ const OrderDetail = () => {
               Status: <span style={{ color: "#d9534f" }}>Payment made</span>
             </p>
             <a href="#">Download</a>
-          </OrderBoxContent>
+          </div>
         </OrderDetailCol>
         <OrderDetailCol>
           <OrderBox>
             <FaMapMarkerAlt style={{ color: "#0F5132", fontSize: "25px" }} />
           </OrderBox>
-          <OrderBoxContent>
+          <div className="box-content">
             <h3>Deliver to</h3>
             <p>City: Thu Duc, HCM</p>
             <p>Street: Vo Van Ngan </p>
             <p>Address: 01, TNTT</p>
             <a href="#">Open map</a>
-          </OrderBoxContent>
+          </div>
         </OrderDetailCol>
       </Section>
       <Section>

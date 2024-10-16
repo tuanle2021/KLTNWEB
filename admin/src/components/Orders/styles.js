@@ -27,8 +27,10 @@ export const SearchBar = styled.div`
 // Nhóm Select box
 export const SelectGroup = styled.div`
   display: flex;
+
   gap: 10px;
   select {
+    width: 200px;
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 4px;
@@ -41,6 +43,24 @@ export const Container = styled.div`
   padding: 15px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   background-color: #fff;
+  .back-order-list-btn {
+    font-size: 18px;
+    margin-bottom: 20px;
+    font-weight: bold;
+    background-color: #007bff;
+
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 10px;
+    &:hover {
+      background-color: #0056b3;
+    }
+    a {
+      text-decoration: none;
+      color: #fff;
+    }
+  }
 `;
 // Header của từng đơn hàng
 export const Header = styled.div`
@@ -96,10 +116,12 @@ export const OrderDetailCol = styled.div`
   flex: 1;
   display: flex;
   max-width: 33.3333%;
-  padding: 0 15px;
   margin: 20px;
   .box-content {
     margin-left: 20px;
+  }
+  h3 {
+    margin-top: 0;
   }
 `;
 // Box chứa icon
