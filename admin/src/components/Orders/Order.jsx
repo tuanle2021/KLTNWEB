@@ -16,7 +16,7 @@ const Order = () => {
   if (error) return <p>Error: {error}</p>;
   return (
     <OrderContainer>
-      <h4>Order</h4>
+      <h2>Order</h2>
       <SearchBar>
         <input type="text" placeholder="Search..." />
         <SelectGroup>

@@ -1,18 +1,18 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUsers } from "../../redux/slices/userSlice";
-import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 import {
-  SellersContainer,
-  SellersGrid,
-  SellerCard,
-  SellerImage,
-  SellerInfo,
-  SellerName,
-  SellerEmail,
-  SellerID,
+  UserContainer,
+  UserGrid,
+  UserCard,
+  UserImage,
+  UserInfo,
+  UserName,
+  UserEmail,
+  UserID,
   ProfileButton,
-  SellerHeader,
+  UserHeader,
   SearchContainer,
   SelectGroup,
   CreateButton,
@@ -20,6 +20,7 @@ import {
 
 const User = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { users, loading, error } = useSelector((state) => state.users);
 
   useEffect(() => {
@@ -29,10 +30,12 @@ const User = () => {
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
   return (
-    <SellersContainer>
+    <UserContainer>
       <div className="header">
-        <h2>Sellers</h2>
-        <CreateButton>Create new</CreateButton>
+        <h2>User</h2>
+        <CreateButton onClick={() => navigate(`/create-user`)}>
+          Create new
+        </CreateButton>
       </div>
 
       {/* Thanh tìm kiếm và lựa chọn */}
@@ -48,25 +51,26 @@ const User = () => {
         </SelectGroup>
       </SearchContainer>
 
-      {/* Danh sách người bán */}
-      <SellersGrid>
-        {users.map((seller, index) => (
-          <SellerCard key={index}>
-            <SellerHeader />
-            <SellerImage
+      <UserGrid>
+        {users.map((user, index) => (
+          <UserCard key={index}>
+            <UserHeader />
+            <UserImage
               src="https://res.cloudinary.com/dihhw7jo1/image/upload/v1727766768/products/MacBook%20Air%2013%20inch%20M1%204.jpg.jpg"
-              alt={seller.name}
+              alt={user.name}
             />
-            <SellerInfo>
-              <SellerName>{seller.name}</SellerName>
-              <SellerID>ID: {seller._id}</SellerID>
-              <SellerEmail>{seller.email}</SellerEmail>
-              <ProfileButton>Profile</ProfileButton>
-            </SellerInfo>
-          </SellerCard>
+            <UserInfo>
+              <UserName>{user.name}</UserName>
+              <UserID>ID: {user._id}</UserID>
+              <UserEmail>{user.email}</UserEmail>
+              <ProfileButton onClick={() => navigate(`/users/${user._id}`)}>
+                Profile
+              </ProfileButton>
+            </UserInfo>
+          </UserCard>
         ))}
-      </SellersGrid>
-    </SellersContainer>
+      </UserGrid>
+    </UserContainer>
   );
 };
 

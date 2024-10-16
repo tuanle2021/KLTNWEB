@@ -1,6 +1,8 @@
 import React from "react";
 import { IoIosCalendar } from "react-icons/io";
 import { FaUser, FaTruck, FaMapMarkerAlt } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+
 import {
   Container,
   Header,
@@ -17,10 +19,14 @@ import {
 } from "./styles";
 
 const OrderDetail = () => {
+  const navigate = useNavigate();
   return (
     <Container>
-      <Button className="back-order-list-btn">
-        <a href="/orders">Orders List</a>
+      <Button
+        className="back-order-list-btn"
+        onClick={() => navigate(`/orders`)}
+      >
+        Go Back
       </Button>
       <Header>
         <div>

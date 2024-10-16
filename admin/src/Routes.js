@@ -18,6 +18,8 @@ import { ContentWrapper } from "./components/styles";
 import OrderScreen from "./pages/OrderScreen";
 import ProtectedRoute from "./components/ProtectedRoute";
 import OrderDetailScreen from "./pages/OrderDetailScreen";
+import UserDetail from "./components/Users/UserDetail";
+import CreateUser from "./components/Users/CreateUser";
 const Layout = ({ children }) => {
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
@@ -66,6 +68,8 @@ const AppRoutes = () => {
             <Route path="/product/edit/:id" element={<ProductEditScreen />} />
             <Route path="/addproduct" element={<AddProduct />} />
             <Route path="/users" element={<UsersScreen />} />
+            <Route path="/users/:id" element={<UserDetail />} />
+            <Route path="/create-user" element={<CreateUser />} />
             <Route path="/orders" element={<OrderScreen />} />
             <Route path="/orders/:id" element={<OrderDetailScreen />} />
             <Route path="/" element={<HomePage />} />
