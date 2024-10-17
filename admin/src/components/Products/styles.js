@@ -312,20 +312,6 @@ export const ImageUploadContainer = styled.div`
   }
 `;
 
-// Input tags
-export const TagInput = styled.input`
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 14px;
-  outline: none;
-  box-sizing: border-box;
-  &:focus {
-    border-color: #007bff;
-  }
-`;
-
 // Select box
 export const FormSelect = styled.select`
   width: 100%;
@@ -337,18 +323,6 @@ export const FormSelect = styled.select`
 
   &:focus {
     border-color: #007bff;
-  }
-`;
-
-// Checkbox group
-export const CheckboxGroup = styled.div`
-  display: flex;
-  align-items: center;
-
-  label {
-    margin-left: 10px;
-    font-size: 14px;
-    color: #333;
   }
 `;
 

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProducts, setPage } from "../../redux/slices/productSlice";
 import ProductCard from "./ProductCard";
+import AddItemForm from "./AddItemForm";
 import {
   ProductContainer,
   ProductGrid,
@@ -16,6 +17,7 @@ const MainProducts = () => {
   const { products, totalPages, currentPage, loading, error } = useSelector(
     (state) => state.products
   );
+  const [editProduct, setEditProduct] = useState(null);
 
   useEffect(() => {
     dispatch(fetchProducts({ page: currentPage, limit: 10 }));
@@ -25,6 +27,14 @@ const MainProducts = () => {
     dispatch(setPage(page));
   };
 
+  const handleEdit = (product) => {
+    setEditProduct(product);
+  };
+
+  const handleClearEdit = () => {
+    setEditProduct(null);
+  };
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
 
@@ -32,7 +42,7 @@ const MainProducts = () => {
     <ProductContainer>
       <ProductHeader>
         <h2>Products</h2>
-        <button>Create new</button>
+        <button onClick={() => setEditProduct(null)}>Create new</button>
       </ProductHeader>
 
       <SearchBar>
@@ -55,7 +65,11 @@ const MainProducts = () => {
 
       <ProductGrid>
         {products.map((product) => (
-          <ProductCard key={product._id} product={product} /> // Sử dụng ProductCard component
+          <ProductCard
+            key={product._id}
+            product={product}
+            onEdit={handleEdit}
+          /> // Sử dụng ProductCard component
         ))}
       </ProductGrid>
 

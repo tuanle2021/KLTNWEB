@@ -60,9 +60,10 @@ export const fetchProductById = createAsyncThunk(
 
 export const updateProduct = createAsyncThunk(
   "products/updateProduct",
-  async ({ id, productData }, { rejectWithValue }) => {
+  async ({ id, productData }, { rejectWithValue, getState }) => {
     try {
       const formData = new FormData();
+      const token = getState().auth.user.token;
       for (const key in productData) {
         if (key === "images") {
           productData.images.forEach((image) => {
@@ -78,24 +79,33 @@ export const updateProduct = createAsyncThunk(
         {
           headers: {
             "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`, // Thêm token vào header
           },
         }
       );
       return data;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      return rejectWithValue(error.response.data.message || error.message);
     }
   }
 );
 
 export const deleteProduct = createAsyncThunk(
   "products/deleteProduct",
-  async (id, { rejectWithValue }) => {
+  async (id, { rejectWithValue, getState }) => {
     try {
-      await axios.delete(`${process.env.REACT_APP_BACKEND_URL}/products/${id}`);
+      const token = getState().auth.user.token;
+      await axios.delete(
+        `${process.env.REACT_APP_BACKEND_URL}/products/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       return id;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      return rejectWithValue(error.response.data.message || error.message);
     }
   }
 );
@@ -156,7 +166,8 @@ const productSlice = createSlice({
       .addCase(addProduct.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-      }).addCase(fetchProductById.pending, (state) => {
+      })
+      .addCase(fetchProductById.pending, (state) => {
         state.loading = true;
         state.error = null;
       })

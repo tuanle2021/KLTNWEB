@@ -1,11 +1,14 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { IoCloudUploadOutline } from "react-icons/io5";
+import { useParams, useNavigate } from "react-router-dom";
 import {
   addProduct,
+  updateProduct,
   addImage,
   removeImage,
   clearImages,
+  fetchProductById,
 } from "../../redux/slices/productSlice";
 import { fetchCategories } from "../../redux/slices/categorySlice";
 
@@ -16,13 +19,13 @@ import {
   FormInput,
   FormTextarea,
   ImageUploadContainer,
-  TagInput,
   FormSelect,
-  CheckboxGroup,
   SubmitButton,
 } from "./styles"; // Import các styled-components từ file styles
 
 const AddItemForm = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { images, loading, error } = useSelector((state) => state.products);
   const { categories = [] } = useSelector((state) => state.categories) || {};
@@ -32,7 +35,6 @@ const AddItemForm = () => {
     price: "",
     stock: "",
     category_id: "",
-    publish: true,
   };
   const [formData, setFormData] = useState(initialFormData);
   const fileInputRef = useRef(null);
@@ -42,11 +44,26 @@ const AddItemForm = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (!loading && !error) {
+    if (id) {
+      dispatch(fetchProductById(id)).then((action) => {
+        if (action.meta.requestStatus === "fulfilled") {
+          const product = action.payload;
+          setFormData({
+            name: product.name,
+            description: product.description,
+            price: product.price,
+            stock: product.stock,
+            category_id: product.category_id,
+          });
+          dispatch(clearImages());
+          product.images.forEach((image) => dispatch(addImage(image)));
+        }
+      });
+    } else {
       setFormData(initialFormData);
       dispatch(clearImages());
     }
-  }, [loading, error]);
+  }, [id, dispatch]);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -55,6 +72,7 @@ const AddItemForm = () => {
       [name]: type === "checkbox" ? checked : value,
     });
   };
+
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
     files.forEach((file) => dispatch(addImage(file)));
@@ -73,15 +91,31 @@ const AddItemForm = () => {
       return;
     }
 
-    // Nếu không có lỗi, tiến hành submit
-    console.log("form data:", formData);
-    dispatch(addProduct({ ...formData, images }));
+    if (id) {
+      dispatch(
+        updateProduct({ id, productData: { ...formData, images } })
+      ).then((action) => {
+        if (action.meta.requestStatus === "fulfilled") {
+          navigate(`/products`);
+        }
+      });
+    } else {
+      dispatch(addProduct({ ...formData, images })).then((action) => {
+        if (action.meta.requestStatus === "fulfilled") {
+          navigate(`/products`);
+        }
+      });
+    }
   };
 
   return (
     <FormContainer as="form" onSubmit={handleSubmit}>
-      <h2>Create product</h2>
-
+      <h2>{id ? "Update product" : "Create product"}</h2>
+      {id && (
+        <SubmitButton onClick={() => navigate(`/products`)}>
+          Back to products
+        </SubmitButton>
+      )}
       {/* Tên sản phẩm */}
       <FormGroup>
         <FormLabel>Product title</FormLabel>
@@ -111,7 +145,11 @@ const AddItemForm = () => {
         <ImageUploadContainer>
           {images.map((image, index) => (
             <div key={index} className="image-preview">
-              <img src={URL.createObjectURL(image)} alt="product" />
+              {image instanceof File || image instanceof Blob ? (
+                <img src={URL.createObjectURL(image)} alt="product" />
+              ) : (
+                <img src={image} alt="product" />
+              )}
               <button
                 type="button"
                 onClick={() => dispatch(removeImage(index))}
@@ -177,28 +215,16 @@ const AddItemForm = () => {
         />
       </FormGroup>
 
-      {/* Publish checkbox */}
-      <FormGroup>
-        <CheckboxGroup>
-          <input
-            type="checkbox"
-            id="publish"
-            name="publish"
-            checked={formData.publish}
-            onChange={handleInputChange}
-          />
-          <label htmlFor="publish">Publish on site</label>
-        </CheckboxGroup>
-      </FormGroup>
-
       {/* Submit button */}
       <FormGroup>
         <SubmitButton type="submit" disabled={loading}>
-          {loading ? "Submitting..." : "Submit item"}
+          {loading ? "Submitting..." : id ? "Update item" : "Submit item"}
         </SubmitButton>
       </FormGroup>
 
-      {error && <p>Error: {error}</p>}
+      {error && (
+        <p>Error: {typeof error === "string" ? error : error.message}</p>
+      )}
     </FormContainer>
   );
 };

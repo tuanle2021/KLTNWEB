@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { fetchUserById } from "../../redux/slices/userSlice";
 import { FaTrashAlt } from "react-icons/fa";
 
@@ -19,6 +19,7 @@ import {
 const UserDetail = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { userDetail, loading, error } = useSelector((state) => state.users);
 
   useEffect(() => {
@@ -34,7 +35,9 @@ const UserDetail = () => {
 
   return (
     <ProfileContainer>
-      <h1>User Profile</h1>
+      <Button className="go-back" onClick={() => navigate(`/users`)}>
+        Go Back
+      </Button>{" "}
       <ProfileTop>
         <Header />
         <Logo
