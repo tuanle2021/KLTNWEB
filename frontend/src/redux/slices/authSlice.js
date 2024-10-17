@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import Cookies from "js-cookie";
 
@@ -10,6 +10,23 @@ export const login = createAsyncThunk(
       const { data } = await axios.post(
         `${process.env.REACT_APP_BACKEND_URL}/login`,
         { email, password }
+      );
+      Cookies.set("user", JSON.stringify(data)); // Lưu vào cookie
+      return data; // Trả về dữ liệu cho Redux
+    } catch (error) {
+      return rejectWithValue(error.response.data.message);
+    }
+  }
+);
+
+// Async thunk for register
+export const register = createAsyncThunk(
+  "auth/register",
+  async (userData, { rejectWithValue }) => {
+    try {
+      const { data } = await axios.post(
+        `${process.env.REACT_APP_BACKEND_URL}/register`,
+        userData
       );
       Cookies.set("user", JSON.stringify(data)); // Lưu vào cookie
       return data; // Trả về dữ liệu cho Redux
@@ -44,6 +61,18 @@ const authSlice = createSlice({
       })
       .addCase(login.rejected, (state, action) => {
         console.log("Login failed with error: ", action.payload); // Kiểm tra nếu action rejected được gọi
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(register.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(register.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload;
+      })
+      .addCase(register.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

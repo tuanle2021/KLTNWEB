@@ -1,11 +1,15 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaHeart, FaEye } from "react-icons/fa";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchProductById } from "../../redux/slices/productSlice";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
+import { FiShoppingCart } from "react-icons/fi";
 import { addToCart } from "../../redux/slices/cartSlice";
+
 import {
   ProductCardContainer,
   ProductImage,
+  Image,
   DiscountBadge,
   ProductActionIcons,
   ProductDetails,
@@ -19,6 +23,20 @@ import {
 const ProductCart = ({ product }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const Product = useSelector((state) =>
+    state.products.products.find((Product) => Product._id === product)
+  );
+  const [isFavorited, setIsFavorited] = useState(false);
+  useEffect(() => {
+    if (!product) {
+      dispatch(fetchProductById(product));
+    }
+  }, [dispatch, product, Product]);
+
+  const handleFavoriteClick = (e) => {
+    e.stopPropagation();
+    setIsFavorited(!isFavorited);
+  };
 
   // Nếu không có sản phẩm được truyền vào, hiển thị "Loading..."
   if (!product) return <p>Loading...</p>;
@@ -42,28 +60,33 @@ const ProductCart = ({ product }) => {
   };
   return (
     <ProductCardContainer onClick={handleCardClick}>
-      {/* Nhãn giảm giá nếu có giảm giá */}
-      {discount > 0 && <DiscountBadge>{`-${discount}%`}</DiscountBadge>}
+      <ProductImage>
+        {/* Nhãn giảm giá */}
+        <DiscountBadge>{`-${discount}%`}</DiscountBadge>
 
-      {/* Các icon hành động (Yêu thích và Xem chi tiết) */}
-      <ProductActionIcons>
-        <ActionIcon>
-          <FaHeart />
-        </ActionIcon>
-        <ActionIcon>
-          <FaEye />
-        </ActionIcon>
-      </ProductActionIcons>
+        {/* Các icon hành động (Yêu thích và Xem chi tiết) */}
+        <ProductActionIcons>
+          <ActionIcon onClick={handleFavoriteClick}>
+            {isFavorited ? <FaHeart /> : <FaRegHeart />}
+          </ActionIcon>
+        </ProductActionIcons>
 
-      {/* Hình ảnh sản phẩm */}
-      <ProductImage
-        src={
-          images && images.length > 0
-            ? images[0]
-            : `https://via.placeholder.com/150?text=${name}`
-        }
-        alt={name}
-      />
+        {/* Hình ảnh sản phẩm */}
+        <Image
+          src={
+            images && images.length > 0
+              ? images[0]
+              : `https://via.placeholder.com/150?text=${name}`
+          }
+          alt={name}
+        />
+        <AddToCartButton onClick={handleAddToCart}>
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <FiShoppingCart size={16} />
+            <p style={{ marginLeft: "8px" }}> Add To Cart</p>
+          </div>
+        </AddToCartButton>
+      </ProductImage>
 
       {/* Thông tin chi tiết sản phẩm */}
       <ProductDetails>
@@ -75,7 +98,6 @@ const ProductCart = ({ product }) => {
         <ProductRating>
           <span>⭐</span> {rating} ({reviews})
         </ProductRating>
-        <AddToCartButton onClick={handleAddToCart}>Add To Cart</AddToCartButton>
       </ProductDetails>
     </ProductCardContainer>
   );

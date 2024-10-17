@@ -1,49 +1,36 @@
-import React, { useEffect, useRef } from "react";
-import { useDispatch, useSelector } from "react-redux"; // Thêm import useDispatch từ react-redux
+import React, {
+  useEffect,
+  useRef,
+  useCallback,
+  useMemo,
+  useState,
+} from "react";
+import { useDispatch, useSelector } from "react-redux";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import PromoSlider from "../../components/Slide";
 import CategoryMenu from "../../components/Category";
-import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
-import { fetchFilterProduct, setPage } from "../../redux/slices/productSlice";
-
-import ProductCart from "../../components/ProductComponent/ProductCart";
-import { fetchProducts } from "../../redux/slices/productSlice";
+import {
+  fetchFilterProduct,
+  fetchProducts,
+  setPage,
+} from "../../redux/slices/productSlice";
 import Roadmap from "../../components/RoadmapComponent/Roadmap";
 import FlashSale from "../../components/QuickviewComponent/QuickView";
-import ProductList from "../../components/ProductComponent/ProductList";
+import ProductGrid from "./ProductGrid";
+import ProductListSection from "./ProductListSection";
+import CategorySection from "./CategorySection";
+import { TopBanner } from "./style";
 
-import {
-  TopBanner,
-  ProductGrid,
-  LeftArrowButton,
-  RightArrowButton,
-  Title,
-  ProductListContainer,
-  Pagination,
-  PaginationButton,
-  PaginationInfo,
-} from "./style";
 const HomePage = () => {
-  const dispatch = useDispatch(); // Sử dụng useDispatch để dispatch các hành động
-  // const { products, loading, error } = useSelector((state) => state.products);
-
-  useEffect(() => {
-    dispatch(fetchProducts());
-  }, [dispatch]);
-
+  const dispatch = useDispatch();
   const gridRef = useRef();
-
-  const scrollLeft = () => {
-    gridRef.current.scrollBy({ left: -300, behavior: "smooth" });
-  };
-
-  const scrollRight = () => {
-    gridRef.current.scrollBy({ left: 300, behavior: "smooth" });
-  };
+  const [localProducts, setLocalProducts] = useState([]);
+  const [localFeaturedProducts, setLocalFeaturedProducts] = useState([]);
 
   const {
     products,
+    featuredProducts,
     loading,
     error,
     currentPage,
@@ -51,74 +38,56 @@ const HomePage = () => {
     productsPerPage,
     totalPages,
   } = useSelector((state) => state.products);
-
+  useEffect(() => {
+    dispatch(fetchProducts());
+  }, [dispatch]);
   useEffect(() => {
     dispatch(fetchFilterProduct({ page: currentPage, limit: productsPerPage }));
-  }, [dispatch, currentPage]);
+  }, [dispatch, currentPage, productsPerPage]);
 
-  // Chuyển trang trước
-  const handlePreviousPage = () => {
+  useEffect(() => {
+    setLocalProducts(products);
+    setLocalFeaturedProducts(featuredProducts);
+  }, [products, featuredProducts]);
+
+  const handlePreviousPage = useCallback(() => {
     if (currentPage > 1) {
       dispatch(setPage(currentPage - 1));
     }
-  };
+  }, [dispatch, currentPage]);
 
-  // Chuyển trang sau
-  const handleNextPage = () => {
+  const handleNextPage = useCallback(() => {
     if (currentPage < totalPages) {
       dispatch(setPage(currentPage + 1));
     }
-  };
-  if (loading) return console.log("Loading products...");
-  if (error) return console.log("Error loading products:", error);
+  }, [dispatch, currentPage, totalPages]);
+
+  const memoizedProducts = useMemo(() => localProducts, [localProducts]);
+  const memoizedFilterProducts = useMemo(
+    () => localFeaturedProducts,
+    [localFeaturedProducts]
+  );
+
+  if (loading) return <p>Loading products...</p>;
+  if (error) return <p>Error loading products: {error}</p>;
 
   return (
     <div>
-      {/* Roadmap hiển thị đường dẫn */}
       <Roadmap />
       <div className="container">
         <TopBanner>
-          <CategoryMenu />
           <PromoSlider />
         </TopBanner>
+        <CategorySection />
 
-        <div style={{ position: "relative" }}>
-          <LeftArrowButton onClick={scrollLeft}>
-            <FaArrowLeft />
-          </LeftArrowButton>
-          <ProductGrid ref={gridRef}>
-            {products.map((product) => (
-              <ProductCart key={product._id} product={product} />
-            ))}
-          </ProductGrid>
-          <RightArrowButton onClick={scrollRight}>
-            <FaArrowRight />
-          </RightArrowButton>
-        </div>
-
-        <>
-          <Title>Product List</Title>
-          <ProductListContainer>
-            {products.map((product) => (
-              <ProductCart key={product._id} product={product} />
-            ))}
-          </ProductListContainer>
-          <Pagination>
-            <PaginationButton
-              onClick={handlePreviousPage}
-              disabled={currentPage === 1}
-            >
-              Previous
-            </PaginationButton>
-            <PaginationInfo>Page {currentPage}</PaginationInfo>
-            <PaginationButton
-              onClick={handleNextPage}
-              disabled={currentPage === totalPages}
-            >
-              Next
-            </PaginationButton>
-          </Pagination>
-        </>
+        <ProductListSection
+          products={memoizedFilterProducts}
+          handlePreviousPage={handlePreviousPage}
+          handleNextPage={handleNextPage}
+          currentPage={currentPage}
+          totalPages={totalPages}
+        />
+        <ProductGrid ref={gridRef} products={memoizedProducts} />
         <FlashSale />
       </div>
     </div>

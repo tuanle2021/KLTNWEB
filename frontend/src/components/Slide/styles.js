@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const PromoContainer = styled.div`
-  width: 70%;
+  width: 100%;
   max-width: 1200px;
   margin: 0 auto;
   overflow: hidden;
@@ -12,7 +12,7 @@ export const PromoContent = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  height: 400px;
+  height: auto;
   background-size: cover;
   background-position: center;
   border-radius: 10px;

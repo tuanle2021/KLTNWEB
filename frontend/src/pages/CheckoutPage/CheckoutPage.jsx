@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import Roadmap from "../../components/RoadmapComponent/Roadmap";
 import {
@@ -12,7 +13,12 @@ import {
   PlaceOrderButton,
   SummaryItem,
   CheckboxLabel,
+  OrderSuccessContainer,
+  SuccessMessage,
+  OrderDetails,
+  BackToHomeButton,
 } from "./styles";
+import { createOrder } from "../../redux/slices/orderSlice";
 
 const CheckoutPage = () => {
   const [formData, setFormData] = useState({
@@ -23,11 +29,14 @@ const CheckoutPage = () => {
     phoneNumber: "",
     emailAddress: "",
   });
+  const [orderSuccess, setOrderSuccess] = useState(false); // State để kiểm tra trạng thái đặt hàng thành công
 
-  const orderSummary = useSelector((state) => state.order) || {
-    items: [],
-    shipping_address: "",
-  };
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const { orderSummary, items, shipping_address } = useSelector(
+    (state) => state.order
+  );
 
   useEffect(() => {
     const userData = Cookies.get("user") ? JSON.parse(Cookies.get("user")) : {};
@@ -53,20 +62,34 @@ const CheckoutPage = () => {
   };
 
   const calculateSubtotal = () => {
-    return orderSummary.items.reduce(
-      (acc, item) => acc + item.product.price * item.quantity,
-      0
+    return (
+      orderSummary?.items?.reduce(
+        (acc, item) => acc + item.product.price * item.quantity,
+        0
+      ) || 0
     );
   };
 
   const calculateTotal = () => {
-    return calculateSubtotal() + (orderSummary.shipping || 0);
+    return calculateSubtotal() + (orderSummary?.shipping || 0);
+  };
+
+  const handlePlaceOrder = async () => {
+    try {
+      // Dispatch action để tạo đơn hàng
+      await dispatch(createOrder());
+      // Thay đổi trạng thái orderSuccess khi đặt hàng thành công
+      setOrderSuccess(true);
+    } catch (error) {
+      console.error("Failed to place order:", error);
+    }
   };
 
   return (
     <div>
       {/* Roadmap hiển thị đường dẫn */}
       <Roadmap />
+
       <CheckoutContainer>
         {/* Billing Details Section */}
         <BillingDetails>
@@ -140,7 +163,7 @@ const CheckoutPage = () => {
         {/* Order Summary Section */}
         <OrderSummary>
           <h3>Order Summary</h3>
-          {orderSummary.items.map((item, index) => (
+          {orderSummary?.items?.map((item, index) => (
             <SummaryItem key={index}>
               <span>{item.product.name}</span>
               <span>${item.product.price}</span>
@@ -152,7 +175,7 @@ const CheckoutPage = () => {
           </SummaryItem>
           <SummaryItem>
             <span>Shipping:</span>
-            <span>{orderSummary.shipping}</span>
+            <span>{orderSummary?.shipping}</span>
           </SummaryItem>
           <SummaryItem>
             <span>Total:</span>
@@ -176,9 +199,20 @@ const CheckoutPage = () => {
             <button>Apply Coupon</button>
           </CouponContainer>
 
-          <PlaceOrderButton>Place Order</PlaceOrderButton>
+          <PlaceOrderButton onClick={handlePlaceOrder}>
+            Place Order
+          </PlaceOrderButton>
         </OrderSummary>
       </CheckoutContainer>
+      <OrderSuccessContainer>
+        <SuccessMessage>Order Placed Successfully!</SuccessMessage>
+        <OrderDetails>
+          Your order has been placed and is being processed.
+        </OrderDetails>
+        <a href="/">
+          <BackToHomeButton>Back to Home</BackToHomeButton>
+        </a>
+      </OrderSuccessContainer>
     </div>
   );
 };

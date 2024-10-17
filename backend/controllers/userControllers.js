@@ -6,7 +6,7 @@ const { sendEmail } = require("../helpers/sendEmail");
 const { generateToken } = require("../helpers/createToken");
 exports.register = async (req, res) => {
   try {
-    const { name, email, password, address, phone, gender } = req.body;
+    const { name, email, password, address, phone, gender, isAdmin=false } = req.body;
 
     // Validate dữ liệu
     if (!validateLength(name, 3, 50)) {
@@ -45,6 +45,7 @@ exports.register = async (req, res) => {
       address,
       phone,
       gender,
+      isAdmin: req.user && req.user.isAdmin ? isAdmin : false,// Nếu người dùng hiện tại là quản trị viên thì tạo người dùng mới với quyền quản trị viên
     });
 
     // Lưu người dùng vào cơ sở dữ liệu

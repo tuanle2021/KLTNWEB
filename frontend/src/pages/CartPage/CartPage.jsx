@@ -1,5 +1,5 @@
+// src/pages/CartPage/CartPage.jsx
 import React, { useEffect, useState } from "react";
-import { IoIosCloseCircle } from "react-icons/io";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
@@ -10,17 +10,10 @@ import {
   updateCartItem,
   deleteCartItem,
 } from "../../redux/slices/cartSlice";
-import { setOrderItems } from "../../redux/slices/orderSlice";
+import { setOrderItems, createOrder } from "../../redux/slices/orderSlice";
 import {
   CartContainer,
   CartHeader,
-  CartItemContainer,
-  ProductImage,
-  ProductName,
-  ProductPrice,
-  ProductQuantity,
-  ProductSubtotal,
-  RemoveButton,
   CartActions,
   CouponInput,
   ApplyCouponButton,
@@ -30,8 +23,8 @@ import {
   ReturnToShopButton,
   CouponAndTotalContainer,
   CartTotalDetail,
-  SelectItemCheckbox,
 } from "./styles";
+import CartItem from "./CartItem";
 
 const CartPage = () => {
   const dispatch = useDispatch();
@@ -48,7 +41,6 @@ const CartPage = () => {
     setQuantities(items.map((item) => item.quantity));
   }, [items]);
 
-  // Hàm để cập nhật số lượng sản phẩm
   const handleQuantityChange = (index, quantity) => {
     const newQuantities = [...quantities];
     newQuantities[index] = quantity;
@@ -58,7 +50,6 @@ const CartPage = () => {
     }
   };
 
-  // Hàm để chọn sản phẩm
   const handleSelectItem = (index) => {
     dispatch(toggleSelectItem({ index }));
   };
@@ -70,7 +61,7 @@ const CartPage = () => {
     });
     window.location.reload();
   };
-  // Tính tổng giá trị của giỏ hàng
+
   const calculateSubtotal = () => {
     return selectedItems.reduce(
       (acc, index) => acc + items[index].product.price * items[index].quantity,
@@ -78,22 +69,34 @@ const CartPage = () => {
     );
   };
 
-  // Hàm xử lý sự kiện checkout
-  const handleCheckout = () => {
-    const selectedProducts = selectedItems.map((index) => items[index]);
-    dispatch(setOrderItems({ items: selectedProducts, shipping_address: "" }));
-    dispatch(clearSelectedItems());
-    navigate("/checkout");
+  const handleCheckout = async () => {
+    const selectedProducts = selectedItems.map((index) => ({
+      product_id: items[index].product._id,
+      quantity: items[index].quantity,
+    }));
+    const orderData = {
+      items: selectedProducts,
+      shipping_address: " ",
+    };
+    dispatch(setOrderItems(selectedProducts));
+    try {
+      await dispatch(createOrder(orderData)).unwrap();
+      dispatch(clearSelectedItems());
+      navigate("/checkout");
+    } catch (error) {
+      console.error("Failed to create order:", error);
+    }
   };
 
-  // Hàm để xóa sản phẩm khỏi giỏ hàng
   const handleRemoveItem = (id) => {
     dispatch(deleteCartItem(id));
     window.location.reload();
   };
+
   const handleReturnShop = () => {
     navigate("/");
   };
+
   if (loading) {
     return <p>Loading...</p>;
   }
@@ -104,7 +107,6 @@ const CartPage = () => {
 
   return (
     <CartContainer>
-      {/* Phần tiêu đề giỏ hàng */}
       <CartHeader>
         <span>Image</span>
         <span>Product</span>
@@ -113,36 +115,19 @@ const CartPage = () => {
         <span>Quantity</span>
       </CartHeader>
 
-      {/* Các sản phẩm trong giỏ hàng */}
       {items.map((item, index) => (
-        <CartItemContainer key={item.product._id}>
-          <SelectItemCheckbox
-            type="checkbox"
-            checked={selectedItems.includes(index)}
-            onChange={() => handleSelectItem(index)}
-          />
-          <RemoveButton onClick={() => handleRemoveItem(item._id)}>
-            <IoIosCloseCircle size={20} color="#e74c3c" />
-          </RemoveButton>
-          <ProductImage src={item.product.images[0]} alt={item.product.name} />
-          <ProductName>{item.product.name}</ProductName>
-          <ProductPrice>${item.product.price}</ProductPrice>
-          <ProductSubtotal>
-            ${item.product.price * item.quantity}
-          </ProductSubtotal>
-          <ProductQuantity
-            type="number"
-            min="1"
-            value={item.quantity}
-            onChange={(e) =>
-              handleQuantityChange(index, parseInt(e.target.value, 10))
-            }
-            disabled={!selectedItems.includes(index)}
-          />
-        </CartItemContainer>
+        <CartItem
+          key={item.product._id}
+          item={item}
+          index={index}
+          selectedItems={selectedItems}
+          quantities={quantities}
+          handleSelectItem={handleSelectItem}
+          handleQuantityChange={handleQuantityChange}
+          handleRemoveItem={handleRemoveItem}
+        />
       ))}
 
-      {/* Các hành động như mã coupon và quay lại shop */}
       <CartActions>
         <ReturnToShopButton onClick={handleReturnShop}>
           Return To Shop
@@ -152,7 +137,6 @@ const CartPage = () => {
         </UpdateCartButton>
       </CartActions>
 
-      {/* Phần mã coupon và tổng giá trị giỏ hàng */}
       <CouponAndTotalContainer>
         <div>
           <CouponInput placeholder="Coupon Code" />
@@ -170,8 +154,7 @@ const CartPage = () => {
           </CartTotalDetail>
           <CartTotalDetail>
             <span>Total:</span>
-            <span>${calculateSubtotal()}</span>{" "}
-            {/* Tạm thời chưa tính phí ship và giảm giá*/}
+            <span>${calculateSubtotal()}</span>
           </CartTotalDetail>
           <ProceedToCheckoutButton
             onClick={handleCheckout}

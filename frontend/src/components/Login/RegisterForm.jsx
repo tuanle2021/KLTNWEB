@@ -3,10 +3,9 @@ import { Form, Formik } from "formik";
 import RegisterInput from "./RegisterInput/RegisterInput";
 import * as Yup from "yup";
 import DotLoader from "react-spinners/DotLoader";
-import axios from "axios";
-import { useDispatch } from "react-redux";
-import Cookies from "js-cookie";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { register } from "../../redux/slices/authSlice"; // Import thunk register
 import {
   FormWrapper,
   LogoWrapper,
@@ -37,6 +36,7 @@ const RegisterPage = ({ setVisible }) => {
   const navigate = useNavigate();
   const [user, setUser] = useState(userInfos);
   const { name, email, password, address, phone, gender } = user;
+  const { loading, error, success } = useSelector((state) => state.auth);
 
   const handleRegisterChange = (e) => {
     const { name, value } = e.target;
@@ -97,48 +97,22 @@ const RegisterPage = ({ setVisible }) => {
 
   const [genderError, setGenderError] = useState("");
 
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
-  const [loading, setLoading] = useState(true);
-
   const registerSubmit = async () => {
-    try {
-      setLoading(true);
-      const { data } = await axios.post(
-        `${process.env.REACT_APP_BACKEND_URL}/register`,
-        {
-          name,
-          email,
-          password,
-          address: {
-            street: user.address.street,
-            city: user.address.city,
-            country: user.address.country,
-          },
-          phone,
-          gender,
-        }
+    if (gender === "") {
+      setGenderError(
+        "Please choose a gender. You can change who can see this later."
       );
-      setError("");
-      setSuccess(data.message);
-      const { message, ...rest } = data;
-      setTimeout(() => {
-        dispatch({ type: "LOGIN", payload: rest });
-        Cookies.set("user", JSON.stringify(rest));
-        setVisible(false); // Hide the register form and show the login form
-      }, 2000);
-    } catch (error) {
-      setLoading(false);
-      setSuccess("");
-      if (error.response && error.response.status === 400) {
-        setError("Account already exists. Please use a different email.");
-      } else {
-        setError(
-          error.response
-            ? error.response.data.message
-            : "An error occurred. Please try again."
-        );
-      }
+    } else {
+      setGenderError("");
+      dispatch(register({ name, email, password, address, phone, gender }))
+        .unwrap()
+        .then((data) => {
+          setVisible(false); // Hide the register form and show the login form
+          navigate("/dashboard"); // Điều hướng đến trang dashboard sau khi đăng ký thành công
+        })
+        .catch((error) => {
+          console.error("Registration failed:", error);
+        });
     }
   };
 
@@ -165,16 +139,7 @@ const RegisterPage = ({ setVisible }) => {
           gender,
         }}
         validationSchema={registerValidation}
-        onSubmit={() => {
-          if (gender === "") {
-            setGenderError(
-              "Please choose a gender. You can change who can see this later."
-            );
-          } else {
-            setGenderError("");
-            registerSubmit();
-          }
-        }}
+        onSubmit={registerSubmit}
       >
         {(formik) => (
           <Form>

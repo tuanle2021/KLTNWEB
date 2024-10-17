@@ -49,7 +49,7 @@ export const fetchOrdersByUserId = createAsyncThunk(
 const orderSlice = createSlice({
   name: "order",
   initialState: {
-    shipping_address: null,
+    shipping_address: " ",
     items: [],
     order: null,
     loading: false,
