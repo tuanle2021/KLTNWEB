@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProducts, setPage } from "../../redux/slices/productSlice";
+import { fetchCategories } from "../../redux/slices/categorySlice";
 import ProductCard from "./ProductCard";
-import AddItemForm from "./AddItemForm";
 import {
   ProductContainer,
   ProductGrid,
@@ -14,6 +14,7 @@ import {
 
 const MainProducts = () => {
   const dispatch = useDispatch();
+  const { categories = [] } = useSelector((state) => state.categories) || {};
   const { products, totalPages, currentPage, loading, error } = useSelector(
     (state) => state.products
   );
@@ -22,6 +23,10 @@ const MainProducts = () => {
   useEffect(() => {
     dispatch(fetchProducts({ page: currentPage, limit: 10 }));
   }, [dispatch, currentPage]);
+
+  useEffect(() => {
+    dispatch(fetchCategories());
+  }, [dispatch]);
 
   const handlePageChange = (page) => {
     dispatch(setPage(page));
@@ -50,9 +55,11 @@ const MainProducts = () => {
         <SelectGroup>
           <select>
             <option>All categories</option>
-            <option>All categories</option>
-            <option>All categories</option>
-            <option>All categories</option>
+            {categories.map((category) => (
+              <option key={category._id} value={category._id}>
+                {category.name}
+              </option>
+            ))}
           </select>
           <select>
             <option>Latest added</option>

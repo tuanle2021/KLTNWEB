@@ -9,7 +9,7 @@ export const SidebarContainer = styled.div`
   bottom: 0;
   width: 100%;
   overflow-y: auto;
-  background-color: #343a40;
+  background-color: #f8f9fa;
   box-shadow: 0 0.1rem 0.25rem rgba(0, 0, 0, 0.075);
   z-index: 10;
   border-right: 1px solid rgba(108, 117, 125, 0.25);
@@ -39,11 +39,11 @@ export const BrandWrap = styled(Link)`
   padding: 1rem;
   display: flex;
   align-items: center;
-  color: #fff;
+  color: #3068e0;
   text-decoration: none;
   font-size: 1.4rem;
   font-weight: bold;
-  background-color: #343a40;
+  background-color: #f8f9fa;
   &:hover {
     color: #007bff;
   }
@@ -84,21 +84,27 @@ export const MenuLink = styled(NavLink)`
   display: flex;
   align-items: center;
   justify-content: ${(props) => (props.isMinimized ? "center" : "flex-start")};
-  color: #fff;
+  color: #464a5d;
+  font-weight: bold;
   text-decoration: none;
   padding: 10px;
   border-radius: 4px;
   &:hover {
-    background-color: #495057;
+    background-color: ;
   }
   &.active {
-    background-color: #007bff;
+    background-color: #e8effd;
+    color: #5475af;
     border-radius: 8px;
+    i {
+      color: #3068e0;
+    }
   }
 `;
 
 export const Icon = styled.i`
   margin-right: ${(props) => (props.isMinimized ? "0" : "10px")};
+  color: #b3b4cf;
 `;
 export const Overlay = styled.div`
   position: fixed;
