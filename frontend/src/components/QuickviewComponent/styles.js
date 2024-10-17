@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 export const FlashSaleContainer = styled.div`
   padding: 40px;
@@ -46,7 +46,7 @@ export const ProductList = styled.div`
 
 export const ProductCard = styled.div`
   position: relative;
-  width: 220px;
+  width: 200px;
   padding: 20px;
   border: 1px solid #ddd;
   border-radius: 10px;

@@ -8,7 +8,7 @@ export const ProfileContainer = styled.div`
 `;
 
 export const Sidebar = styled.div`
-  width: 250px;
+  width: 150px;
   margin-right: 40px;
 `;
 
@@ -111,4 +111,113 @@ export const CancelButton = styled.button`
     color: #333;
     border-color: #333;
   }
+`;
+
+export const OrderContainer = styled.div`
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+`;
+
+export const OrderInfo = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+
+  .flex {
+    display: flex;
+    gap: 20px;
+  }
+
+  .date {
+    margin-left: 10px;
+    color: #007bff;
+    color: #000;
+  }
+`;
+
+export const ProductInfo = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 20px 0;
+
+  img {
+    width: 80px;
+    height: 80px;
+    margin-right: 20px;
+  }
+`;
+
+export const ProductDetails = styled.div`
+  flex: 1;
+
+  .product-name {
+    font-size: 14px;
+    margin-bottom: 5px;
+  }
+  .rattings,
+  .return-policy {
+    font-size: 12px;
+    color: #666;
+  }
+`;
+
+export const PriceInfo = styled.div`
+  font-size: 16px;
+  font-weight: bold;
+  color: #000;
+  .stock {
+    font-size: 14px;
+    color: #666;
+  }
+`;
+
+export const OrderActions = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #eee;
+  padding-top: 10px;
+
+  .actions {
+    display: flex;
+    gap: 10px;
+  }
+`;
+
+export const Button = styled.button`
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  background-color: #f56b2a;
+  color: #fff;
+  font-weight: bold;
+
+  &.review-btn {
+    background-color: #ff5722;
+  }
+
+  &.reorder-btn {
+    background-color: #4caf50;
+  }
+  &.hide {
+    background-color: #fff;
+    border: none;
+    transition: var(--smooth);
+  }
+`;
+
+export const StatusBadge = styled.span`
+  font-size: 14px;
+  padding: 5px 10px;
+  border-radius: 4px;
+  background-color: ${({ status }) =>
+    status === "HOÀN THÀNH" ? "#4caf50" : "#f44336"};
+  color: #fff;
+  font-weight: bold;
 `;
