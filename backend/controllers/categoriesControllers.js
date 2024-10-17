@@ -57,11 +57,11 @@ const deleteCategoryById = async (req, res) => {
 const updateCategoryById = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name } = req.body;
+    const { name, description } = req.body;
 
     const category = await Category.findByIdAndUpdate(
       id,
-      { name },
+      { name, description },
       { new: true, runValidators: true }
     );
 

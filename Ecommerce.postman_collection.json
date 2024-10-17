@@ -1,0 +1,1006 @@
+{
+	"info": {
+		"_postman_id": "1bc52d5c-0365-4f36-8d7b-673e908b149a",
+		"name": "Ecommerce",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "36025851"
+	},
+	"item": [
+		{
+			"name": "Products",
+			"item": [
+				{
+					"name": "Add products",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "MacBook Air 13 inch M1 ",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "MacBook Air 13 inch M1 2020 8CPU 7GPU 8GB/256GB",
+									"type": "text"
+								},
+								{
+									"key": "price",
+									"value": "980",
+									"type": "text"
+								},
+								{
+									"key": "stock",
+									"value": "12",
+									"type": "text"
+								},
+								{
+									"key": "category_id",
+									"value": "66fba041558e4077b4716136",
+									"type": "text"
+								},
+								{
+									"key": "images",
+									"type": "file",
+									"src": [
+										"/C:/Users/huynh/Downloads/picture/MacBook Air 13 inch M1 4.jpg",
+										"/C:/Users/huynh/Downloads/picture/MacBook Air 13 inch M1 3.jpg",
+										"/C:/Users/huynh/Downloads/picture/MacBook Air 13 inch M1 2.jpg",
+										"/C:/Users/huynh/Downloads/picture/MacBook Air 13 inch M1 .jpg"
+									]
+								}
+							]
+						},
+						"url": {
+							"raw": "{{Eurl}}/products",
+							"host": [
+								"{{Eurl}}"
+							],
+							"path": [
+								"products"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "description",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "price",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "stock",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "category_id",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "images",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update product",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZjY3MDJjYTAwZjJiNjJlZTAwOTU3YSIsImlhdCI6MTcyNzc1NDAwMSwiZXhwIjoxNzI4MzU4ODAxfQ.3gr6mfSBGsGvNbsqwJApRmoBv4DVHsWS5JsstL4-8wY",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Iphone",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "This is the new version of this year",
+									"type": "text"
+								},
+								{
+									"key": "price",
+									"value": "1509",
+									"type": "text"
+								},
+								{
+									"key": "stock",
+									"value": "22",
+									"type": "text"
+								},
+								{
+									"key": "category_id",
+									"value": "66fa513908238537f54999c5",
+									"type": "text"
+								},
+								{
+									"key": "images",
+									"type": "file",
+									"src": "/C:/Users/huynh/Downloads/picture/download (4).jpg"
+								},
+								{
+									"key": "ratings",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{Eurl}}/products/66fa7be78b7c87a660b68a43",
+							"host": [
+								"{{Eurl}}"
+							],
+							"path": [
+								"products",
+								"66fa7be78b7c87a660b68a43"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upload images",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "images",
+									"type": "file",
+									"src": "/C:/Users/huynh/Downloads/picture/download.jpg"
+								},
+								{
+									"key": "folderPath",
+									"value": "products",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{Eurl}}/images",
+							"host": [
+								"{{Eurl}}"
+							],
+							"path": [
+								"images"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All products",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Eurl}}/products",
+							"host": [
+								"{{Eurl}}"
+							],
+							"path": [
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Filter product",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Eurl}}/products?page=1&limit=10&category=electronics&filter=phone&minPrice=100&maxPrice=1000&sortByPrice=asc",
+							"host": [
+								"{{Eurl}}"
+							],
+							"path": [
+								"products"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "category",
+									"value": "electronics"
+								},
+								{
+									"key": "filter",
+									"value": "phone"
+								},
+								{
+									"key": "minPrice",
+									"value": "100"
+								},
+								{
+									"key": "maxPrice",
+									"value": "1000"
+								},
+								{
+									"key": "sortByPrice",
+									"value": "asc"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get product by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Eurl}}/products/66fa7c628b7c87a660b68a45",
+							"host": [
+								"{{Eurl}}"
+							],
+							"path": [
+								"products",
+								"66fa7c628b7c87a660b68a45"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZjY3MDJjYTAwZjJiNjJlZTAwOTU3YSIsImlhdCI6MTcyNzc1NDAwMSwiZXhwIjoxNzI4MzU4ODAxfQ.3gr6mfSBGsGvNbsqwJApRmoBv4DVHsWS5JsstL4-8wY",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{Eurl}}/products/66fbab01dc3c95dcf100be15",
+							"host": [
+								"{{Eurl}}"
+							],
+							"path": [
+								"products",
+								"66fbab01dc3c95dcf100be15"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Jonash Cals\",\r\n  \"email\": \"detexa@rinseart.com\",\r\n  \"password\": \"securepassword\",\r\n  \"address\": {\r\n    \"street\": \"123 Main Sting\",\r\n    \"city\": \"Souwun\",\r\n    \"state\": \"CA\",\r\n    \"zip\": \"12345\",\r\n    \"country\": \"USA\"\r\n  },\r\n  \"phone\": \"123-456-7890\",\r\n  \"gender\":\"male\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "verification",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZjYzYTNiZTAyY2JhN2E2YTJlODM2ZCIsImlhdCI6MTcyNzQxMjc5OSwiZXhwIjoxNzI4MDE3NTk5fQ.Qri27ylMz9F3GREngxqySCjH42_xrJFokJIzCTg4IXM",
+								"type": "text"
+							},
+							{
+								"key": "",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"token\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZjYzYTNiZTAyY2JhN2E2YTJlODM2ZCIsImlhdCI6MTcyNzQxMjc5OSwiZXhwIjoxNzI4MDE3NTk5fQ.Qri27ylMz9F3GREngxqySCjH42_xrJFokJIzCTg4IXM\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/activate",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"activate"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"huynh9201@gmail.com\",\r\n    \"password\":\"Huynh12\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "request-new-token",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"userId\": \"66f6734aa00f2b62ee009581\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/request-new-token",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"request-new-token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "authen",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZjY3MDJjYTAwZjJiNjJlZTAwOTU3YSIsImlhdCI6MTcyNzc1NDAwMSwiZXhwIjoxNzI4MzU4ODAxfQ.3gr6mfSBGsGvNbsqwJApRmoBv4DVHsWS5JsstL4-8wY",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8000/authen",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"authen"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all user",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZjY3MDJjYTAwZjJiNjJlZTAwOTU3YSIsImlhdCI6MTcyNzc1NDAwMSwiZXhwIjoxNzI4MzU4ODAxfQ.3gr6mfSBGsGvNbsqwJApRmoBv4DVHsWS5JsstL4-8wY",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{Eurl}}/users",
+							"host": [
+								"{{Eurl}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get user by id",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZjY3MDJjYTAwZjJiNjJlZTAwOTU3YSIsImlhdCI6MTcyNzc1MzU1OSwiZXhwIjoxNzI4MzU4MzU5fQ.0XKkFmbAFyLp0CbYw8b40ILcPrOsW5qCtk1PN0BJsHw",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{Eurl}}/users/66ed1131715c244f59a3f778",
+							"host": [
+								"{{Eurl}}"
+							],
+							"path": [
+								"users",
+								"66ed1131715c244f59a3f778"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Category",
+			"item": [
+				{
+					"name": "Add category",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"Watch\",\r\n    \"description\":\"Watch description\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Eurl}}/categories",
+							"host": [
+								"{{Eurl}}"
+							],
+							"path": [
+								"categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all category",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Eurl}}/categories",
+							"host": [
+								"{{Eurl}}"
+							],
+							"path": [
+								"categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete category",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{Eurl}}/categories/66fbaeb2900ff974492f2cc4",
+							"host": [
+								"{{Eurl}}"
+							],
+							"path": [
+								"categories",
+								"66fbaeb2900ff974492f2cc4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update category",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"Watch 0002\",\r\n    \"description\":\"Watch description edited\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Eurl}}/categories/66fbaf2cd5ff005fdf5b104f",
+							"host": [
+								"{{Eurl}}"
+							],
+							"path": [
+								"categories",
+								"66fbaf2cd5ff005fdf5b104f"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Cart",
+			"item": [
+				{
+					"name": "Add product to cart",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZmUzYTZkMmYxOGE5ZGE1YjhiMDAzYyIsImlhdCI6MTcyNzkzODY2OSwiZXhwIjoxNzI4NTQzNDY5fQ.9DegFgfV9Jy0INbpazTdCsArhF5dLafXnho1ZUdM1vk",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"productId\":\"66fe3dc9207cd8d5fc4af23e\",\r\n    \"quantity\":\"1\"\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Eurl}}/cart/add",
+							"host": [
+								"{{Eurl}}"
+							],
+							"path": [
+								"cart",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get product in cart",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZmUzYTZkMmYxOGE5ZGE1YjhiMDAzYyIsImlhdCI6MTcyNzkzODY2OSwiZXhwIjoxNzI4NTQzNDY5fQ.9DegFgfV9Jy0INbpazTdCsArhF5dLafXnho1ZUdM1vk",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Eurl}}/cart",
+							"host": [
+								"{{Eurl}}"
+							],
+							"path": [
+								"cart"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete cart item",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZmUzYTZkMmYxOGE5ZGE1YjhiMDAzYyIsImlhdCI6MTcyNzkzODY2OSwiZXhwIjoxNzI4NTQzNDY5fQ.9DegFgfV9Jy0INbpazTdCsArhF5dLafXnho1ZUdM1vk",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\":\"66fba09b558e4077b4716138\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Eurl}}/cart",
+							"host": [
+								"{{Eurl}}"
+							],
+							"path": [
+								"cart"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete cart",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZmUzYTZkMmYxOGE5ZGE1YjhiMDAzYyIsImlhdCI6MTcyNzkzODY2OSwiZXhwIjoxNzI4NTQzNDY5fQ.9DegFgfV9Jy0INbpazTdCsArhF5dLafXnho1ZUdM1vk",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\":\"66fba09b558e4077b4716138\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Eurl}}/cart",
+							"host": [
+								"{{Eurl}}"
+							],
+							"path": [
+								"cart"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update cart item by id",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZmUzYTZkMmYxOGE5ZGE1YjhiMDAzYyIsImlhdCI6MTcyNzkzODY2OSwiZXhwIjoxNzI4NTQzNDY5fQ.9DegFgfV9Jy0INbpazTdCsArhF5dLafXnho1ZUdM1vk",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\":\"66fba09b558e4077b4716138\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Eurl}}/cart",
+							"host": [
+								"{{Eurl}}"
+							],
+							"path": [
+								"cart"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Orders",
+			"item": [
+				{
+					"name": "Add order",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZmUzYTZkMmYxOGE5ZGE1YjhiMDAzYyIsImlhdCI6MTcyNzkzODY2OSwiZXhwIjoxNzI4NTQzNDY5fQ.9DegFgfV9Jy0INbpazTdCsArhF5dLafXnho1ZUdM1vk",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"shipping_address\": \"1 Mac Dinh Chi, Quan 1\",\r\n  \"items\": [\r\n    {\r\n      \"product_id\": \"66fe3dc9207cd8d5fc4af23e\",\r\n      \"quantity\": 3\r\n    },\r\n    {\r\n      \"product_id\": \"66fe3c052f18a9da5b8b0054\",\r\n      \"quantity\": 2\r\n    }\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Eurl}}/orders",
+							"host": [
+								"{{Eurl}}"
+							],
+							"path": [
+								"orders"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZjY3MDJjYTAwZjJiNjJlZTAwOTU3YSIsImlhdCI6MTcyNzc1NDAwMSwiZXhwIjoxNzI4MzU4ODAxfQ.3gr6mfSBGsGvNbsqwJApRmoBv4DVHsWS5JsstL4-8wY",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update order status",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZmUzYTZkMmYxOGE5ZGE1YjhiMDAzYyIsImlhdCI6MTcyNzkzODY2OSwiZXhwIjoxNzI4NTQzNDY5fQ.9DegFgfV9Jy0INbpazTdCsArhF5dLafXnho1ZUdM1vk",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"status\":\"shipped\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Eurl}}/orders/66fcbea55fb3b8cc1432761f",
+							"host": [
+								"{{Eurl}}"
+							],
+							"path": [
+								"orders",
+								"66fcbea55fb3b8cc1432761f"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update order items",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZmUzYTZkMmYxOGE5ZGE1YjhiMDAzYyIsImlhdCI6MTcyNzkzODY2OSwiZXhwIjoxNzI4NTQzNDY5fQ.9DegFgfV9Jy0INbpazTdCsArhF5dLafXnho1ZUdM1vk",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"shipping_address\": \"1 Mac Dinh Chi, Quan 1\",\r\n  \"items\": [\r\n    {\r\n      \"product_id\": \"66fba09b558e4077b4716138\",\r\n      \"quantity\": 3\r\n    },\r\n    {\r\n      \"product_id\": \"66fba0f3558e4077b471613a\",\r\n      \"quantity\": 2\r\n    }\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Eurl}}/orders/66fcbea55fb3b8cc1432761f/items",
+							"host": [
+								"{{Eurl}}"
+							],
+							"path": [
+								"orders",
+								"66fcbea55fb3b8cc1432761f",
+								"items"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get order by id",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZmUzYTZkMmYxOGE5ZGE1YjhiMDAzYyIsImlhdCI6MTcyNzkzODY2OSwiZXhwIjoxNzI4NTQzNDY5fQ.9DegFgfV9Jy0INbpazTdCsArhF5dLafXnho1ZUdM1vk",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{Eurl}}/orders/66fcbea55fb3b8cc1432761f",
+							"host": [
+								"{{Eurl}}"
+							],
+							"path": [
+								"orders",
+								"66fcbea55fb3b8cc1432761f"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get order by user id",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZmUzYTZkMmYxOGE5ZGE1YjhiMDAzYyIsImlhdCI6MTcyNzkzODY2OSwiZXhwIjoxNzI4NTQzNDY5fQ.9DegFgfV9Jy0INbpazTdCsArhF5dLafXnho1ZUdM1vk",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{Eurl}}/orders/66fcbea55fb3b8cc1432761f",
+							"host": [
+								"{{Eurl}}"
+							],
+							"path": [
+								"orders",
+								"66fcbea55fb3b8cc1432761f"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all orders",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZmUzYTZkMmYxOGE5ZGE1YjhiMDAzYyIsImlhdCI6MTcyNzkzODY2OSwiZXhwIjoxNzI4NTQzNDY5fQ.9DegFgfV9Jy0INbpazTdCsArhF5dLafXnho1ZUdM1vk",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{Eurl}}/orders",
+							"host": [
+								"{{Eurl}}"
+							],
+							"path": [
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all orders Copy",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZmUzYTZkMmYxOGE5ZGE1YjhiMDAzYyIsImlhdCI6MTcyNzkzODY2OSwiZXhwIjoxNzI4NTQzNDY5fQ.9DegFgfV9Jy0INbpazTdCsArhF5dLafXnho1ZUdM1vk",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{Eurl}}/orders/66f6702ca00f2b62ee00957a",
+							"host": [
+								"{{Eurl}}"
+							],
+							"path": [
+								"orders",
+								"66f6702ca00f2b62ee00957a"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

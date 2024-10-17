@@ -1,15 +1,19 @@
-import React, { useState } from "react";
-import { IoIosCloseCircle } from "react-icons/io";
+// src/pages/CartPage/CartPage.jsx
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import {
+  getCart,
+  updateQuantity,
+  toggleSelectItem,
+  clearSelectedItems,
+  updateCartItem,
+  deleteCartItem,
+} from "../../redux/slices/cartSlice";
+import { setOrderItems, createOrder } from "../../redux/slices/orderSlice";
 import {
   CartContainer,
   CartHeader,
-  CartItemContainer,
-  ProductImage,
-  ProductName,
-  ProductPrice,
-  ProductQuantity,
-  ProductSubtotal,
-  RemoveButton,
   CartActions,
   CouponInput,
   ApplyCouponButton,
@@ -20,77 +24,119 @@ import {
   CouponAndTotalContainer,
   CartTotalDetail,
 } from "./styles";
+import CartItem from "./CartItem";
 
-const CartPage = ({}) => {
-  const cartItems = [
-    {
-      id: "1",
-      name: "LCD Monitor",
-      price: 650,
-      quantity: 1,
-      image: "https://via.placeholder.com/100?text=LCD+Monitor",
-    },
-    {
-      id: "2",
-      name: "Gamepad",
-      price: 550,
-      quantity: 2,
-      image: "https://via.placeholder.com/100?text=Gamepad",
-    },
-  ];
-  // State lưu trữ thông tin sản phẩm
-  const [items, setItems] = useState(cartItems);
+const CartPage = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { items, selectedItems, loading, error } = useSelector(
+    (state) => state.cart
+  );
+  const [quantities, setQuantities] = useState([]);
+  useEffect(() => {
+    dispatch(getCart());
+  }, [dispatch]);
 
-  // Hàm để cập nhật số lượng sản phẩm
+  useEffect(() => {
+    setQuantities(items.map((item) => item.quantity));
+  }, [items]);
+
   const handleQuantityChange = (index, quantity) => {
-    const updatedItems = [...items];
-    updatedItems[index].quantity = quantity;
-    setItems(updatedItems);
+    const newQuantities = [...quantities];
+    newQuantities[index] = quantity;
+    setQuantities(newQuantities);
+    if (selectedItems.includes(index)) {
+      dispatch(updateQuantity({ index, quantity }));
+    }
   };
 
-  // Tính tổng giá trị của giỏ hàng
-  const calculateSubtotal = () => {
-    return items.reduce((acc, item) => acc + item.price * item.quantity, 0);
+  const handleSelectItem = (index) => {
+    dispatch(toggleSelectItem({ index }));
   };
+
+  const handleUpdateCart = () => {
+    selectedItems.forEach((index) => {
+      const item = items[index];
+      dispatch(updateCartItem({ id: item._id, quantity: quantities[index] }));
+    });
+    window.location.reload();
+  };
+
+  const calculateSubtotal = () => {
+    return selectedItems.reduce(
+      (acc, index) => acc + items[index].product.price * items[index].quantity,
+      0
+    );
+  };
+
+  const handleCheckout = async () => {
+    const selectedProducts = selectedItems.map((index) => ({
+      product_id: items[index].product._id,
+      quantity: items[index].quantity,
+    }));
+    const orderData = {
+      items: selectedProducts,
+      shipping_address: " ",
+    };
+    dispatch(setOrderItems(selectedProducts));
+    try {
+      await dispatch(createOrder(orderData)).unwrap();
+      dispatch(clearSelectedItems());
+      navigate("/checkout");
+    } catch (error) {
+      console.error("Failed to create order:", error);
+    }
+  };
+
+  const handleRemoveItem = (id) => {
+    dispatch(deleteCartItem(id));
+    window.location.reload();
+  };
+
+  const handleReturnShop = () => {
+    navigate("/");
+  };
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
+  if (error) {
+    return <p>Error: {error.message || error.toString()}</p>;
+  }
 
   return (
     <CartContainer>
-      {/* Phần tiêu đề giỏ hàng */}
       <CartHeader>
+        <span>Image</span>
         <span>Product</span>
         <span>Price</span>
-        <span>Quantity</span>
         <span>Subtotal</span>
+        <span>Quantity</span>
       </CartHeader>
 
-      {/* Các sản phẩm trong giỏ hàng */}
       {items.map((item, index) => (
-        <CartItemContainer key={item.id}>
-          <RemoveButton onClick={() => console.log("Remove item")}>
-            <IoIosCloseCircle size={20} color="#e74c3c" />
-          </RemoveButton>
-          <ProductImage src={item.image} alt={item.name} />
-          <ProductName>{item.name}</ProductName>
-          <ProductPrice>${item.price}</ProductPrice>
-          <ProductQuantity
-            type="number"
-            min="1"
-            value={item.quantity}
-            onChange={(e) =>
-              handleQuantityChange(index, parseInt(e.target.value, 10))
-            }
-          />
-          <ProductSubtotal>${item.price * item.quantity}</ProductSubtotal>
-        </CartItemContainer>
+        <CartItem
+          key={item.product._id}
+          item={item}
+          index={index}
+          selectedItems={selectedItems}
+          quantities={quantities}
+          handleSelectItem={handleSelectItem}
+          handleQuantityChange={handleQuantityChange}
+          handleRemoveItem={handleRemoveItem}
+        />
       ))}
 
-      {/* Các hành động như mã coupon và quay lại shop */}
       <CartActions>
-        <ReturnToShopButton>Return To Shop</ReturnToShopButton>
-        <UpdateCartButton>Update Cart</UpdateCartButton>
+        <ReturnToShopButton onClick={handleReturnShop}>
+          Return To Shop
+        </ReturnToShopButton>
+        <UpdateCartButton onClick={handleUpdateCart}>
+          Update Cart
+        </UpdateCartButton>
       </CartActions>
 
-      {/* Phần mã coupon và tổng giá trị giỏ hàng */}
       <CouponAndTotalContainer>
         <div>
           <CouponInput placeholder="Coupon Code" />
@@ -110,7 +156,12 @@ const CartPage = ({}) => {
             <span>Total:</span>
             <span>${calculateSubtotal()}</span>
           </CartTotalDetail>
-          <ProceedToCheckoutButton>Proceed to checkout</ProceedToCheckoutButton>
+          <ProceedToCheckoutButton
+            onClick={handleCheckout}
+            disabled={selectedItems.length === 0}
+          >
+            Proceed to checkout
+          </ProceedToCheckoutButton>
         </CartTotalContainer>
       </CouponAndTotalContainer>
     </CartContainer>

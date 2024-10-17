@@ -7,6 +7,7 @@ import ActivateForm from "../pages/HomePage/ActivateForm";
 import ProfilePage from "../pages/ProfilePage/ProfilePage";
 import CheckoutPage from "../pages/CheckoutPage/CheckoutPage";
 import CartPage from "../pages/CartPage/CartPage";
+import ProductPage from "../pages/ProductPage/ProductPage";
 export const routes = [
   {
     path: "/",
@@ -46,6 +47,11 @@ export const routes = [
   {
     path: "/product/:id",
     page: ProductDetailPage,
+    isShowHeader: true,
+  },
+  {
+    path: "/products",
+    page: ProductPage,
     isShowHeader: true,
   },
   {

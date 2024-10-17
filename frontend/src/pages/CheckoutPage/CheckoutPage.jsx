@@ -1,4 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 import Roadmap from "../../components/RoadmapComponent/Roadmap";
 import {
   CheckoutContainer,
@@ -10,34 +13,89 @@ import {
   PlaceOrderButton,
   SummaryItem,
   CheckboxLabel,
+  OrderSuccessContainer,
+  SuccessMessage,
+  OrderDetails,
+  BackToHomeButton,
 } from "./styles";
+import { createOrder } from "../../redux/slices/orderSlice";
 
 const CheckoutPage = () => {
   const [formData, setFormData] = useState({
     firstName: "",
-    companyName: "",
-    streetAddress: "",
-    apartment: "",
+    street: "",
     city: "",
+    country: "",
     phoneNumber: "",
     emailAddress: "",
   });
+  const [orderSuccess, setOrderSuccess] = useState(false); // State để kiểm tra trạng thái đặt hàng thành công
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const { orderSummary, items, shipping_address } = useSelector(
+    (state) => state.order
+  );
+
+  useEffect(() => {
+    const userData = Cookies.get("user") ? JSON.parse(Cookies.get("user")) : {};
+    setFormData({
+      firstName: userData.name || "",
+      streetAddress: userData.address.street || "",
+      city: userData.address.city || "",
+      country: userData.address.country || "",
+      phoneNumber: userData.phone || "",
+      emailAddress: userData.email || "",
+    });
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
+  const handleCheckboxChange = (e) => {
+    if (e.target.checked) {
+      Cookies.set("user", JSON.stringify(formData));
+    }
+  };
+
+  const calculateSubtotal = () => {
+    return (
+      orderSummary?.items?.reduce(
+        (acc, item) => acc + item.product.price * item.quantity,
+        0
+      ) || 0
+    );
+  };
+
+  const calculateTotal = () => {
+    return calculateSubtotal() + (orderSummary?.shipping || 0);
+  };
+
+  const handlePlaceOrder = async () => {
+    try {
+      // Dispatch action để tạo đơn hàng
+      await dispatch(createOrder());
+      // Thay đổi trạng thái orderSuccess khi đặt hàng thành công
+      setOrderSuccess(true);
+    } catch (error) {
+      console.error("Failed to place order:", error);
+    }
+  };
+
   return (
     <div>
       {/* Roadmap hiển thị đường dẫn */}
       <Roadmap />
+
       <CheckoutContainer>
         {/* Billing Details Section */}
         <BillingDetails>
           <h2>Billing Details</h2>
           <FormInput>
-            <label>First Name*</label>
+            <label>Name*</label>
             <input
               type="text"
               name="firstName"
@@ -46,15 +104,7 @@ const CheckoutPage = () => {
               required
             />
           </FormInput>
-          <FormInput>
-            <label>Company Name</label>
-            <input
-              type="text"
-              name="companyName"
-              value={formData.companyName}
-              onChange={handleInputChange}
-            />
-          </FormInput>
+
           <FormInput>
             <label>Street Address*</label>
             <input
@@ -66,22 +116,22 @@ const CheckoutPage = () => {
             />
           </FormInput>
           <FormInput>
-            <label>Apartment, floor, etc. (optional)</label>
-            <input
-              type="text"
-              name="apartment"
-              value={formData.apartment}
-              onChange={handleInputChange}
-            />
-          </FormInput>
-          <FormInput>
-            <label>Town/City*</label>
+            <label>City*</label>
             <input
               type="text"
               name="city"
               value={formData.city}
               onChange={handleInputChange}
               required
+            />
+          </FormInput>
+          <FormInput>
+            <label>Country</label>
+            <input
+              type="text"
+              name="country"
+              value={formData.country}
+              onChange={handleInputChange}
             />
           </FormInput>
           <FormInput>
@@ -105,7 +155,7 @@ const CheckoutPage = () => {
             />
           </FormInput>
           <CheckboxLabel>
-            <input type="checkbox" />
+            <input type="checkbox" onChange={handleCheckboxChange} />
             Save this information for faster check-out next time
           </CheckboxLabel>
         </BillingDetails>
@@ -113,25 +163,23 @@ const CheckoutPage = () => {
         {/* Order Summary Section */}
         <OrderSummary>
           <h3>Order Summary</h3>
-          <SummaryItem>
-            <span>LCD Monitor</span>
-            <span>$650</span>
-          </SummaryItem>
-          <SummaryItem>
-            <span>H1 Gamepad</span>
-            <span>$1100</span>
-          </SummaryItem>
+          {orderSummary?.items?.map((item, index) => (
+            <SummaryItem key={index}>
+              <span>{item.product.name}</span>
+              <span>${item.product.price}</span>
+            </SummaryItem>
+          ))}
           <SummaryItem>
             <span>Subtotal:</span>
-            <span>$1750</span>
+            <span>${calculateSubtotal()}</span>
           </SummaryItem>
           <SummaryItem>
             <span>Shipping:</span>
-            <span>Free</span>
+            <span>{orderSummary?.shipping}</span>
           </SummaryItem>
           <SummaryItem>
             <span>Total:</span>
-            <span>$1750</span>
+            <span>${calculateTotal()}</span>
           </SummaryItem>
 
           <PaymentMethod>
@@ -151,9 +199,20 @@ const CheckoutPage = () => {
             <button>Apply Coupon</button>
           </CouponContainer>
 
-          <PlaceOrderButton>Place Order</PlaceOrderButton>
+          <PlaceOrderButton onClick={handlePlaceOrder}>
+            Place Order
+          </PlaceOrderButton>
         </OrderSummary>
       </CheckoutContainer>
+      <OrderSuccessContainer>
+        <SuccessMessage>Order Placed Successfully!</SuccessMessage>
+        <OrderDetails>
+          Your order has been placed and is being processed.
+        </OrderDetails>
+        <a href="/">
+          <BackToHomeButton>Back to Home</BackToHomeButton>
+        </a>
+      </OrderSuccessContainer>
     </div>
   );
 };

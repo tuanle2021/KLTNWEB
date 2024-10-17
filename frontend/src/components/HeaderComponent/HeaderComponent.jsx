@@ -1,22 +1,31 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { logout } from "../../redux/slides/authSlice";
+import { logout } from "../../redux/slices/authSlice";
+import CategoryMenu from "../Category/CategoryMenu";
 import { Link } from "react-router-dom";
+import { IoSearch } from "react-icons/io5";
 import {
   HeaderContainer,
   HeaderInner,
   Logo,
   SearchBar,
-  NavLinks,
   NavItem,
   ShoppingCart,
   ProfileMenu,
   Button,
+  UserIconWrapper,
+  DropdownContainer,
+  NavButton,
 } from "./styles";
 import {
+  InboxOutlined,
+  CloseCircleOutlined,
+  StarOutlined,
+  LogoutOutlined,
   UserOutlined,
   DownOutlined,
   ShoppingCartOutlined,
+  ShopOutlined,
 } from "@ant-design/icons";
 
 const HeaderComponent = () => {
@@ -30,45 +39,27 @@ const HeaderComponent = () => {
     <HeaderContainer>
       <div className="container">
         <HeaderInner>
-          <Logo>
-            <a href="/">
-              <img
-                src="/images/logo-Ecommerce.png"
-                alt="TechShop Logo"
-                style={{ height: "40px" }}
-              />
-            </a>
+          <Logo href="/">
+            <ShopOutlined style={{ fontSize: "2em", marginRight: "10px" }} />
           </Logo>
-
+          <CategoryMenu />
           {/* Search Bar */}
           <SearchBar>
             <input type="text" placeholder="Search for tech products..." />
-            <button type="submit">Search</button>
+            <button type="submit">
+              <IoSearch />
+            </button>
           </SearchBar>
-
-          {/* Navigation Links */}
-          <NavLinks>
-            <ul>
-              <li>
-                <a href="/categories">Categories</a>
-              </li>
-              <li>
-                <a href="/deals">Deals</a>
-              </li>
-              <li>
-                <a href="/contact">Contact</a>
-              </li>
-              <li>
-                <a href="/about">About Us</a>
-              </li>
-            </ul>
-          </NavLinks>
 
           {/* Shopping Cart */}
           <ShoppingCart>
             <a href="/cart">
               <ShoppingCartOutlined
-                style={{ fontSize: "1.7em", marginRight: "10px" }}
+                style={{
+                  fontSize: "1.5em",
+                  marginRight: "10px",
+                  color: "var(--dark-bg-third)",
+                }}
               />
               <span className="cart-count">3</span>
               {/* Dynamic cart item count */}
@@ -79,19 +70,57 @@ const HeaderComponent = () => {
           <ProfileMenu>
             {user ? (
               <>
-                <UserOutlined className="profile-icon" />
-                <DownOutlined />
-                <div className="profile-dropdown">
-                  <NavItem>
-                    <Link to="/" onClick={handleLogout}>
-                      Logout
-                    </Link>
-                    <Link to="/profile">Profile</Link>
-                  </NavItem>
-                </div>
+                <ProfileMenu>
+                  <UserIconWrapper>
+                    <UserOutlined />
+                    <DownOutlined className="dropdown-icon" />
+                  </UserIconWrapper>
+                  <DropdownContainer className="profile-dropdown">
+                    <NavItem>
+                      <Link to="/profile">
+                        <i className="icon">
+                          <UserOutlined />
+                        </i>{" "}
+                        My Account
+                      </Link>
+                    </NavItem>
+                    <NavItem>
+                      <Link to="/orders">
+                        <i className="icon">
+                          <InboxOutlined />
+                        </i>{" "}
+                        My Order
+                      </Link>
+                    </NavItem>
+                    <NavItem>
+                      <Link to="/cancellations">
+                        <i className="icon">
+                          <CloseCircleOutlined />
+                        </i>{" "}
+                        My Cancellations
+                      </Link>
+                    </NavItem>
+                    <NavItem>
+                      <Link to="/reviews">
+                        <i className="icon">
+                          <StarOutlined />
+                        </i>{" "}
+                        My Reviews
+                      </Link>
+                    </NavItem>
+                    <NavItem>
+                      <Link to="/" onClick={handleLogout}>
+                        <i className="icon">
+                          <LogoutOutlined />
+                        </i>{" "}
+                        Logout
+                      </Link>
+                    </NavItem>
+                  </DropdownContainer>
+                </ProfileMenu>
               </>
             ) : (
-              <>
+              <NavButton>
                 <NavItem>
                   <Link to="/login">
                     <Button>Login</Button>
@@ -102,7 +131,7 @@ const HeaderComponent = () => {
                     <Button>Register</Button>
                   </Link>
                 </NavItem>
-              </>
+              </NavButton>
             )}
           </ProfileMenu>
         </HeaderInner>

@@ -1,4 +1,7 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { useParams } from "react-router-dom";
+import { addToCart } from "../../redux/slices/cartSlice";
 import {
   ProductDetailContainer,
   ProductDetailImage,
@@ -14,6 +17,8 @@ import {
 } from "./styles";
 
 const ProductDetail = ({ product }) => {
+  const dispatch = useDispatch();
+  const { id } = useParams();
   const { name, description, price, stock, images } = product;
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
@@ -28,7 +33,9 @@ const ProductDetail = ({ product }) => {
       prevIndex === 0 ? images.length - 1 : prevIndex - 1
     );
   };
-
+  const handleAddToCart = () => {
+    dispatch(addToCart({ productId: id, quantity: 1 }));
+  };
   return (
     <ProductDetailContainer>
       {/* Hiển thị hình ảnh lớn của sản phẩm */}
@@ -50,7 +57,7 @@ const ProductDetail = ({ product }) => {
         <ProductDetailStock>
           {stock > 0 ? `Stock available: ${stock}` : "Out of Stock"}
         </ProductDetailStock>
-        <AddToCartDetailButton disabled={stock <= 0}>
+        <AddToCartDetailButton disabled={stock <= 0} onClick={handleAddToCart}>
           {stock > 0 ? "Add to Cart" : "Out of Stock"}
         </AddToCartDetailButton>
         <ThumbnailContainer>

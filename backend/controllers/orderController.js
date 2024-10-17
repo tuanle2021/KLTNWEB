@@ -203,7 +203,9 @@ const getAllOrders = async (req, res) => {
     }
 
     // Lấy danh sách tất cả các đơn hàng
-    const orders = await Order.find().populate("items.product_id");
+    const orders = await Order.find()
+      .populate("items.product_id")
+      .populate("user_id", "name email");
 
     res.status(200).json(orders);
   } catch (error) {

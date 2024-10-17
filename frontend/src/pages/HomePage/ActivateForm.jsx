@@ -7,7 +7,7 @@ import {
   Container,
 } from "../../pages/LoginPage/styles";
 import PropagateLoader from "react-spinners/PropagateLoader";
-import { activateAccount } from "../../redux/slides/verifySlice";
+import { activateAccount } from "../../redux/slices/verifySlice";
 import { useParams, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 

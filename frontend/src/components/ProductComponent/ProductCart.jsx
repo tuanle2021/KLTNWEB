@@ -1,12 +1,15 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchProductById } from "../../redux/slides/productSlice";
-import { FaHeart, FaEye } from "react-icons/fa";
+import { fetchProductById } from "../../redux/slices/productSlice";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
+import { FiShoppingCart } from "react-icons/fi";
+import { addToCart } from "../../redux/slices/cartSlice";
 
 import {
   ProductCardContainer,
   ProductImage,
+  Image,
   DiscountBadge,
   ProductActionIcons,
   ProductDetails,
@@ -17,68 +20,84 @@ import {
   ActionIcon,
 } from "./styles";
 
-const ProductCart = ({ productId }) => {
-  const dispatch = useDispatch();
+const ProductCart = ({ product }) => {
   const navigate = useNavigate();
-  const product = useSelector((state) =>
-    state.products.products.find((product) => product._id === productId)
+  const dispatch = useDispatch();
+  const Product = useSelector((state) =>
+    state.products.products.find((Product) => Product._id === product)
   );
-
+  const [isFavorited, setIsFavorited] = useState(false);
   useEffect(() => {
     if (!product) {
-      dispatch(fetchProductById(productId));
+      dispatch(fetchProductById(product));
     }
-  }, [dispatch, productId, product]);
+  }, [dispatch, product, Product]);
 
-  const handleCardClick = () => {
-    navigate(`/product/${productId}`);
+  const handleFavoriteClick = (e) => {
+    e.stopPropagation();
+    setIsFavorited(!isFavorited);
   };
 
+  // Nếu không có sản phẩm được truyền vào, hiển thị "Loading..."
   if (!product) return <p>Loading...</p>;
 
-  const { id, name, price, originalPrice, images, rating, reviews } = product;
-  const discount = 20;
+  // Destructure các thuộc tính của sản phẩm để sử dụng dễ dàng hơn
+  const { _id, name, price, originalPrice, images, rating, reviews } = product;
+
+  // Tính toán giảm giá nếu có giá gốc (originalPrice)
+  const discount = originalPrice
+    ? Math.round(((originalPrice - price) / originalPrice) * 100)
+    : 0;
+
+  // Điều hướng đến trang chi tiết sản phẩm khi click vào card
+  const handleCardClick = () => {
+    navigate(`/product/${_id}`);
+  };
+  // Xử lý thêm sản phẩm vào giỏ hàng
+  const handleAddToCart = (e) => {
+    e.stopPropagation(); // Ngăn chặn việc click chuyển hướng trang khi click vào nút
+    dispatch(addToCart({ productId: _id, quantity: 1 }));
+  };
   return (
     <ProductCardContainer onClick={handleCardClick}>
-      {/* Nhãn giảm giá */}
-      <DiscountBadge>{`-${discount}%`}</DiscountBadge>
+      <ProductImage>
+        {/* Nhãn giảm giá */}
+        <DiscountBadge>{`-${discount}%`}</DiscountBadge>
 
-      {/* Các icon hành động (Yêu thích và Xem chi tiết) */}
-      <ProductActionIcons>
-        <ActionIcon>
-          <FaHeart />
-        </ActionIcon>
-        <ActionIcon>
-          <FaEye />
-        </ActionIcon>
-      </ProductActionIcons>
+        {/* Các icon hành động (Yêu thích và Xem chi tiết) */}
+        <ProductActionIcons>
+          <ActionIcon onClick={handleFavoriteClick}>
+            {isFavorited ? <FaHeart /> : <FaRegHeart />}
+          </ActionIcon>
+        </ProductActionIcons>
 
-      {/* Hình ảnh sản phẩm */}
-      <ProductImage
-        src={
-          images && images.length > 0
-            ? images[0]
-            : `https://via.placeholder.com/150?text=${name}`
-        }
-        alt={name}
-      />
+        {/* Hình ảnh sản phẩm */}
+        <Image
+          src={
+            images && images.length > 0
+              ? images[0]
+              : `https://via.placeholder.com/150?text=${name}`
+          }
+          alt={name}
+        />
+        <AddToCartButton onClick={handleAddToCart}>
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <FiShoppingCart size={16} />
+            <p style={{ marginLeft: "8px" }}> Add To Cart</p>
+          </div>
+        </AddToCartButton>
+      </ProductImage>
 
       {/* Thông tin chi tiết sản phẩm */}
       <ProductDetails>
         <ProductName>{name}</ProductName>
         <ProductPrice>
-          <span>${price}</span> <small>${originalPrice}</small>
+          <span>${price}</span>{" "}
+          {originalPrice && <small>${originalPrice}</small>}
         </ProductPrice>
         <ProductRating>
           <span>⭐</span> {rating} ({reviews})
         </ProductRating>
-        <AddToCartButton
-          onClick={(e) => {
-            e.stopPropagation();
-          }}
-        >
-          Add To Cart
-        </AddToCartButton>
       </ProductDetails>
     </ProductCardContainer>
   );
