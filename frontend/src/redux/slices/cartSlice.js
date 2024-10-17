@@ -25,7 +25,7 @@ export const addToCart = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      return rejectWithValue(error.response?.data?.message || error.message);
     }
   }
 );
@@ -47,10 +47,11 @@ export const getCart = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      return rejectWithValue(error.response?.data?.message || error.message);
     }
   }
 );
+
 export const updateCartItem = createAsyncThunk(
   "cart/updateCartItem",
   async ({ id, quantity }, { rejectWithValue, getState }) => {
@@ -70,10 +71,11 @@ export const updateCartItem = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      return rejectWithValue(error.response?.data?.message || error.message);
     }
   }
 );
+
 // Async thunk để xóa sản phẩm khỏi giỏ hàng
 export const deleteCartItem = createAsyncThunk(
   "cart/deleteCartItem",
@@ -92,7 +94,7 @@ export const deleteCartItem = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      return rejectWithValue(error.response?.data?.message || error.message);
     }
   }
 );
@@ -138,7 +140,7 @@ const cartSlice = createSlice({
       })
       .addCase(addToCart.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload.message;
+        state.error = action.payload;
       })
       .addCase(getCart.pending, (state) => {
         state.loading = true;
@@ -152,7 +154,7 @@ const cartSlice = createSlice({
       })
       .addCase(getCart.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload.message;
+        state.error = action.payload;
       })
       .addCase(updateCartItem.pending, (state) => {
         state.loading = true;
@@ -184,10 +186,12 @@ const cartSlice = createSlice({
       })
       .addCase(deleteCartItem.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload.message;
+        state.error = action.payload;
       });
   },
 });
+
 export const { updateQuantity, toggleSelectItem, clearSelectedItems } =
   cartSlice.actions;
+
 export default cartSlice.reducer;

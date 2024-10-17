@@ -23,6 +23,7 @@ import {
 const ProductCart = ({ product }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.auth.user);
   const Product = useSelector((state) =>
     state.products.products.find((Product) => Product._id === product)
   );
@@ -55,8 +56,12 @@ const ProductCart = ({ product }) => {
   };
   // Xử lý thêm sản phẩm vào giỏ hàng
   const handleAddToCart = (e) => {
-    e.stopPropagation(); // Ngăn chặn việc click chuyển hướng trang khi click vào nút
-    dispatch(addToCart({ productId: _id, quantity: 1 }));
+    e.preventDefault();
+    if (user) {
+      dispatch(addToCart({ productId: _id, quantity: 1 }));
+    } else {
+      navigate("/login");
+    }
   };
   return (
     <ProductCardContainer onClick={handleCardClick}>

@@ -69,6 +69,7 @@ const CartPage = () => {
     );
   };
 
+  // Hàm xử lý sự kiện checkout
   const handleCheckout = async () => {
     const selectedProducts = selectedItems.map((index) => ({
       product_id: items[index].product._id,

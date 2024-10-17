@@ -1,8 +1,8 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../../redux/slices/authSlice";
+import { Link, useNavigate } from "react-router-dom";
 import CategoryMenu from "../Category/CategoryMenu";
-import { Link } from "react-router-dom";
 import { IoSearch } from "react-icons/io5";
 import {
   HeaderContainer,
@@ -30,9 +30,21 @@ import {
 
 const HeaderComponent = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const user = useSelector((state) => state.auth.user);
+
   const handleLogout = () => {
     dispatch(logout());
+  };
+
+  const handleCartClick = (e) => {
+    e.preventDefault();
+    if (user) {
+      navigate("/cart");
+    } else {
+      alert("Please login to view cart");
+      navigate("/login");
+    }
   };
 
   return (
@@ -53,7 +65,7 @@ const HeaderComponent = () => {
 
           {/* Shopping Cart */}
           <ShoppingCart>
-            <a href="/cart">
+            <a onClick={handleCartClick}>
               <ShoppingCartOutlined
                 style={{
                   fontSize: "1.5em",

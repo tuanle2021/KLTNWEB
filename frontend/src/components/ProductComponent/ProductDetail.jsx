@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams, useNavigate } from "react-router-dom";
 import { addToCart } from "../../redux/slices/cartSlice";
 import {
   ProductDetailContainer,
@@ -18,7 +18,9 @@ import {
 
 const ProductDetail = ({ product }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { id } = useParams();
+  const user = useSelector((state) => state.auth.user);
   const { name, description, price, stock, images } = product;
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
@@ -33,8 +35,14 @@ const ProductDetail = ({ product }) => {
       prevIndex === 0 ? images.length - 1 : prevIndex - 1
     );
   };
-  const handleAddToCart = () => {
-    dispatch(addToCart({ productId: id, quantity: 1 }));
+  const handleAddToCart = (e) => {
+    e.preventDefault();
+    if (user) {
+      dispatch(addToCart({ productId: id, quantity: 1 }));
+    } else {
+      alert("Please login to add to cart");
+      navigate("/login");
+    }
   };
   return (
     <ProductDetailContainer>
