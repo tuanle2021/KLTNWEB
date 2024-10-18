@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import Roadmap from "../../components/RoadmapComponent/Roadmap";
@@ -30,13 +30,11 @@ const CheckoutPage = () => {
     emailAddress: "",
   });
   const [orderSuccess, setOrderSuccess] = useState(false); // State để kiểm tra trạng thái đặt hàng thành công
+  const [orderItems, setOrderItems] = useState([]); // State để lưu trữ sản phẩm đã chọn
+  const [paymentMethod, setPaymentMethod] = useState(""); // State để lưu trữ phương thức thanh toán
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  const { orderSummary, items, shipping_address } = useSelector(
-    (state) => state.order
-  );
 
   useEffect(() => {
     const userData = Cookies.get("user") ? JSON.parse(Cookies.get("user")) : {};
@@ -48,6 +46,10 @@ const CheckoutPage = () => {
       phoneNumber: userData.phone || "",
       emailAddress: userData.email || "",
     });
+
+    const selectedProducts =
+      JSON.parse(localStorage.getItem("selectedProducts")) || [];
+    setOrderItems(selectedProducts);
   }, []);
 
   const handleInputChange = (e) => {
@@ -61,25 +63,47 @@ const CheckoutPage = () => {
     }
   };
 
+  const handlePaymentMethodChange = (e) => {
+    setPaymentMethod(e.target.value);
+  };
+
   const calculateSubtotal = () => {
-    return (
-      orderSummary?.items?.reduce(
-        (acc, item) => acc + item.product.price * item.quantity,
-        0
-      ) || 0
+    return orderItems.reduce(
+      (acc, item) => acc + item.product.price * item.quantity,
+      0
     );
   };
 
   const calculateTotal = () => {
-    return calculateSubtotal() + (orderSummary?.shipping || 0);
+    return calculateSubtotal();
   };
 
   const handlePlaceOrder = async () => {
+    if (!paymentMethod) {
+      alert("Please select a payment method");
+      return;
+    }
+
+    const orderData = {
+      shipping_address: `${formData.streetAddress}, ${formData.city}`,
+      items: orderItems.map((item) => ({
+        product_id: item.product._id,
+        quantity: item.quantity,
+      })),
+    };
+
     try {
+      console.log("orderData", orderData);
       // Dispatch action để tạo đơn hàng
-      await dispatch(createOrder());
-      // Thay đổi trạng thái orderSuccess khi đặt hàng thành công
-      setOrderSuccess(true);
+      await dispatch(createOrder(orderData));
+      if (paymentMethod === "cod") {
+        // Thay đổi trạng thái orderSuccess khi đặt hàng thành công
+        setOrderSuccess(true);
+        navigate("/order");
+      } else {
+        // Điều hướng đến trang OrderPage nếu phương thức thanh toán là bank
+        navigate("/order");
+      }
     } catch (error) {
       console.error("Failed to place order:", error);
     }
@@ -163,7 +187,7 @@ const CheckoutPage = () => {
         {/* Order Summary Section */}
         <OrderSummary>
           <h3>Order Summary</h3>
-          {orderSummary?.items?.map((item, index) => (
+          {orderItems.map((item, index) => (
             <SummaryItem key={index}>
               <span>{item.product.name}</span>
               <span>${item.product.price}</span>
@@ -175,7 +199,7 @@ const CheckoutPage = () => {
           </SummaryItem>
           <SummaryItem>
             <span>Shipping:</span>
-            <span>{orderSummary?.shipping}</span>
+            <span>Free</span>
           </SummaryItem>
           <SummaryItem>
             <span>Total:</span>
@@ -184,12 +208,22 @@ const CheckoutPage = () => {
 
           <PaymentMethod>
             <label>
-              <input type="radio" name="payment" value="bank" />
+              <input
+                type="radio"
+                name="payment"
+                value="bank"
+                onChange={handlePaymentMethodChange}
+              />
               Bank
               <img src="/images/payment-icons.png" alt="Payment Methods" />
             </label>
             <label>
-              <input type="radio" name="payment" value="cash" />
+              <input
+                type="radio"
+                name="payment"
+                value="cod"
+                onChange={handlePaymentMethodChange}
+              />
               Cash on delivery
             </label>
           </PaymentMethod>
@@ -204,15 +238,17 @@ const CheckoutPage = () => {
           </PlaceOrderButton>
         </OrderSummary>
       </CheckoutContainer>
-      <OrderSuccessContainer>
-        <SuccessMessage>Order Placed Successfully!</SuccessMessage>
-        <OrderDetails>
-          Your order has been placed and is being processed.
-        </OrderDetails>
-        <a href="/">
-          <BackToHomeButton>Back to Home</BackToHomeButton>
-        </a>
-      </OrderSuccessContainer>
+      {orderSuccess && (
+        <OrderSuccessContainer>
+          <SuccessMessage>Order Placed Successfully!</SuccessMessage>
+          <OrderDetails>
+            Your order has been placed and is being processed.
+          </OrderDetails>
+          <a href="/">
+            <BackToHomeButton>Back to Home</BackToHomeButton>
+          </a>
+        </OrderSuccessContainer>
+      )}
     </div>
   );
 };

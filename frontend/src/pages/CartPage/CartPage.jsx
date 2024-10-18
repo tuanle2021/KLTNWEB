@@ -1,4 +1,3 @@
-// src/pages/CartPage/CartPage.jsx
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -10,11 +9,7 @@ import {
   updateCartItem,
   deleteCartItem,
 } from "../../redux/slices/cartSlice";
-import {
-  setOrderItems,
-  createOrder,
-  fetchOrdersByUserId,
-} from "../../redux/slices/orderSlice";
+import { fetchOrdersByUserId } from "../../redux/slices/orderSlice";
 import {
   CartContainer,
   CartHeader,
@@ -44,6 +39,7 @@ const CartPage = () => {
   } = useSelector((state) => state.orders);
   const user = useSelector((state) => state.auth.user);
   const [quantities, setQuantities] = useState([]);
+
   useEffect(() => {
     dispatch(getCart());
     if (user) {
@@ -82,25 +78,14 @@ const CartPage = () => {
       0
     );
   };
-  console.log("Items: ", items);
-  // Hàm xử lý sự kiện checkout
-  const handleCheckout = async () => {
+
+  const handleCheckout = () => {
     const selectedProducts = selectedItems.map((index) => ({
-      product_id: items[index].product._id,
+      product: items[index].product,
       quantity: items[index].quantity,
     }));
-    const orderData = {
-      items: selectedProducts,
-      shipping_address: " ",
-    };
-    dispatch(setOrderItems(selectedProducts));
-    try {
-      await dispatch(createOrder(orderData)).unwrap();
-      dispatch(clearSelectedItems());
-      navigate("/checkout");
-    } catch (error) {
-      console.error("Failed to create order:", error);
-    }
+    localStorage.setItem("selectedProducts", JSON.stringify(selectedProducts));
+    navigate("/checkout");
   };
 
   const handleRemoveItem = (id) => {

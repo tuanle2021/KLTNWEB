@@ -1,4 +1,3 @@
-// src/pages/OrderPage/OrderPage.jsx
 import React, { useState, useEffect } from "react";
 import Roadmap from "../../components/RoadmapComponent/Roadmap";
 import {
@@ -30,6 +29,13 @@ const OrderPage = () => {
     emailAddress: "john@example.com",
   });
   const [sdkReady, setSdkReady] = useState(true);
+  const [orderItems, setOrderItems] = useState([]); // State để lưu trữ sản phẩm đã chọn
+
+  useEffect(() => {
+    const selectedProducts =
+      JSON.parse(localStorage.getItem("selectedProducts")) || [];
+    setOrderItems(selectedProducts);
+  }, []);
 
   const userInfo = {
     name: "John Doe",
@@ -46,33 +52,9 @@ const OrderPage = () => {
     paymentMethod: "PayPal",
   };
 
-  const orderSummary = {
-    items: [
-      {
-        product: {
-          _id: "1",
-          name: "Product 1",
-          price: 100,
-          images: ["/path/to/image1.jpg"],
-        },
-        quantity: 2,
-      },
-      {
-        product: {
-          _id: "2",
-          name: "Product 2",
-          price: 50,
-          images: ["/path/to/image2.jpg"],
-        },
-        quantity: 1,
-      },
-    ],
-    shipping: 10,
-  };
-
   const calculateSubtotal = () => {
     return (
-      orderSummary.items.reduce(
+      orderItems.reduce(
         (acc, item) => acc + item.product.price * item.quantity,
         0
       ) || 0
@@ -80,7 +62,7 @@ const OrderPage = () => {
   };
 
   const calculateTotal = () => {
-    return calculateSubtotal() + (orderSummary.shipping || 0);
+    return calculateSubtotal();
   };
 
   const successPaymentHandler = (paymentResult) => {
@@ -135,12 +117,12 @@ const OrderPage = () => {
           </OrderDetailRow>
 
           <CheckoutContainer>
-            {orderSummary.length === 2 ? (
+            {orderItems.length === 0 ? (
               <OrderBoxTitle>Your order is empty</OrderBoxTitle>
             ) : (
               <>
                 {" "}
-                {orderSummary.items.map((item, index) => (
+                {orderItems.map((item, index) => (
                   <CartItem
                     key={item.product._id}
                     item={item}
@@ -163,7 +145,7 @@ const OrderPage = () => {
               </SummaryItem>
               <SummaryItem>
                 <span>Shipping:</span>
-                <span>${orderSummary.shipping}</span>
+                <span>Free</span>
               </SummaryItem>
               <SummaryItem>
                 <span>Total:</span>

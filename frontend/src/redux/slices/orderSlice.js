@@ -3,7 +3,7 @@ import axios from "axios";
 
 // Async thunk để tạo đơn hàng
 export const createOrder = createAsyncThunk(
-  "order/createOrder",
+  "orders/createOrder",
   async (orderData, { rejectWithValue, getState }) => {
     try {
       const state = getState();
@@ -47,7 +47,7 @@ export const fetchOrdersByUserId = createAsyncThunk(
   }
 );
 const orderSlice = createSlice({
-  name: "order",
+  name: "orders",
   initialState: {
     shipping_address: " ",
     items: [],
