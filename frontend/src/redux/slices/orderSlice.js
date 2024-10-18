@@ -51,6 +51,7 @@ const orderSlice = createSlice({
   initialState: {
     shipping_address: " ",
     items: [],
+    orders: [],
     order: null,
     loading: false,
     error: null,

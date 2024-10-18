@@ -260,3 +260,43 @@ export const Container = styled.div`
   border-radius: 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 `;
+
+export const AlertContainer = styled.div`
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  animation: slide-in 0.5s ease-out, slide-out 0.5s ease-out 2.5s forwards;
+
+  @keyframes slide-in {
+    from {
+      transform: translateX(100%);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes slide-out {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(100%);
+    }
+  }
+`;
+
+export const Alert = styled.div`
+  display: flex;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 1.2rem;
+  background-color: ${(props) =>
+    props.severity === "success" ? "#28a745" : "#dc3545"};
+  color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  p {
+    margin-left: 10px;
+  }
+`;

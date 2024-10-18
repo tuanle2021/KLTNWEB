@@ -10,7 +10,11 @@ import {
   updateCartItem,
   deleteCartItem,
 } from "../../redux/slices/cartSlice";
-import { setOrderItems, createOrder } from "../../redux/slices/orderSlice";
+import {
+  setOrderItems,
+  createOrder,
+  fetchOrdersByUserId,
+} from "../../redux/slices/orderSlice";
 import {
   CartContainer,
   CartHeader,
@@ -25,6 +29,7 @@ import {
   CartTotalDetail,
 } from "./styles";
 import CartItem from "./CartItem";
+import TableOrder from "./TableOrder";
 
 const CartPage = () => {
   const dispatch = useDispatch();
@@ -32,10 +37,19 @@ const CartPage = () => {
   const { items, selectedItems, loading, error } = useSelector(
     (state) => state.cart
   );
+  const {
+    orders,
+    loading: ordersLoading,
+    error: ordersError,
+  } = useSelector((state) => state.orders);
+  const user = useSelector((state) => state.auth.user);
   const [quantities, setQuantities] = useState([]);
   useEffect(() => {
     dispatch(getCart());
-  }, [dispatch]);
+    if (user) {
+      dispatch(fetchOrdersByUserId(user.id));
+    }
+  }, [dispatch, user]);
 
   useEffect(() => {
     setQuantities(items.map((item) => item.quantity));
@@ -68,7 +82,7 @@ const CartPage = () => {
       0
     );
   };
-
+  console.log("Items: ", items);
   // Hàm xử lý sự kiện checkout
   const handleCheckout = async () => {
     const selectedProducts = selectedItems.map((index) => ({
@@ -98,12 +112,20 @@ const CartPage = () => {
     navigate("/");
   };
 
-  if (loading) {
+  if (loading || ordersLoading) {
     return <p>Loading...</p>;
   }
 
-  if (error) {
-    return <p>Error: {error.message || error.toString()}</p>;
+  if (error || ordersError) {
+    return (
+      <p>
+        Error:{" "}
+        {error?.message ||
+          error?.toString() ||
+          ordersError?.message ||
+          ordersError?.toString()}
+      </p>
+    );
   }
 
   return (
@@ -165,6 +187,8 @@ const CartPage = () => {
           </ProceedToCheckoutButton>
         </CartTotalContainer>
       </CouponAndTotalContainer>
+      <h3>Your Orders Not Paid</h3>
+      <TableOrder orders={orders} status={true} />
     </CartContainer>
   );
 };
