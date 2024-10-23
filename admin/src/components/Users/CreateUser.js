@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { FaSave } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+import Cookies from "js-cookie";
+import { login } from "../../redux/slices/authSlice"; 
 
 import {
   ProfileContainer,
@@ -34,14 +36,47 @@ const CreateUser = () => {
     isAdmin: false,
   });
 
-  const handleChange = (e) => {
+  const handleChange = async (e) => {
     const { name, value, type, checked } = e.target;
-    if (type === "checkbox") {
+     if (type === "checkbox") {
       if (checked) {
-        const password = prompt("Please enter your current password:");
-        if (!password) {
-          e.target.checked = false;
-          return;
+        let password;
+        let isValid = false;
+        const userData = Cookies.get("user") ? JSON.parse(Cookies.get("user")) : {};
+        const email = userData.email;
+
+        while (!isValid) {
+          const { value: inputPassword } = await Swal.fire({
+        title: "Enter your current password",
+        input: "password",
+        inputPlaceholder: "Enter your password",
+        inputAttributes: {
+          autocapitalize: "off",
+          autocorrect: "off",
+        },
+        showCancelButton: true,
+          });
+
+          if (!inputPassword) {
+        e.target.checked = false;
+        return;
+          }
+
+          password = inputPassword;
+
+          try {
+        await dispatch(login({ email, password })).unwrap();
+        isValid = true;
+          } catch (error) {
+        await Swal.fire({
+          icon: "error",
+          title: "Incorrect password",
+          text: "Please try again.",
+          timer: 2000,
+          timerProgressBar: true,
+          showConfirmButton: false,
+        });
+          }
         }
       }
       setUser({ ...user, [name]: checked });
@@ -84,37 +119,11 @@ const CreateUser = () => {
           />
           <ProfileInfo>
             <div className="detail-info">
-              <h2>
-                <Input
-                  type="text"
-                  name="name"
-                  value={name}
-                  onChange={handleChange}
-                  placeholder="Name"
-                />
-              </h2>
+              <h2>{name}</h2>
               <p>
-                <Input
-                  type="text"
-                  name="address.street"
-                  value={street}
-                  onChange={handleChange}
-                  placeholder="Street"
-                />
-                <Input
-                  type="text"
-                  name="address.city"
-                  value={city}
-                  onChange={handleChange}
-                  placeholder="City"
-                />
-                <Input
-                  type="text"
-                  name="address.country"
-                  value={country}
-                  onChange={handleChange}
-                  placeholder="Country"
-                />
+                <label>{street},</label>
+                <label>{city},</label>
+                <label>{country}</label>
               </p>
               <CheckboxLabel>
                 <input
