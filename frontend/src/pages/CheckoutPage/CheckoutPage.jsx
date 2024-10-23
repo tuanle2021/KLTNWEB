@@ -85,15 +85,33 @@ const CheckoutPage = () => {
     }
 
     const orderData = {
-      shipping_address: `${formData.streetAddress}, ${formData.city}`,
-      items: orderItems.map((item) => ({
+      user: {
+        name: formData.firstName,
+        email: formData.emailAddress,
+      },
+      shippingAddress: {
+        street: formData.streetAddress,
+        city: formData.city,
+        country: "VietNam",
+        postalCode: "0008",
+      },
+      items: orderItems.map((item) => (
+        {
+          product:{
         product_id: item.product._id,
+        name: item.product.name,
+        price: item.product.price,
         quantity: item.quantity,
-      })),
+        images: item.product.images[0],
+      }
+        })),
+      paymentMethod: paymentMethod,
     };
 
     try {
       console.log("orderData", orderData);
+      // Lưu thông tin đơn hàng vào localStorage
+      localStorage.setItem("orderData", JSON.stringify(orderData));
       // Dispatch action để tạo đơn hàng
       await dispatch(createOrder(orderData));
       if (paymentMethod === "cod") {

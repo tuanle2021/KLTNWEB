@@ -8,6 +8,7 @@ const {
   updateOrderItems,
   deleteOrder,
   getAllOrders,
+  updatePaymentStatus,
 } = require("../controllers/orderController");
 const { authentication } = require("../middleware/authenUser");
 
@@ -18,5 +19,8 @@ router.get("/orders/user/:user_id", authentication, getOrdersByUserId);
 router.put("/orders/:id", authentication, updateOrderStatus);
 router.put("/orders/:id/items", authentication, updateOrderItems);
 router.delete("/orders/:id", authentication, deleteOrder);
-
+router.post("/orders/pay", authentication, updatePaymentStatus);
+router.get("/paypal", (req, res) => {
+  res.send(process.env.PAYPAL_CLIENT_ID);
+});
 module.exports = router;

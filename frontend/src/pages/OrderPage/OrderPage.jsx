@@ -18,44 +18,67 @@ import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { FaUser, FaTruckField } from "react-icons/fa6";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import CartItem from "../CartPage/CartItem";
+import axios from "axios";
 
 const OrderPage = () => {
-  const [formData, setFormData] = useState({
-    firstName: "John",
-    street: "123 Main St",
-    city: "New York",
-    country: "USA",
-    phoneNumber: "1234567890",
-    emailAddress: "john@example.com",
+  const [orderData, setOrderData] = useState({
+    user: {},
+    shippingAddress: {},
+    items: [],
+    paymentMethod: "",
   });
-  const [sdkReady, setSdkReady] = useState(true);
-  const [orderItems, setOrderItems] = useState([]); // State để lưu trữ sản phẩm đã chọn
+  const [sdkReady, setSdkReady] = useState(false);
+    const [isPaid, setIsPaid] = useState(false);
+  console.log("Order Data: ",orderData);
 
-  useEffect(() => {
-    const selectedProducts =
-      JSON.parse(localStorage.getItem("selectedProducts")) || [];
-    setOrderItems(selectedProducts);
+   useEffect(() => {
+    const storedOrderData = JSON.parse(localStorage.getItem("orderData")) || {};
+    setOrderData(storedOrderData);
+
+    const addPayPalScript = async () => {
+      const { data: clientId } = await axios.get(
+        `${process.env.REACT_APP_BACKEND_URL}/paypal`
+      );
+      const script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}`;
+      script.async = true;
+      script.onload = () => {
+        setSdkReady(true);
+      };
+      document.body.appendChild(script);
+    };
+
+    if (!window.paypal) {
+      addPayPalScript();
+    } else {
+      setSdkReady(true);
+    }
   }, []);
 
-  const userInfo = {
-    name: "John Doe",
-    email: "john@example.com",
-  };
-
-  const cart = {
-    shippingAddress: {
-      country: "USA",
-      city: "New York",
-      address: "123 Main St",
-      postalCode: "10001",
-    },
-    paymentMethod: "PayPal",
+    const successPaymentHandler = async (paymentResult) => {
+    console.log(paymentResult);
+    // Xử lý kết quả thanh toán thành công
+    try {
+      const { data } = await axios.post(
+        `${process.env.REACT_APP_BACKEND_URL}/orders/pay`,
+        {
+          order_id: orderData._id,
+          status: "success",
+          method: "paypal",
+        }
+      );
+      console.log("Payment Success: ", data);
+      setIsPaid(true);
+    } catch (error) {
+      console.error("Payment Error: ", error);
+    }
   };
 
   const calculateSubtotal = () => {
     return (
-      orderItems.reduce(
-        (acc, item) => acc + item.product.price * item.quantity,
+      orderData.items.reduce(
+        (acc, item) => acc + item.product.price * item.product.quantity,
         0
       ) || 0
     );
@@ -63,11 +86,6 @@ const OrderPage = () => {
 
   const calculateTotal = () => {
     return calculateSubtotal();
-  };
-
-  const successPaymentHandler = (paymentResult) => {
-    console.log(paymentResult);
-    // Xử lý kết quả thanh toán thành công
   };
 
   return (
@@ -83,8 +101,8 @@ const OrderPage = () => {
               </OrderBox>
               <OrderBoxContent>
                 <OrderBoxTitle>Customer</OrderBoxTitle>
-                <OrderBoxText>{userInfo.name}</OrderBoxText>
-                <OrderBoxText>{userInfo.email}</OrderBoxText>
+                <OrderBoxText>{orderData.user.name}</OrderBoxText>
+                <OrderBoxText>{orderData.user.email}</OrderBoxText>
               </OrderBoxContent>
             </OrderDetailCol>
             <OrderDetailCol>
@@ -94,9 +112,9 @@ const OrderPage = () => {
               <OrderBoxContent>
                 <OrderBoxTitle>Order info</OrderBoxTitle>
                 <OrderBoxText>
-                  Shipping: {cart.shippingAddress.country}
+                  Shipping: {orderData.shippingAddress.country}
                 </OrderBoxText>
-                <OrderBoxText>Pay method: {cart.paymentMethod}</OrderBoxText>
+                <OrderBoxText>Pay method: {orderData.paymentMethod}</OrderBoxText>
               </OrderBoxContent>
             </OrderDetailCol>
             <OrderDetailCol>
@@ -108,23 +126,22 @@ const OrderPage = () => {
               <OrderBoxContent>
                 <OrderBoxTitle>Deliver to</OrderBoxTitle>
                 <OrderBoxText>
-                  Address: {cart.shippingAddress.city},{" "}
-                  {cart.shippingAddress.address},{" "}
-                  {cart.shippingAddress.postalCode}
+                  Address: {orderData.shippingAddress.city},{" "}
+                  {orderData.shippingAddress.address},{" "}
+                  {orderData.shippingAddress.postalCode}
                 </OrderBoxText>
               </OrderBoxContent>
             </OrderDetailCol>
           </OrderDetailRow>
 
           <CheckoutContainer>
-            {orderItems.length === 0 ? (
+            {orderData.items.length === 0 ? (
               <OrderBoxTitle>Your order is empty</OrderBoxTitle>
             ) : (
               <>
-                {" "}
-                {orderItems.map((item, index) => (
+                {orderData.items.map((item, index) => (
                   <CartItem
-                    key={item.product._id}
+                    key={item.product_id}
                     item={item}
                     index={index}
                     selectedItems={[]}
@@ -152,17 +169,6 @@ const OrderPage = () => {
                 <span>${calculateTotal()}</span>
               </SummaryItem>
 
-              <PaymentMethod>
-                <label>
-                  <input type="radio" name="payment" value="bank" />
-                  Bank
-                  <img src="/images/payment-icons.png" alt="Payment Methods" />
-                </label>
-                <label>
-                  <input type="radio" name="payment" value="cash" />
-                  Cash on delivery
-                </label>
-              </PaymentMethod>
 
               <CouponContainer>
                 <input type="text" placeholder="Coupon Code" />
@@ -170,10 +176,14 @@ const OrderPage = () => {
               </CouponContainer>
 
               <PayPalButtonContainer>
-                <PayPalButtons
-                  amount={calculateTotal()}
-                  onSuccess={successPaymentHandler}
-                />
+                {sdkReady && !isPaid ? (
+                  <PayPalButtons
+                    amount={calculateTotal()}
+                    onSuccess={successPaymentHandler}
+                  />
+                ) : (
+                  <div>Loading...</div>
+                )}
               </PayPalButtonContainer>
             </OrderSummary>
           </CheckoutContainer>

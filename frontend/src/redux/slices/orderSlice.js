@@ -24,6 +24,7 @@ export const createOrder = createAsyncThunk(
     }
   }
 );
+
 // Async thunk để lấy orders theo user ID
 export const fetchOrdersByUserId = createAsyncThunk(
   "orders/fetchOrdersByUserId",
@@ -46,13 +47,61 @@ export const fetchOrdersByUserId = createAsyncThunk(
     }
   }
 );
+
+// Async thunk để lấy chi tiết đơn hàng
+export const getOrderDetails = createAsyncThunk(
+  "orders/getOrderDetails",
+  async (orderId, { rejectWithValue, getState }) => {
+    try {
+      const state = getState();
+      const token = state.auth.user.token;
+
+      const response = await axios.get(
+        `${process.env.REACT_APP_BACKEND_URL}/orders/${orderId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+// Async thunk để xử lý thanh toán đơn hàng
+export const payOrder = createAsyncThunk(
+  "orders/payOrder",
+  async ({ orderId, paymentResult }, { rejectWithValue, getState }) => {
+    try {
+      const state = getState();
+      const token = state.auth.user.token;
+
+      const response = await axios.post(
+        `${process.env.REACT_APP_BACKEND_URL}/orders/pay`,
+        { order_id: orderId, status: "success", method: "paypal" },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 const orderSlice = createSlice({
   name: "orders",
   initialState: {
     shipping_address: " ",
     items: [],
     orders: [],
-    order: null,
+    order: { loading: true, items: [], user: {}, shippingAddress: {} },
     loading: false,
     error: null,
   },
@@ -89,6 +138,30 @@ const orderSlice = createSlice({
         state.orders = action.payload;
       })
       .addCase(fetchOrdersByUserId.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload.message;
+      })
+      .addCase(getOrderDetails.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getOrderDetails.fulfilled, (state, action) => {
+        state.loading = false;
+        state.order = action.payload;
+      })
+      .addCase(getOrderDetails.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload.message;
+      })
+      .addCase(payOrder.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(payOrder.fulfilled, (state, action) => {
+        state.loading = false;
+        state.order = action.payload;
+      })
+      .addCase(payOrder.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload.message;
       });
