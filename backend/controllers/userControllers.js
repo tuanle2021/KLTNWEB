@@ -190,3 +190,71 @@ exports.getUserById = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+exports.createUser = async (req, res) => {
+  try {
+    const { name, email, phone, address, isAdmin, password, gender } = req.body;
+    console.log("Received input:", { name, email, phone, address, isAdmin, password, gender });
+
+    // Validate data
+    if (!validateLength(name, 3, 50)) {
+      console.error("Validation error: Name must be between 3 and 50 characters");
+      return res
+          .status(400)
+          .json({ error: "Name must be between 3 and 50 characters" });
+    }
+    if (!validateEmail(email)) {
+      console.error("Validation error: Invalid email format");
+      return res.status(400).json({ error: "Invalid email format" });
+    }
+    if (!validateLength(phone, 10, 15)) {
+      console.error("Validation error: Phone number must be between 10 and 15 characters");
+      return res
+          .status(400)
+          .json({ error: "Phone number must be between 10 and 15 characters" });
+    }
+    if (!validateLength(password, 6, 100)) {
+      console.error("Validation error: Password must be between 6 and 100 characters");
+      return res
+          .status(400)
+          .json({ error: "Password must be between 6 and 100 characters" });
+    }
+    if (!gender) {
+      console.error("Validation error: Gender is required");
+      return res
+          .status(400)
+          .json({ error: "Gender is required" });
+    }
+
+    // Check if email already exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      console.error("Validation error: Email already exists");
+      return res.status(400).json({ error: "Email already exists" });
+    }
+
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, 10);
+    console.log("Hashed password:", hashedPassword);
+
+    // Create a new user
+    const newUser = new User({
+      name,
+      email,
+      phone,
+      address,
+      password: hashedPassword,
+      gender,
+      isAdmin: req.user && req.user.isAdmin ? isAdmin : false,
+    });
+
+    // Save the new user to the database
+    await newUser.save();
+    console.log("New user created:", newUser);
+
+    res.status(201).json(newUser);
+  } catch (error) {
+    console.error("Error in createUser:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};

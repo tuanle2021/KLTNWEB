@@ -142,4 +142,27 @@ const userSlice = createSlice({
   },
 });
 
+// Thunk to create a new user
+export const createUserAdmin = createAsyncThunk(
+    "users/createUser",
+    async (userData, { rejectWithValue, getState }) => {
+      try {
+        const state = getState();
+        const token = state.auth.user.token;
+        const response = await axios.post(
+            `${process.env.REACT_APP_BACKEND_URL}/users`,
+            userData,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`, // Add token to header
+              },
+            }
+        );
+        return response.data;
+      } catch (error) {
+        return rejectWithValue(error.response.data.message);
+      }
+    }
+);
+
 export default userSlice.reducer;

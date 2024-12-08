@@ -24,6 +24,30 @@ export const createOrder = createAsyncThunk(
     }
   }
 );
+
+// Update order
+export const updateOrder = createAsyncThunk(
+    "order/updateOrder",
+    async (orderData, { rejectWithValue, getState }) => {
+      try {
+        const state = getState();
+        const token = state.auth.user.token;
+
+        const response = await axios.put(
+            `${process.env.REACT_APP_BACKEND_URL}/orders/${orderData.id}/items`,
+            orderData,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+        );
+        return response.data;
+      } catch (error) {
+        return rejectWithValue(error.response.data);
+      }
+    }
+);
 // Async thunk để lấy orders theo user ID
 export const fetchOrdersByUserId = createAsyncThunk(
   "orders/fetchOrdersByUserId",
@@ -60,6 +84,9 @@ const orderSlice = createSlice({
       state.items = action.payload.items;
       state.shipping_address = action.payload.shipping_address;
     },
+    setOrderSummary: (state, action) => {
+      state.orderSummary = action.payload;
+    },
     clearOrders: (state) => {
       state.items = [];
       state.error = null;
@@ -94,5 +121,5 @@ const orderSlice = createSlice({
   },
 });
 
-export const { setOrderItems, clearOrders } = orderSlice.actions;
+export const { setOrderItems, setOrderSummary, clearOrders } = orderSlice.actions;
 export default orderSlice.reducer;

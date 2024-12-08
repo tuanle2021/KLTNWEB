@@ -120,7 +120,7 @@ const updateOrderStatus = async (req, res) => {
 const updateOrderItems = async (req, res) => {
   try {
     const { id } = req.params;
-    const { items, shipping_address } = req.body;
+    const { items, shipping_address, payment_status } = req.body;
 
     // Kiểm tra quyền hạn của người dùng (chỉ admin mới được phép cập nhật)
     if (!req.user || !req.user.isAdmin) {
@@ -142,8 +142,8 @@ const updateOrderItems = async (req, res) => {
         const product = await Product.findById(item.product_id);
         if (!product) {
           return res
-            .status(404)
-            .json({ message: `Product not found: ${item.product_id}` });
+              .status(404)
+              .json({ message: `Product not found: ${item.product_id}` });
         }
         const itemTotalPrice = product.price * item.quantity;
         total_price += itemTotalPrice;
@@ -162,6 +162,11 @@ const updateOrderItems = async (req, res) => {
     // Cập nhật địa chỉ giao hàng nếu có
     if (shipping_address) {
       order.shipping_address = shipping_address;
+    }
+
+    // Cập nhật trạng thái thanh toán nếu có
+    if (payment_status) {
+      order.payment_status = payment_status;
     }
 
     const updatedOrder = await order.save();

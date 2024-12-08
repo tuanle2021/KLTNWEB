@@ -8,6 +8,7 @@ import ProfilePage from "../pages/ProfilePage/ProfilePage";
 import CheckoutPage from "../pages/CheckoutPage/CheckoutPage";
 import CartPage from "../pages/CartPage/CartPage";
 import ProductPage from "../pages/ProductPage/ProductPage";
+import SuccessPage from "../pages/SuccessPage/SuccessPage";
 export const routes = [
   {
     path: "/",
@@ -33,6 +34,11 @@ export const routes = [
     path: "/checkout",
     page: CheckoutPage,
     isShowHeader: true,
+  },
+  {
+    path: "/success",
+    page: SuccessPage,
+    isShowHeader: false,
   },
   {
     path: "/cart",

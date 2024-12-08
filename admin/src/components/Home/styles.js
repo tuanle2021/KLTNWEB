@@ -111,6 +111,30 @@ export const TableCell = styled.td`
   border-top: 1px solid #dee2e6;
 `;
 
+export const Pagination = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+`;
+
+export const PaginationButton = styled.button`
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  padding: 5px 10px;
+  margin: 0 5px;
+  cursor: pointer;
+
+  &.active {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+  }
+
+  &:hover {
+    background-color: #e0e0e0;
+  }
+`;
+
 export const Badge = styled.span`
   display: inline-block;
   padding: 0.3em 0.45em;

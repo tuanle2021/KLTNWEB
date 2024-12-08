@@ -4,6 +4,7 @@ const {
   activateAccount,
   login,
   requestNewToken,
+  createUser,
   getAllUsers,
   getUserById,
 } = require("../controllers/userControllers");
@@ -20,5 +21,6 @@ router.post("/categories", addCategory);
 router.post("/authen", authentication);
 router.get("/users", authentication, getAllUsers);
 router.get("/users/:id", authentication, getUserById);
+router.post("/users", authentication, createUser);
 
 module.exports = router;

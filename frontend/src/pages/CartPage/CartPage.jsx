@@ -1,7 +1,7 @@
-// src/pages/CartPage/CartPage.jsx
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 import {
   getCart,
   updateQuantity,
@@ -10,7 +10,7 @@ import {
   updateCartItem,
   deleteCartItem,
 } from "../../redux/slices/cartSlice";
-import { setOrderItems, createOrder } from "../../redux/slices/orderSlice";
+import { setOrderItems, createOrder, setOrderSummary } from "../../redux/slices/orderSlice";
 import {
   CartContainer,
   CartHeader,
@@ -30,9 +30,11 @@ const CartPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { items, selectedItems, loading, error } = useSelector(
-    (state) => state.cart
+      (state) => state.cart
   );
+  const orderSummary = useSelector((state) => state.order.orderSummary);
   const [quantities, setQuantities] = useState([]);
+
   useEffect(() => {
     dispatch(getCart());
   }, [dispatch]);
@@ -40,6 +42,12 @@ const CartPage = () => {
   useEffect(() => {
     setQuantities(items.map((item) => item.quantity));
   }, [items]);
+
+  useEffect(() => {
+    if (orderSummary) {
+      console.log(orderSummary);
+    }
+  }, [orderSummary]);
 
   const handleQuantityChange = (index, quantity) => {
     const newQuantities = [...quantities];
@@ -64,8 +72,8 @@ const CartPage = () => {
 
   const calculateSubtotal = () => {
     return selectedItems.reduce(
-      (acc, index) => acc + items[index].product.price * items[index].quantity,
-      0
+        (acc, index) => acc + items[index].product.price * quantities[index],
+        0
     );
   };
 
@@ -80,7 +88,9 @@ const CartPage = () => {
     };
     dispatch(setOrderItems(selectedProducts));
     try {
-      await dispatch(createOrder(orderData)).unwrap();
+      const order = await dispatch(createOrder(orderData)).unwrap();
+      await dispatch(setOrderSummary(order));
+      Cookies.set("orderSummary", JSON.stringify(order));
       dispatch(clearSelectedItems());
       navigate("/checkout");
     } catch (error) {
@@ -106,65 +116,65 @@ const CartPage = () => {
   }
 
   return (
-    <CartContainer>
-      <CartHeader>
-        <span>Image</span>
-        <span>Product</span>
-        <span>Price</span>
-        <span>Subtotal</span>
-        <span>Quantity</span>
-      </CartHeader>
+      <CartContainer>
+        <CartHeader>
+          <span>Image</span>
+          <span>Product</span>
+          <span>Price</span>
+          <span>Subtotal</span>
+          <span>Quantity</span>
+        </CartHeader>
 
-      {items.map((item, index) => (
-        <CartItem
-          key={item.product._id}
-          item={item}
-          index={index}
-          selectedItems={selectedItems}
-          quantities={quantities}
-          handleSelectItem={handleSelectItem}
-          handleQuantityChange={handleQuantityChange}
-          handleRemoveItem={handleRemoveItem}
-        />
-      ))}
+        {items.map((item, index) => (
+            <CartItem
+                key={item.product._id}
+                item={item}
+                index={index}
+                selectedItems={selectedItems}
+                quantities={quantities}
+                handleSelectItem={handleSelectItem}
+                handleQuantityChange={handleQuantityChange}
+                handleRemoveItem={handleRemoveItem}
+            />
+        ))}
 
-      <CartActions>
-        <ReturnToShopButton onClick={handleReturnShop}>
-          Return To Shop
-        </ReturnToShopButton>
-        <UpdateCartButton onClick={handleUpdateCart}>
-          Update Cart
-        </UpdateCartButton>
-      </CartActions>
+        <CartActions>
+          <ReturnToShopButton onClick={handleReturnShop}>
+            Return To Shop
+          </ReturnToShopButton>
+          <UpdateCartButton onClick={handleUpdateCart}>
+            Update Cart
+          </UpdateCartButton>
+        </CartActions>
 
-      <CouponAndTotalContainer>
-        <div>
-          <CouponInput placeholder="Coupon Code" />
-          <ApplyCouponButton>Apply Coupon</ApplyCouponButton>
-        </div>
-        <CartTotalContainer>
-          <h3>Cart Total</h3>
-          <CartTotalDetail>
-            <span>Subtotal:</span>
-            <span>${calculateSubtotal()}</span>
-          </CartTotalDetail>
-          <CartTotalDetail>
-            <span>Shipping:</span>
-            <span>Free</span>
-          </CartTotalDetail>
-          <CartTotalDetail>
-            <span>Total:</span>
-            <span>${calculateSubtotal()}</span>
-          </CartTotalDetail>
-          <ProceedToCheckoutButton
-            onClick={handleCheckout}
-            disabled={selectedItems.length === 0}
-          >
-            Proceed to checkout
-          </ProceedToCheckoutButton>
-        </CartTotalContainer>
-      </CouponAndTotalContainer>
-    </CartContainer>
+        <CouponAndTotalContainer>
+          <div>
+            <CouponInput placeholder="Coupon Code" />
+            <ApplyCouponButton>Apply Coupon</ApplyCouponButton>
+          </div>
+          <CartTotalContainer>
+            <h3>Cart Total</h3>
+            <CartTotalDetail>
+              <span>Subtotal:</span>
+              <span>${calculateSubtotal()}</span>
+            </CartTotalDetail>
+            <CartTotalDetail>
+              <span>Shipping:</span>
+              <span>Free</span>
+            </CartTotalDetail>
+            <CartTotalDetail>
+              <span>Total:</span>
+              <span>${calculateSubtotal()}</span>
+            </CartTotalDetail>
+            <ProceedToCheckoutButton
+                onClick={handleCheckout}
+                disabled={selectedItems.length === 0}
+            >
+              Proceed to checkout
+            </ProceedToCheckoutButton>
+          </CartTotalContainer>
+        </CouponAndTotalContainer>
+      </CartContainer>
   );
 };
 
