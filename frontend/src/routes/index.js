@@ -9,6 +9,7 @@ import CheckoutPage from "../pages/CheckoutPage/CheckoutPage";
 import CartPage from "../pages/CartPage/CartPage";
 import ProductPage from "../pages/ProductPage/ProductPage";
 import SuccessPage from "../pages/SuccessPage/SuccessPage";
+import ChatPage from "../pages/ChatPage/ChatPage";
 export const routes = [
   {
     path: "/",
@@ -58,6 +59,11 @@ export const routes = [
   {
     path: "/products",
     page: ProductPage,
+    isShowHeader: true,
+  },
+  {
+    path: "/chat",
+    page: ChatPage,
     isShowHeader: true,
   },
   {
