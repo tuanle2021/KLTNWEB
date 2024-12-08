@@ -1,0 +1,24 @@
+tạo file .env trong backend và làm theo video youtube bên dưới để điền 
+thông tin cho chức năng gửi mail xác thực tài khoản
+-Gửi email: + https://console.cloud.google.com
+	    + https://developers.google.com/oauthplayground
+	    + https://www.youtube.com/watch?v=-rcRf7yswfM
+
+các biến trong file .env:
+PORT=8000
+DATABASE_URL= sử dụng db từ mongodb atlas KLTN em đã tạo để dùng chung, liên hệ em nếu chưa được thêm
+JWT_SECRET= (lấy một dãy ký tự càng phức tạp càng tốt để tạo token xác thực tài khoản)
+
+BASE_URL=http://localhost:3000
+EMAIL =  mail bất kỳ để chức năng gửi email xác thực tài khoản
+
+CLIENT_ID = 
+CLIENT_SECRET =
+REFRESH_TOKEN =
+ACCESS_TOKEN = 
+
+đăng nhập cloudinary để lấy các thông tin này
+hình ảnh sẽ được tải lên thông qua middleware và uploadimage và trả về danh sách url của hình
+CLOUD_NAME=
+CLOUD_KEY=
+CLOUD_SECRET=
