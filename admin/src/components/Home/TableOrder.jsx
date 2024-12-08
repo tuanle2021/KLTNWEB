@@ -36,7 +36,7 @@ const TableOrder = ({ orders, status }) => {
                 <TableCell>{order.user_id?.email || "N/A"}</TableCell>
                 <TableCell>${order.total_price}</TableCell>
                 <TableCell>
-                  {order.payment_status === "pending" ? (
+                  {order.payment_status === "completed" ? (
                     <Badge variant="success">
                       Paid At {moment(order.paidAt).format("MMM Do YY")}
                     </Badge>
