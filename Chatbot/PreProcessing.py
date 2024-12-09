@@ -196,93 +196,93 @@ df2['labels'] = df2['Tag'].map(lambda x: label2id[x.strip()])
 X = list(df2['Pattern'])
 y = list(df2['labels'])
 
-X_train,X_test,y_train,y_test = train_test_split(X,y,random_state = 47)
-
-
-# Load BERT Pretrained model and Tokenizer
-model_name = "bert-base-uncased"
-max_len = 256
-
-tokenizer = BertTokenizer.from_pretrained(model_name,
-                                          max_length=max_len)
-model = BertForSequenceClassification.from_pretrained(model_name,
-                                                      num_labels=num_labels,
-                                                      id2label=id2label,
-                                                      label2id = label2id)
-
-# print(model)
-# Transform the data into numerical format
-train_encoding = tokenizer(X_train, truncation=True, padding=True)
-test_encoding = tokenizer(X_test, truncation=True, padding=True)
-
-full_data = tokenizer(X, truncation=True, padding=True)
-
-
-# Build Data Loader
-class DataLoader(Dataset):
-
-    def __init__(self, encodings, labels):
-        self.encodings = encodings
-        self.labels = labels
-
-    def __getitem__(self, idx):
-        # print("encodding_pre \n",self.encodings.items())
-        item = {key: torch.tensor(val[idx]) for key, val in self.encodings.items()}
-        item['labels'] = torch.tensor(self.labels[idx])
-
-        return item
-
-    def __len__(self):
-        return len(self.labels)
-train_dataloader = DataLoader(train_encoding, y_train)
-test_dataloader = DataLoader(test_encoding, y_test)
-
-
-fullDataLoader = DataLoader(full_data, y_test)
-
-
-
-def compute_metrics(pred):
-    labels = pred.label_ids
-    preds = pred.predictions.argmax(-1)
-    precision, recall, f1, _ = precision_recall_fscore_support(labels, preds, average='macro')
-    acc = accuracy_score(labels, preds)
-
-    return {
-        'Accuracy': acc,
-        'F1': f1,
-        'Precision': precision,
-        'Recall': recall
-    }
-training_args = TrainingArguments(
-    output_dir='output',
-    num_train_epochs=100,
-    per_device_train_batch_size=32,
-    per_device_eval_batch_size=16,
-    warmup_steps=100,
-    weight_decay=0.05,
-    logging_steps=50,
-    evaluation_strategy="steps",
-    eval_steps=50,
-    save_strategy="steps",
-    load_best_model_at_end=True
-)
-
-trainer = Trainer(
-    model=model,
-    args=training_args,
-    train_dataset=train_dataloader,
-    eval_dataset=test_dataloader,
-    compute_metrics= compute_metrics
-)
-
-trainer.train()
-
-
-q=[trainer.evaluate(eval_dataset=df2) for df2 in [train_dataloader, test_dataloader]]
-
-pd.DataFrame(q, index=["train","test"]).iloc[:,:5]
-
-model_path = "/home/tangsan/KLTN/KLTNWEB/Chatbot/chatbot"
-trainer.save_model(model_path)
-tokenizer.save_pretrained(model_path)
+# X_train,X_test,y_train,y_test = train_test_split(X,y,random_state = 47)
+#
+#
+# # Load BERT Pretrained model and Tokenizer
+# model_name = "bert-base-uncased"
+# max_len = 256
+#
+# tokenizer = BertTokenizer.from_pretrained(model_name,
+#                                           max_length=max_len)
+# model = BertForSequenceClassification.from_pretrained(model_name,
+#                                                       num_labels=num_labels,
+#                                                       id2label=id2label,
+#                                                       label2id = label2id)
+#
+# # print(model)
+# # Transform the data into numerical format
+# train_encoding = tokenizer(X_train, truncation=True, padding=True)
+# test_encoding = tokenizer(X_test, truncation=True, padding=True)
+#
+# full_data = tokenizer(X, truncation=True, padding=True)
+#
+#
+# # Build Data Loader
+# class DataLoader(Dataset):
+#
+#     def __init__(self, encodings, labels):
+#         self.encodings = encodings
+#         self.labels = labels
+#
+#     def __getitem__(self, idx):
+#         # print("encodding_pre \n",self.encodings.items())
+#         item = {key: torch.tensor(val[idx]) for key, val in self.encodings.items()}
+#         item['labels'] = torch.tensor(self.labels[idx])
+#
+#         return item
+#
+#     def __len__(self):
+#         return len(self.labels)
+# train_dataloader = DataLoader(train_encoding, y_train)
+# test_dataloader = DataLoader(test_encoding, y_test)
+#
+#
+# fullDataLoader = DataLoader(full_data, y_test)
+#
+#
+#
+# def compute_metrics(pred):
+#     labels = pred.label_ids
+#     preds = pred.predictions.argmax(-1)
+#     precision, recall, f1, _ = precision_recall_fscore_support(labels, preds, average='macro')
+#     acc = accuracy_score(labels, preds)
+#
+#     return {
+#         'Accuracy': acc,
+#         'F1': f1,
+#         'Precision': precision,
+#         'Recall': recall
+#     }
+# training_args = TrainingArguments(
+#     output_dir='output',
+#     num_train_epochs=100,
+#     per_device_train_batch_size=32,
+#     per_device_eval_batch_size=16,
+#     warmup_steps=100,
+#     weight_decay=0.05,
+#     logging_steps=50,
+#     evaluation_strategy="steps",
+#     eval_steps=50,
+#     save_strategy="steps",
+#     load_best_model_at_end=True
+# )
+#
+# trainer = Trainer(
+#     model=model,
+#     args=training_args,
+#     train_dataset=train_dataloader,
+#     eval_dataset=test_dataloader,
+#     compute_metrics= compute_metrics
+# )
+#
+# trainer.train()
+#
+#
+# q=[trainer.evaluate(eval_dataset=df2) for df2 in [train_dataloader, test_dataloader]]
+#
+# pd.DataFrame(q, index=["train","test"]).iloc[:,:5]
+#
+# model_path = "/home/tangsan/NLP/KLTNWEB/Chatbot/chatbot"
+# trainer.save_model(model_path)
+# tokenizer.save_pretrained(model_path)
