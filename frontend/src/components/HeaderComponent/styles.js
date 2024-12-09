@@ -4,6 +4,8 @@ export const HeaderContainer = styled.header`
   color: #333;
   padding: 15px 0;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: center;
 `;
 
 export const HeaderInner = styled.div`
@@ -16,13 +18,13 @@ export const HeaderInner = styled.div`
     flex-direction: row;
     align-items: center;
     padding: 0 20px;
-    flex-wrap: wrap;
+
     justify-content: center;
     text-decoration: none;
   }
 `;
 export const Link = styled.a`
-  display: block;
+  display: inline-block;
   margin: 15px 0;
   color: #0e0620;
   font-size: 14px;
@@ -36,8 +38,8 @@ export const Link = styled.a`
 export const Button = styled.button`
   width: 100%;
   padding: 15px;
-  background-color: var(--green-color);
-  color: white;
+  color: #000;
+  background-color: none;
   font-size: 16px;
   border: none;
   border-radius: 8px;
@@ -196,4 +198,63 @@ export const NavItem = styled.div`
   &:not(:last-child) {
     border-bottom: 1px solid #e0e0e0;
   }
+`;
+
+export const SearchContainer = styled.div`
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  display: block;
+`;
+
+export const SearchInput = styled.input`
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+`;
+
+export const SearchButton = styled.button`
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+`;
+
+export const SearchResults = styled.div`
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+`;
+
+export const SearchResultItem = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  cursor: pointer;
+
+  &:hover {
+    background: #f0f0f0;
+  }
+`;
+
+export const ProductImage = styled.img`
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  margin-right: 10px;
+`;
+
+export const ProductName = styled.span`
+  font-size: 14px;
+  color: #333;
 `;

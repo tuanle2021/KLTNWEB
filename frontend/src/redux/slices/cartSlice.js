@@ -106,10 +106,17 @@ const cartSlice = createSlice({
     selectedItems: [],
     total_price: 0,
     total_items: 0,
+    isOpen: false,
     loading: false,
     error: null,
   },
   reducers: {
+    openCartSidebar: (state) => {
+      state.isOpen = true;
+    },
+    closeCartSidebar: (state) => {
+      state.isOpen = false;
+    },
     updateQuantity: (state, action) => {
       const { index, quantity } = action.payload;
       state.items[index].quantity = quantity;
@@ -191,7 +198,12 @@ const cartSlice = createSlice({
   },
 });
 
-export const { updateQuantity, toggleSelectItem, clearSelectedItems } =
-  cartSlice.actions;
+export const {
+  updateQuantity,
+  toggleSelectItem,
+  clearSelectedItems,
+  openCartSidebar,
+  closeCartSidebar,
+} = cartSlice.actions;
 
 export default cartSlice.reducer;

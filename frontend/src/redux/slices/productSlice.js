@@ -62,10 +62,27 @@ export const updateProduct = createAsyncThunk(
   }
 );
 
+// Async thunk để tìm kiếm sản phẩm
+export const searchProducts = createAsyncThunk(
+  "products/searchProducts",
+  async (query, { rejectWithValue }) => {
+    try {
+      const { data } = await axios.get(
+        `${process.env.REACT_APP_BACKEND_URL}/products/search`,
+        { params: { query } }
+      );
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response.data.message);
+    }
+  }
+);
+
 const productSlice = createSlice({
   name: "products",
   initialState: {
     featuredProducts: [],
+    searchedProducts: [],
     products: [],
     product: null,
     loading: false,
@@ -82,6 +99,18 @@ const productSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(searchProducts.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(searchProducts.fulfilled, (state, action) => {
+        state.loading = false;
+        state.searchedProducts = action.payload;
+      })
+      .addCase(searchProducts.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
       .addCase(fetchProducts.pending, (state) => {
         state.loading = true;
         state.error = null;

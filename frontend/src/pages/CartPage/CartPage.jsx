@@ -30,7 +30,7 @@ import {
   CartTotalDetail,
 } from "./styles";
 import CartItem from "./CartItem";
-import TableOrder from "./TableOrder";
+import Loading from "../../components/LoadingError/Loading";
 
 const CartPage = () => {
   const dispatch = useDispatch();
@@ -45,7 +45,7 @@ const CartPage = () => {
   } = useSelector((state) => state.orders);
 
   const user = useSelector((state) => state.auth.user);
-  const orderSummary = useSelector((state) => state.order.orderSummary);
+  const orderSummary = useSelector((state) => state.orders.orderSummary);
   const [quantities, setQuantities] = useState([]);
 
   useEffect(() => {
@@ -81,16 +81,20 @@ const CartPage = () => {
   const handleUpdateCart = () => {
     selectedItems.forEach((index) => {
       const item = items[index];
-      dispatch(updateCartItem({ id: item._id, quantity: quantities[index] }));
+      if (item && item._id) {
+        dispatch(updateCartItem({ id: item._id, quantity: quantities[index] }));
+      }
     });
-    window.location.reload();
   };
 
   const calculateSubtotal = () => {
-    return selectedItems.reduce(
-      (acc, index) => acc + items[index].product.price * quantities[index],
-      0
-    );
+    return selectedItems.reduce((acc, index) => {
+      const item = items[index];
+      if (item && item.product && item.product.price) {
+        return acc + item.product.price * quantities[index];
+      }
+      return acc;
+    }, 0);
   };
 
   const handleCheckout = async () => {
@@ -118,31 +122,24 @@ const CartPage = () => {
 
   const handleRemoveItem = (id) => {
     dispatch(deleteCartItem(id));
-    window.location.reload();
   };
 
   const handleReturnShop = () => {
     navigate("/");
   };
 
-  if (loading || ordersLoading) {
-    return <p>Loading...</p>;
-  }
-
-  if (error || ordersError) {
-    return (
-      <p>
-        Error:{" "}
-        {error?.message ||
-          error?.toString() ||
-          ordersError?.message ||
-          ordersError?.toString()}
-      </p>
-    );
-  }
-
   return (
     <CartContainer>
+      {loading && <p>Loading...</p>}
+      {error && (
+        <p>
+          Error:{" "}
+          {error?.message ||
+            error?.toString() ||
+            ordersError?.message ||
+            ordersError?.toString()}
+        </p>
+      )}
       <CartHeader>
         <span>Image</span>
         <span>Product</span>
@@ -150,20 +147,22 @@ const CartPage = () => {
         <span>Subtotal</span>
         <span>Quantity</span>
       </CartHeader>
-
-      {items.map((item, index) => (
-        <CartItem
-          key={item.product._id}
-          item={item}
-          index={index}
-          selectedItems={selectedItems}
-          quantities={quantities}
-          handleSelectItem={handleSelectItem}
-          handleQuantityChange={handleQuantityChange}
-          handleRemoveItem={handleRemoveItem}
-        />
-      ))}
-
+      {items.map(
+        (item, index) =>
+          item.product &&
+          item.product._id && (
+            <CartItem
+              key={item.product._id}
+              item={item}
+              index={index}
+              selectedItems={selectedItems}
+              quantities={quantities}
+              handleSelectItem={handleSelectItem}
+              handleQuantityChange={handleQuantityChange}
+              handleRemoveItem={handleRemoveItem}
+            />
+          )
+      )}
       <CartActions>
         <ReturnToShopButton onClick={handleReturnShop}>
           Return To Shop
@@ -172,7 +171,6 @@ const CartPage = () => {
           Update Cart
         </UpdateCartButton>
       </CartActions>
-
       <CouponAndTotalContainer>
         <div>
           <CouponInput placeholder="Coupon Code" />

@@ -3,12 +3,12 @@ import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../../redux/slices/authSlice";
 import { Link, useNavigate } from "react-router-dom";
 import CategoryMenu from "../Category/CategoryMenu";
-import { IoSearch } from "react-icons/io5";
+import SearchBarBox from "./SearchBar";
+
 import {
   HeaderContainer,
   HeaderInner,
   Logo,
-  SearchBar,
   NavItem,
   ShoppingCart,
   ProfileMenu,
@@ -49,105 +49,98 @@ const HeaderComponent = () => {
 
   return (
     <HeaderContainer>
-      <div className="container">
-        <HeaderInner>
-          <Logo href="/">
-            <ShopOutlined style={{ fontSize: "2em", marginRight: "10px" }} />
-          </Logo>
-          <CategoryMenu />
-          {/* Search Bar */}
-          <SearchBar>
-            <input type="text" placeholder="Search for tech products..." />
-            <button type="submit">
-              <IoSearch />
-            </button>
-          </SearchBar>
+      <HeaderInner>
+        <CategoryMenu />
+        <Logo>
+          <Link to="/">MERN Shop</Link>
+        </Logo>
+        {/* Search Bar */}
+        <SearchBarBox />
 
-          {/* Shopping Cart */}
-          <ShoppingCart>
-            <a onClick={handleCartClick}>
-              <ShoppingCartOutlined
-                style={{
-                  fontSize: "1.5em",
-                  marginRight: "10px",
-                  color: "var(--dark-bg-third)",
-                }}
-              />
-              <span className="cart-count">3</span>
-              {/* Dynamic cart item count */}
-            </a>
-          </ShoppingCart>
+        {/* Shopping Cart */}
+        <ShoppingCart>
+          <Link to="/cart">
+            <ShoppingCartOutlined
+              style={{
+                fontSize: "1.5em",
+                marginRight: "10px",
+                color: "var(--dark-bg-third)",
+              }}
+            />
+            <span className="cart-count">3</span>
+            {/* Dynamic cart item count */}
+          </Link>
+        </ShoppingCart>
 
-          {/* Profile Menu */}
-          <ProfileMenu>
-            {user ? (
-              <>
-                <ProfileMenu>
-                  <UserIconWrapper>
-                    <UserOutlined />
-                    <DownOutlined className="dropdown-icon" />
-                  </UserIconWrapper>
-                  <DropdownContainer className="profile-dropdown">
-                    <NavItem>
-                      <Link to="/profile">
-                        <i className="icon">
-                          <UserOutlined />
-                        </i>{" "}
-                        My Account
-                      </Link>
-                    </NavItem>
-                    <NavItem>
-                      <Link to="/orders">
-                        <i className="icon">
-                          <InboxOutlined />
-                        </i>{" "}
-                        My Order
-                      </Link>
-                    </NavItem>
-                    <NavItem>
-                      <Link to="/cancellations">
-                        <i className="icon">
-                          <CloseCircleOutlined />
-                        </i>{" "}
-                        My Cancellations
-                      </Link>
-                    </NavItem>
-                    <NavItem>
-                      <Link to="/reviews">
-                        <i className="icon">
-                          <StarOutlined />
-                        </i>{" "}
-                        My Reviews
-                      </Link>
-                    </NavItem>
-                    <NavItem>
-                      <Link to="/" onClick={handleLogout}>
-                        <i className="icon">
-                          <LogoutOutlined />
-                        </i>{" "}
-                        Logout
-                      </Link>
-                    </NavItem>
-                  </DropdownContainer>
-                </ProfileMenu>
-              </>
-            ) : (
-              <NavButton>
-                <NavItem>
-                  <Link to="/login">
-                    <Button>Login</Button>
-                  </Link>
-                </NavItem>
-                <NavItem>
-                  <Link to="/login?register=true">
-                    <Button>Register</Button>
-                  </Link>
-                </NavItem>
-              </NavButton>
-            )}
-          </ProfileMenu>
-        </HeaderInner>
-      </div>
+        {/* Profile Menu */}
+        <ProfileMenu>
+          {user ? (
+            <>
+              <ProfileMenu>
+                <UserIconWrapper>
+                  <UserOutlined />
+                  <DownOutlined className="dropdown-icon" />
+                </UserIconWrapper>
+                <DropdownContainer className="profile-dropdown">
+                  <NavItem>
+                    <Link to="/profile">
+                      <i className="icon">
+                        <UserOutlined />
+                      </i>{" "}
+                      My Account
+                    </Link>
+                  </NavItem>
+                  <NavItem>
+                    <Link to="/orders">
+                      <i className="icon">
+                        <InboxOutlined />
+                      </i>{" "}
+                      My Order
+                    </Link>
+                  </NavItem>
+                  <NavItem>
+                    <Link to="/cancellations">
+                      <i className="icon">
+                        <CloseCircleOutlined />
+                      </i>{" "}
+                      My Cancellations
+                    </Link>
+                  </NavItem>
+                  <NavItem>
+                    <Link to="/reviews">
+                      <i className="icon">
+                        <StarOutlined />
+                      </i>{" "}
+                      My Reviews
+                    </Link>
+                  </NavItem>
+                  <NavItem>
+                    <Link to="/" onClick={handleLogout}>
+                      <i className="icon">
+                        <LogoutOutlined />
+                      </i>{" "}
+                      Logout
+                    </Link>
+                  </NavItem>
+                </DropdownContainer>
+              </ProfileMenu>
+            </>
+          ) : (
+            <NavButton>
+              <NavItem>
+                <Link to="/login">
+                  <Button>Login</Button>
+                </Link>
+              </NavItem>
+              <NavItem>
+                <Link to="/login?register=true">
+                  <Button>Register</Button>
+                </Link>
+              </NavItem>
+            </NavButton>
+          )}
+        </ProfileMenu>
+      </HeaderInner>
     </HeaderContainer>
   );
 };

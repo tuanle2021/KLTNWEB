@@ -9,7 +9,6 @@ import { useDispatch, useSelector } from "react-redux";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import PromoSlider from "../../components/Slide";
-import CategoryMenu from "../../components/Category";
 import {
   fetchFilterProduct,
   fetchProducts,
@@ -20,6 +19,8 @@ import FlashSale from "../../components/QuickviewComponent/QuickView";
 import ProductGrid from "./ProductGrid";
 import ProductListSection from "./ProductListSection";
 import CategorySection from "./CategorySection";
+import Loading from "../../components/LoadingError/Loading";
+import FeatureSection from "../../components/FeatureComponent/FeatrureSection";
 import { TopBanner } from "./style";
 
 const HomePage = () => {
@@ -34,7 +35,6 @@ const HomePage = () => {
     loading,
     error,
     currentPage,
-    totalProducts,
     productsPerPage,
     totalPages,
   } = useSelector((state) => state.products);
@@ -68,11 +68,10 @@ const HomePage = () => {
     [localFeaturedProducts]
   );
 
-  if (loading) return <p>Loading products...</p>;
-  if (error) return <p>Error loading products: {error}</p>;
-
   return (
     <div>
+      {loading && <p>Loading</p>}
+      {error && <p>{error}</p>}
       <Roadmap />
       <div className="container">
         <TopBanner>
@@ -89,6 +88,7 @@ const HomePage = () => {
         />
         <ProductGrid ref={gridRef} products={memoizedProducts} />
         <FlashSale />
+        <FeatureSection />
       </div>
     </div>
   );

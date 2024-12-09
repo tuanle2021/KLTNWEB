@@ -59,20 +59,20 @@ const ProductCart = ({ product }) => {
     navigate(`/product/${_id}`);
   };
   // Xử lý thêm sản phẩm vào giỏ hàng
-  const handleAddToCart = (e) => {
-    e.stopPropagation();
-    e.preventDefault();
-    if (user) {
-      dispatch(addToCart({ productId: _id, quantity: 1 }));
-      setShowAlert(true); // Hiển thị thông báo
-      setTimeout(() => {
-        setShowAlert(false); // Ẩn thông báo sau 3 giây
-      }, 3000);
-    } else {
-      alert("Please login to add products to cart");
-      navigate("/login");
-    }
-  };
+  // const handleAddToCart = (e) => {
+  //   e.stopPropagation();
+  //   e.preventDefault();
+  //   if (user) {
+  //     dispatch(addToCart({ productId: _id, quantity: 1 }));
+  //     setShowAlert(true); // Hiển thị thông báo
+  //     setTimeout(() => {
+  //       setShowAlert(false); // Ẩn thông báo sau 3 giây
+  //     }, 3000);
+  //   } else {
+  //     alert("Please login to add products to cart");
+  //     navigate("/login");
+  //   }
+  // };
   return (
     <>
       {showAlert && (
@@ -104,12 +104,12 @@ const ProductCart = ({ product }) => {
             }
             alt={name}
           />
-          <AddToCartButton onClick={handleAddToCart}>
+          {/* <AddToCartButton onClick={handleAddToCart}>
             <div style={{ display: "flex", justifyContent: "center" }}>
               <FiShoppingCart size={16} />
               <p style={{ marginLeft: "8px" }}> Add To Cart</p>
             </div>
-          </AddToCartButton>
+          </AddToCartButton> */}
         </ProductImage>
 
         {/* Thông tin chi tiết sản phẩm */}

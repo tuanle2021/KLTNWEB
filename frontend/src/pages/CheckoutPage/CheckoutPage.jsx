@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import Roadmap from "../../components/RoadmapComponent/Roadmap";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
@@ -38,9 +37,7 @@ const CheckoutPage = () => {
     phoneNumber: "",
     emailAddress: "",
   });
-  const [orderSuccess, setOrderSuccess] = useState(false); // State để kiểm tra trạng thái đặt hàng thành công
-  const [orderItems, setOrderItems] = useState([]); // State để lưu trữ sản phẩm đã chọn
-  const [paymentMethod, setPaymentMethod] = useState(""); // State để lưu trữ phương thức thanh toán
+  const [orderSuccess, setOrderSuccess] = useState(false);
   const [orderSummary, setOrderSummary] = useState({ items: [] });
 
   const dispatch = useDispatch();
@@ -64,10 +61,6 @@ const CheckoutPage = () => {
       phoneNumber: userData.phone || "",
       emailAddress: userData.email || "",
     });
-
-    const selectedProducts =
-      JSON.parse(localStorage.getItem("selectedProducts")) || [];
-    setOrderItems(selectedProducts);
   }, []);
   const navigate = useNavigate();
 
@@ -89,10 +82,6 @@ const CheckoutPage = () => {
     }
   };
 
-  const handlePaymentMethodChange = (e) => {
-    setPaymentMethod(e.target.value);
-  };
-
   const calculateSubtotal = () => {
     return (
       orderSummary?.items?.reduce(
@@ -103,38 +92,10 @@ const CheckoutPage = () => {
   };
 
   const calculateTotal = () => {
-    return calculateSubtotal();
+    return calculateSubtotal() + (orderSummary?.shipping || 0);
   };
 
   const handlePlaceOrder = async () => {
-    if (!paymentMethod) {
-      alert("Please select a payment method");
-      return;
-    }
-
-    const orderData = {
-      user: {
-        name: formData.firstName,
-        email: formData.emailAddress,
-      },
-      shippingAddress: {
-        street: formData.streetAddress,
-        city: formData.city,
-        country: "VietNam",
-        postalCode: "0008",
-      },
-      items: orderItems.map((item) => ({
-        product: {
-          product_id: item.product._id,
-          name: item.product.name,
-          price: item.product.price,
-          quantity: item.quantity,
-          images: item.product.images[0],
-        },
-      })),
-      paymentMethod: paymentMethod,
-    };
-
     try {
       const shippingAddress = `${formData.streetAddress}, ${formData.city}, ${formData.country}`;
       console.log(orderSummary);

@@ -13,11 +13,10 @@ const ProductDetailPage = () => {
     dispatch(fetchProductById(id));
   }, [dispatch, id]);
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>{error}</p>;
-
   return (
     <div>
+      {loading && <p>Loading...</p>}
+      {error && <p>{error}</p>}
       {/* Roadmap hiển thị đường dẫn */}
       <Roadmap />
       {product && <ProductDetail product={product} />}

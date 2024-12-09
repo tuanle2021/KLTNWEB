@@ -1,7 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams, useNavigate } from "react-router-dom";
-import { addToCart } from "../../redux/slices/cartSlice";
+import { useNavigate, useParams } from "react-router-dom";
+import {
+  addToCart,
+  openCartSidebar,
+  getCart,
+} from "../../redux/slices/cartSlice";
+import CartSidebar from "../../pages/CartPage/CartSidebar";
 import {
   ProductDetailContainer,
   ProductDetailImage,
@@ -23,7 +28,13 @@ const ProductDetail = ({ product }) => {
   const user = useSelector((state) => state.auth.user);
   const { name, description, price, stock, images } = product;
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-
+  const cartLoading = useSelector((state) => state.cart.fulfilled);
+  const cartItems = useSelector((state) => state.cart.items);
+  useEffect(() => {
+    if (cartItems.length === 0 && !cartLoading) {
+      dispatch(getCart());
+    }
+  });
   const handleNextImage = () => {
     setCurrentImageIndex((prevIndex) =>
       prevIndex === images.length - 1 ? 0 : prevIndex + 1
@@ -43,6 +54,7 @@ const ProductDetail = ({ product }) => {
       alert("Please login to add to cart");
       navigate("/login");
     }
+    dispatch(openCartSidebar());
   };
   return (
     <ProductDetailContainer>
@@ -80,6 +92,7 @@ const ProductDetail = ({ product }) => {
           ))}
         </ThumbnailContainer>
       </ProductInfo>
+      <CartSidebar />
     </ProductDetailContainer>
   );
 };
