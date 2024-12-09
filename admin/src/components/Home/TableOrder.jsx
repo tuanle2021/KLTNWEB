@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import moment from "moment";
 import {
   CardBody,
@@ -8,16 +8,34 @@ import {
   TableCell,
   Badge,
   IconLink,
+  Pagination,
+  PaginationButton,
 } from "./styles";
 import { FaEye } from "react-icons/fa";
 
 const TableOrder = ({ orders, status }) => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
+  // Sort orders by createdAt in descending order
+  const sortedOrders = [...orders].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentOrders = sortedOrders.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(sortedOrders.length / itemsPerPage);
+
   return (
-    <CardBody>
-      <TableResponsive>
-        <Table>
-          <thead>
+      <CardBody>
+        <TableResponsive>
+          <Table>
+            <thead>
             <TableRow>
+              <TableCell>ID</TableCell>
               <TableCell>Name</TableCell>
               <TableCell>Email</TableCell>
               <TableCell>Total Price</TableCell>
@@ -44,29 +62,40 @@ const TableOrder = ({ orders, status }) => {
                     <Badge variant="danger">Not Paid</Badge>
                   )}
                 </TableCell>
-                <TableCell>{moment(order.createdAt).calendar()}</TableCell>
-                {status && (
-                  <TableCell>
-                    <Badge
-                      variant={
-                        order.status === "processing" ? "success" : "danger"
-                      }
-                    >
-                      {order.status}
-                    </Badge>
+                <TableCell>{moment(order.createdAt).calendar()}</TableCell>          
+                  {status && (
+                      <TableCell>
+                        <Badge
+                            variant={
+                              order.status === "processing" ? "success" : "danger"
+                            }
+                        >
+                          {order.status}
+                        </Badge>
+                      </TableCell>
+                  )}
+                  <TableCell className="eye">
+                    <IconLink to={`/orders/${order._id}`}>
+                      <FaEye fontSize={25} />
+                    </IconLink>
                   </TableCell>
-                )}
-                <TableCell className="eye">
-                  <IconLink to={`/orders/${order._id}`}>
-                    <FaEye fontSize={25} />
-                  </IconLink>
-                </TableCell>
-              </TableRow>
+                </TableRow>
             ))}
-          </tbody>
-        </Table>
-      </TableResponsive>
-    </CardBody>
+            </tbody>
+          </Table>
+        </TableResponsive>
+        <Pagination>
+          {Array.from({ length: totalPages }, (_, index) => (
+              <PaginationButton
+                  key={index + 1}
+                  onClick={() => handlePageChange(index + 1)}
+                  className={currentPage === index + 1 ? "active" : ""}
+              >
+                {index + 1}
+              </PaginationButton>
+          ))}
+        </Pagination>
+      </CardBody>
   );
 };
 

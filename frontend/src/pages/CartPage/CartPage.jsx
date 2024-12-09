@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 import {
   getCart,
   updateQuantity,
@@ -10,6 +11,11 @@ import {
   deleteCartItem,
 } from "../../redux/slices/cartSlice";
 import { fetchOrdersByUserId } from "../../redux/slices/orderSlice";
+import {
+  setOrderItems,
+  createOrder,
+  setOrderSummary,
+} from "../../redux/slices/orderSlice";
 import {
   CartContainer,
   CartHeader,
@@ -37,7 +43,9 @@ const CartPage = () => {
     loading: ordersLoading,
     error: ordersError,
   } = useSelector((state) => state.orders);
+
   const user = useSelector((state) => state.auth.user);
+  const orderSummary = useSelector((state) => state.order.orderSummary);
   const [quantities, setQuantities] = useState([]);
 
   useEffect(() => {
@@ -50,6 +58,12 @@ const CartPage = () => {
   useEffect(() => {
     setQuantities(items.map((item) => item.quantity));
   }, [items]);
+
+  useEffect(() => {
+    if (orderSummary) {
+      console.log(orderSummary);
+    }
+  }, [orderSummary]);
 
   const handleQuantityChange = (index, quantity) => {
     const newQuantities = [...quantities];
@@ -74,18 +88,32 @@ const CartPage = () => {
 
   const calculateSubtotal = () => {
     return selectedItems.reduce(
-      (acc, index) => acc + items[index].product.price * items[index].quantity,
+      (acc, index) => acc + items[index].product.price * quantities[index],
       0
     );
   };
 
-  const handleCheckout = () => {
+  const handleCheckout = async () => {
     const selectedProducts = selectedItems.map((index) => ({
       product: items[index].product,
       quantity: items[index].quantity,
     }));
     localStorage.setItem("selectedProducts", JSON.stringify(selectedProducts));
     navigate("/checkout");
+    const orderData = {
+      items: selectedProducts,
+      shipping_address: " ",
+    };
+    dispatch(setOrderItems(selectedProducts));
+    try {
+      const order = await dispatch(createOrder(orderData)).unwrap();
+      dispatch(setOrderSummary(order));
+      Cookies.set("orderSummary", JSON.stringify(order));
+      dispatch(clearSelectedItems());
+      navigate("/checkout");
+    } catch (error) {
+      console.error("Failed to create order:", error);
+    }
   };
 
   const handleRemoveItem = (id) => {
@@ -172,8 +200,6 @@ const CartPage = () => {
           </ProceedToCheckoutButton>
         </CartTotalContainer>
       </CouponAndTotalContainer>
-      <h3>Your Orders Not Paid</h3>
-      <TableOrder orders={orders} status={true} />
     </CartContainer>
   );
 };

@@ -3,8 +3,9 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import Cookies from "js-cookie";
-import { login } from "../../redux/slices/authSlice"; 
-import { createUser } from "../../redux/slices/userSlice";
+import { login } from "../../redux/slices/authSlice";
+import { createUserAdmin } from "../../redux/slices/userSlice";
+
 import {
   ProfileContainer,
   Header,
@@ -29,57 +30,61 @@ const CreateUser = () => {
     email: "",
     password: "Huynh123@",
     phone: "",
-    gender: "", 
+    gender: "",
     address: {
       street: "",
       city: "",
       state: "",
-      zip: "00008", 
+      zip: "00008",
       country: "VietNam",
     },
     isAdmin: false,
+    password: "",
+    gender: "male",
   });
 
   const handleChange = async (e) => {
     const { name, value, type, checked } = e.target;
-     if (type === "checkbox") {
+    if (type === "checkbox") {
       if (checked) {
         let password;
         let isValid = false;
-        const userData = Cookies.get("user") ? JSON.parse(Cookies.get("user")) : {};
+        const userData = Cookies.get("user")
+          ? JSON.parse(Cookies.get("user"))
+          : {};
         const email = userData.email;
 
         while (!isValid) {
           const { value: inputPassword } = await Swal.fire({
-        title: "Enter your current password",
-        input: "password",
-        inputPlaceholder: "Enter your password",
-        inputAttributes: {
-          autocapitalize: "off",
-          autocorrect: "off",
-        },
-        showCancelButton: true,
+            title: "Enter your current password",
+            input: "password",
+            inputPlaceholder: "Enter your password",
+            inputAttributes: {
+              autocapitalize: "off",
+              autocorrect: "off",
+            },
+            showCancelButton: true,
           });
 
           if (!inputPassword) {
-        e.target.checked = false;
-        return;
+            e.target.checked = false;
+            return;
           }
 
           password = inputPassword;
 
           try {
-        await dispatch(login({ email, password }));
-        isValid = true;
+            await dispatch(login({ email, password }));
+            isValid = true;
           } catch (error) {
-        await Swal.fire({
-          icon: "error",
-          title: "Incorrect password",
-          text: "Please try again.",
-          timer: 2000,
-          timerProgressBar: true,
-          showConfirmButton: false,
-        });
+            await Swal.fire({
+              icon: "error",
+              title: "Incorrect password",
+              text: "Please try again.",
+              timer: 2000,
+              timerProgressBar: true,
+              showConfirmButton: false,
+            });
           }
         }
       }
@@ -102,34 +107,18 @@ const CreateUser = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-     const response = await dispatch(createUser(user)).unwrap();
-      if (response.status === 200) {
-        Swal.fire({
-          icon: "success",
-          title: "User created successfully",
-          showConfirmButton: false,
-          timer: 1500,
-        });
-        navigate("/users");
-      } else {
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: response.data.message,
-        });
-      }
-    } catch (error) {
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: error.message,
+    dispatch(createUserAdmin(user))
+      .unwrap()
+      .then(() => {
+        navigate(`/users`);
+      })
+      .catch((error) => {
+        console.error(error);
       });
-    }
   };
 
-  const { name, email, password, phone, gender, address, isAdmin } = user;
-  const { street, city, state, zip, country } = address;
+  const { name, email, phone, address, isAdmin, password, gender } = user;
+  const { street, city, country } = address;
 
   return (
     <ProfileContainer>
@@ -145,13 +134,37 @@ const CreateUser = () => {
           />
           <ProfileInfo>
             <div className="detail-info">
-              <h2>{name}</h2>
+              <h2>
+                <Input
+                  type="text"
+                  name="name"
+                  value={name}
+                  onChange={handleChange}
+                  placeholder="Name"
+                />
+              </h2>
               <p>
-                <label>{street},</label>
-                <label>{city},</label>
-                <label>{state},</label>
-                <label>{zip},</label>
-                <label>{country}</label>
+                <Input
+                  type="text"
+                  name="address.street"
+                  value={street}
+                  onChange={handleChange}
+                  placeholder="Street"
+                />
+                <Input
+                  type="text"
+                  name="address.city"
+                  value={city}
+                  onChange={handleChange}
+                  placeholder="City"
+                />
+                <Input
+                  type="text"
+                  name="address.country"
+                  value={country}
+                  onChange={handleChange}
+                  placeholder="Country"
+                />
               </p>
               <CheckboxLabel>
                 <input
@@ -166,6 +179,12 @@ const CreateUser = () => {
           </ProfileInfo>
         </ProfileTop>
         <InfoSection>
+          <InfoBlock>
+            <h3>Total Order</h3>
+            <p className="total-info">0</p>
+            <h3>Total Paid</h3>
+            <p className="total-info">$0</p>
+          </InfoBlock>
           <InfoBlock2>
             <h3>Contacts</h3>
             <p>
@@ -188,16 +207,6 @@ const CreateUser = () => {
                 placeholder="Email"
               />
             </p>
-             <p>
-              Password:{" "}
-              <Input
-                type="password"
-                name="password"
-                value={password}
-                onChange={handleChange}
-                placeholder="Password"
-              />
-            </p>
             <p>
               Phone:{" "}
               <Input
@@ -209,63 +218,41 @@ const CreateUser = () => {
               />
             </p>
             <p>
+              Password:{" "}
+              <Input
+                type="password"
+                name="password"
+                value={password}
+                onChange={handleChange}
+                placeholder="Password"
+              />
+            </p>
+            <p>
               Gender:{" "}
-              <div>
-                <label>
-                  <input
-                    type="radio"
-                    name="gender"
-                    value="male"
-                    checked={gender === "male"}
-                    onChange={handleChange}
-                  />
-                  Male
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    name="gender"
-                    value="female"
-                    checked={gender === "female"}
-                    onChange={handleChange}
-                  />
-                  Female
-                </label>
-              </div>
+              <label>
+                <input
+                  type="radio"
+                  name="gender"
+                  value="male"
+                  checked={gender === "male"}
+                  onChange={handleChange}
+                />
+                Male
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="gender"
+                  value="female"
+                  checked={gender === "female"}
+                  onChange={handleChange}
+                />
+                Female
+              </label>
             </p>
           </InfoBlock2>
           <InfoBlock2>
             <h3>Address</h3>
-            <p>
-              Street:{" "}
-              <Input
-                type="text"
-                name="address.street"
-                value={street}
-                onChange={handleChange}
-                placeholder="Street"
-              />
-            </p>
-            <p>
-              City:{" "}
-              <Input
-                type="text"
-                name="address.city"
-                value={city}
-                onChange={handleChange}
-                placeholder="City"
-              />
-            </p>
-            <p>
-              State:{" "}
-              <Input
-                type="text"
-                name="address.state"
-                value={state}
-                onChange={handleChange}
-                placeholder="State"
-              />
-            </p>
             <p>
               Country:{" "}
               <Input
@@ -274,6 +261,22 @@ const CreateUser = () => {
                 value={country}
                 onChange={handleChange}
                 placeholder="Country"
+              />
+            </p>
+            <p>
+              <Input
+                type="text"
+                name="address.street"
+                value={street}
+                onChange={handleChange}
+                placeholder="Street"
+              />
+              <Input
+                type="text"
+                name="address.city"
+                value={city}
+                onChange={handleChange}
+                placeholder="City"
               />
             </p>
           </InfoBlock2>
