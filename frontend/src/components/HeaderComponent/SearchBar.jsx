@@ -1,5 +1,8 @@
 import React, { useState, useRef } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { IoSearch } from "react-icons/io5";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
+
 import {
   SearchContainer,
   SearchInput,
@@ -8,47 +11,24 @@ import {
   SearchResultItem,
   ProductImage,
   ProductName,
+  ShowMore,
 } from "./styles";
-
-// Dữ liệu tĩnh giả
-const staticProducts = [
-  {
-    _id: "1",
-    name: "mot",
-    images: [
-      "https://res.cloudinary.com/dihhw7jo1/image/upload/v1727691871/products/iphone-13_2_.webp.webp",
-    ],
-  },
-  {
-    _id: "2",
-    name: "hai 2",
-    images: [
-      "https://res.cloudinary.com/dihhw7jo1/image/upload/v1727691871/products/iphone-13_2_.webp.webp",
-    ],
-  },
-  {
-    _id: "3",
-    name: "hai 3",
-    images: [
-      "https://res.cloudinary.com/dihhw7jo1/image/upload/v1727691871/products/iphone-13_2_.webp.webp",
-    ],
-  },
-  {
-    _id: "4",
-    name: "ba 4",
-    images: [
-      "https://res.cloudinary.com/dihhw7jo1/image/upload/v1727691871/products/iphone-13_2_.webp.webp",
-    ],
-  },
-];
-
+import { fetchProducts } from "../../redux/slices/productSlice";
 const SearchBar = () => {
+  const dispatch = useDispatch();
   const [value, setValue] = useState("");
   const [searchedProducts, setSearchedProducts] = useState([]);
   const [isFocused, setIsFocused] = useState(false);
   const typingTimeoutRef = useRef(null);
 
+  const products = useSelector((state) => state.products.products);
+  const loadingProducts = useSelector((state) => state.products.pending);
+  const navigate = useNavigate(); // Initialize navigate
+
   const handleChange = (e) => {
+    if (products.length === 0 && !loadingProducts) {
+      dispatch(fetchProducts());
+    }
     const value = e.target.value;
     setValue(value);
 
@@ -56,8 +36,13 @@ const SearchBar = () => {
       clearTimeout(typingTimeoutRef.current);
     }
 
+    if (value.trim() === "") {
+      setSearchedProducts([]);
+      return;
+    }
+
     typingTimeoutRef.current = setTimeout(() => {
-      const results = staticProducts.filter((product) =>
+      const results = products.filter((product) =>
         product.name.toLowerCase().includes(value.toLowerCase())
       );
       setSearchedProducts(results);
@@ -66,7 +51,7 @@ const SearchBar = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const results = staticProducts.filter((product) =>
+    const results = products.filter((product) =>
       product.name.toLowerCase().includes(value.toLowerCase())
     );
     setSearchedProducts(results);
@@ -77,8 +62,14 @@ const SearchBar = () => {
   };
 
   const handleBlur = () => {
-    setIsFocused(false);
+    setTimeout(() => setIsFocused(false), 200); // Đợi 200ms để đảm bảo không bị mất focus trước khi chọn sản phẩm
   };
+
+  const handleProductClick = (id) => {
+    navigate(`/product/${id}`); // Điều hướng đến trang chi tiết sản phẩm
+  };
+
+  const maxResults = 8; // Số lượng sản phẩm tối đa hiển thị
 
   return (
     <SearchContainer>
@@ -97,12 +88,22 @@ const SearchBar = () => {
       </form>
       {isFocused && searchedProducts.length > 0 && (
         <SearchResults>
-          {searchedProducts.map((product) => (
-            <SearchResultItem key={product._id}>
+          {searchedProducts.slice(0, maxResults).map((product) => (
+            <SearchResultItem
+              key={product._id}
+              onClick={() => handleProductClick(product._id)}
+            >
               <ProductImage src={product.images[0]} alt={product.name} />
               <ProductName>{product.name}</ProductName>
             </SearchResultItem>
           ))}
+          {searchedProducts.length > maxResults && (
+            <ShowMore>
+              {`Show more (${
+                searchedProducts.length - maxResults
+              } more products)`}
+            </ShowMore>
+          )}
         </SearchResults>
       )}
     </SearchContainer>

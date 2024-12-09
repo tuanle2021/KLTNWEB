@@ -1,6 +1,7 @@
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 export const HeaderContainer = styled.header`
-  background-color: var(--light-blue-color);
+  background-color: #f0f0f8;
   color: #333;
   padding: 15px 0;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -14,51 +15,23 @@ export const HeaderInner = styled.div`
   align-items: center;
   text-align: center;
 
-  @media (min-width: 320px) {
+  @media (min-width: 768px) {
     flex-direction: row;
     align-items: center;
     padding: 0 20px;
-
-    justify-content: center;
+    justify-content: space-between;
     text-decoration: none;
   }
 `;
-export const Link = styled.a`
-  display: inline-block;
-  margin: 15px 0;
-  color: #0e0620;
-  font-size: 14px;
-  text-decoration: none;
-  transition: color 0.3s ease;
 
-  &:hover {
-    color: #2ccf6d;
-  }
-`;
-export const Button = styled.button`
-  width: 100%;
-  padding: 15px;
-  color: #000;
-  background-color: none;
-  font-size: 16px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: background-color 0.3s ease;
-
-  &:hover {
-    background-color: #28b35d;
-  }
-`;
-export const Logo = styled.a`
+export const Logo = styled(Link)`
   font-size: 24px;
-  color: #333;
+  color: #666;
   text-decoration: none;
   font-weight: bold;
 
   &:hover {
-    color: #666;
+    color: #999;
   }
 `;
 
@@ -69,7 +42,7 @@ export const SearchBar = styled.div`
 
   input {
     padding: 8px;
-    width: 300px;
+    width: 100%;
     border-radius: 4px;
     border: 1px solid #ccc;
     margin-right: 10px;
@@ -87,8 +60,10 @@ export const SearchBar = styled.div`
       background-color: #218838;
     }
   }
+
   @media (max-width: 768px) {
-    display: none;
+    width: 100%;
+    margin-top: 10px;
   }
 `;
 
@@ -119,20 +94,16 @@ export const ShoppingCart = styled.div`
   }
 `;
 
-// Container chính cho menu hồ sơ người dùng
 export const ProfileMenu = styled.div`
   position: relative;
   display: inline-block;
 `;
 
-// Container cho icon người dùng
 export const UserIconWrapper = styled.div`
-  display: flex;
-  align-items: center;
+  font-size: 1.5em;
   cursor: pointer;
 `;
 
-// Container của dropdown
 export const DropdownContainer = styled.div`
   position: absolute;
   top: 100%;
@@ -162,6 +133,7 @@ export const DropdownContainer = styled.div`
     border-bottom: 10px solid #ffffff;
   }
 `;
+
 export const NavButton = styled.div`
   display: flex;
 
@@ -169,7 +141,7 @@ export const NavButton = styled.div`
     display: inline;
   }
 `;
-// Item của dropdown
+
 export const NavItem = styled.div`
   margin: 0;
   padding-left: 20px;
@@ -257,4 +229,16 @@ export const ProductImage = styled.img`
 export const ProductName = styled.span`
   font-size: 14px;
   color: #333;
+`;
+
+export const ShowMore = styled.div`
+  margin-top: 8px;
+  color: #1e88e5;
+  cursor: pointer;
+  font-size: 14px;
+  text-align: center;
+
+  &:hover {
+    text-decoration: underline;
+  }
 `;
