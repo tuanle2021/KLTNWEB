@@ -1,6 +1,7 @@
 const Order = require("../models/Order");
 const OrderItem = require("../models/OrderItem");
 const Product = require("../models/Product");
+const Payment = require("../models/Payment");
 
 const createOrder = async (req, res) => {
   try {
@@ -218,6 +219,36 @@ const getAllOrders = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+
+const updatePaymentStatus = async (req, res) => {
+  try {
+    const { order_id, status, method } = req.body;
+
+    // Tìm đơn hàng theo ID
+    const order = await Order.findById(order_id);
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    // Cập nhật trạng thái thanh toán của đơn hàng
+    order.payment_status = status;
+    await order.save();
+
+    // Lưu thông tin thanh toán
+    const payment = new Payment({
+      order_id,
+      amount: order.total_price,
+      method,
+      status,
+    });
+    await payment.save();
+
+    res.status(200).json({ message: "Payment status updated successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
 module.exports = {
   createOrder,
   getOrderById,
@@ -226,4 +257,5 @@ module.exports = {
   updateOrderItems,
   deleteOrder,
   getAllOrders,
+  updatePaymentStatus,
 };

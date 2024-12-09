@@ -190,6 +190,8 @@ export const ProfileInfo = styled.div`
   .detail-info {
     margin-left: 230px;
   }
+    label {
+    margin-right: 10px;
 `;
 export const Header = styled.div`
   background-color: #f6d9ab;

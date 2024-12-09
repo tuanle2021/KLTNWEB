@@ -5,6 +5,7 @@ import { fetchProductById } from "../../redux/slices/productSlice";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { FiShoppingCart } from "react-icons/fi";
 import { addToCart } from "../../redux/slices/cartSlice";
+import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 
 import {
   ProductCardContainer,
@@ -18,15 +19,19 @@ import {
   AddToCartButton,
   ProductRating,
   ActionIcon,
+  AlertContainer,
+  Alert,
 } from "./styles";
 
 const ProductCart = ({ product }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.auth.user);
   const Product = useSelector((state) =>
     state.products.products.find((Product) => Product._id === product)
   );
   const [isFavorited, setIsFavorited] = useState(false);
+  const [showAlert, setShowAlert] = useState(false); // State điều khiển thông báo
   useEffect(() => {
     if (!product) {
       dispatch(fetchProductById(product));
@@ -55,51 +60,71 @@ const ProductCart = ({ product }) => {
   };
   // Xử lý thêm sản phẩm vào giỏ hàng
   const handleAddToCart = (e) => {
-    e.stopPropagation(); // Ngăn chặn việc click chuyển hướng trang khi click vào nút
-    dispatch(addToCart({ productId: _id, quantity: 1 }));
+    e.stopPropagation();
+    e.preventDefault();
+    if (user) {
+      dispatch(addToCart({ productId: _id, quantity: 1 }));
+      setShowAlert(true); // Hiển thị thông báo
+      setTimeout(() => {
+        setShowAlert(false); // Ẩn thông báo sau 3 giây
+      }, 3000);
+    } else {
+      alert("Please login to add products to cart");
+      navigate("/login");
+    }
   };
   return (
-    <ProductCardContainer onClick={handleCardClick}>
-      <ProductImage>
-        {/* Nhãn giảm giá */}
-        <DiscountBadge>{`-${discount}%`}</DiscountBadge>
+    <>
+      {showAlert && (
+        <AlertContainer>
+          <Alert severity="success">
+            <IoMdCheckmarkCircleOutline />
+            <p>Product added to cart successfully!</p>
+          </Alert>
+        </AlertContainer>
+      )}
+      <ProductCardContainer onClick={handleCardClick}>
+        <ProductImage>
+          {/* Nhãn giảm giá */}
+          <DiscountBadge>{`-${discount}%`}</DiscountBadge>
 
-        {/* Các icon hành động (Yêu thích và Xem chi tiết) */}
-        <ProductActionIcons>
-          <ActionIcon onClick={handleFavoriteClick}>
-            {isFavorited ? <FaHeart /> : <FaRegHeart />}
-          </ActionIcon>
-        </ProductActionIcons>
+          {/* Các icon hành động (Yêu thích và Xem chi tiết) */}
+          <ProductActionIcons>
+            <ActionIcon onClick={handleFavoriteClick}>
+              {isFavorited ? <FaHeart /> : <FaRegHeart />}
+            </ActionIcon>
+          </ProductActionIcons>
 
-        {/* Hình ảnh sản phẩm */}
-        <Image
-          src={
-            images && images.length > 0
-              ? images[0]
-              : `https://via.placeholder.com/150?text=${name}`
-          }
-          alt={name}
-        />
-        <AddToCartButton onClick={handleAddToCart}>
-          <div style={{ display: "flex", justifyContent: "center" }}>
-            <FiShoppingCart size={16} />
-            <p style={{ marginLeft: "8px" }}> Add To Cart</p>
-          </div>
-        </AddToCartButton>
-      </ProductImage>
+          {/* Hình ảnh sản phẩm */}
+          <Image
+            src={
+              images && images.length > 0
+                ? images[0]
+                : `https://via.placeholder.com/150?text=${name}`
+            }
+            alt={name}
+          />
+          <AddToCartButton onClick={handleAddToCart}>
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <FiShoppingCart size={16} />
+              <p style={{ marginLeft: "8px" }}> Add To Cart</p>
+            </div>
+          </AddToCartButton>
+        </ProductImage>
 
-      {/* Thông tin chi tiết sản phẩm */}
-      <ProductDetails>
-        <ProductName>{name}</ProductName>
-        <ProductPrice>
-          <span>${price}</span>{" "}
-          {originalPrice && <small>${originalPrice}</small>}
-        </ProductPrice>
-        <ProductRating>
-          <span>⭐</span> {rating} ({reviews})
-        </ProductRating>
-      </ProductDetails>
-    </ProductCardContainer>
+        {/* Thông tin chi tiết sản phẩm */}
+        <ProductDetails>
+          <ProductName>{name}</ProductName>
+          <ProductPrice>
+            <span>${price}</span>{" "}
+            {originalPrice && <small>${originalPrice}</small>}
+          </ProductPrice>
+          <ProductRating>
+            <span>⭐</span> {rating} ({reviews})
+          </ProductRating>
+        </ProductDetails>
+      </ProductCardContainer>
+    </>
   );
 };
 

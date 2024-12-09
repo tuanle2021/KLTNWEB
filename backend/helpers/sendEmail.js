@@ -1,5 +1,4 @@
 const nodemailer = require("nodemailer");
-
 const { google } = require("googleapis");
 
 const { OAuth2 } = google.auth;
@@ -170,5 +169,44 @@ exports.sendEmail = async (email, name, url) => {
   } catch (error) {
     console.error("Error sending email:", error);
     throw new Error("Error sending email");
+  }
+};
+
+exports.sendCode = async (email, name, code) => {
+  try {
+    // Thiết lập OAuth2
+    auth.setCredentials({
+      refresh_token: REFRESH_TOKEN,
+    });
+
+    const accessToken = await auth.getAccessToken();
+
+    // Tạo transporter
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        type: "OAuth2",
+        user: EMAIL,
+        clientId: CLIENT_ID,
+        clientSecret: CLIENT_SECRET,
+        refreshToken: REFRESH_TOKEN,
+        accessToken: accessToken.token,
+      },
+    });
+
+    // Thiết lập nội dung email
+    const mailOptions = {
+      from: EMAIL,
+      to: email,
+      subject: "Reset Password Code",
+      text: `Hello ${name},\n\nYour reset password code is: ${code}\n\nIf you did not request this, please ignore this email.\n\nThank you,\nYour Company`,
+    };
+
+    // Gửi email
+    const result = await transporter.sendMail(mailOptions);
+    return result;
+  } catch (error) {
+    console.error("Error sending reset password code:", error);
+    throw new Error("Error sending reset password code");
   }
 };

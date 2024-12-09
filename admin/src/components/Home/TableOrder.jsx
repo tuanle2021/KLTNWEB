@@ -44,26 +44,25 @@ const TableOrder = ({ orders, status }) => {
               {status && <TableCell>Status</TableCell>}
               <TableCell>Actions</TableCell>
             </TableRow>
-            </thead>
-            <tbody>
-            {currentOrders.map((order, index) => (
-                <TableRow key={order._id}>
-                  <TableCell>{index + 1 + (currentPage - 1) * itemsPerPage}</TableCell>
-                  <TableCell>
-                    <b>{order.user_id?.name || "N/A"}</b>{" "}
-                  </TableCell>
-                  <TableCell>{order.user_id?.email || "N/A"}</TableCell>
-                  <TableCell>${order.total_price}</TableCell>
-                  <TableCell>
-                    {order.payment_status === "pending" ? (
-                        <Badge variant="success">
-                          Paid At {moment(order.paidAt).format("MMM Do YY")}
-                        </Badge>
-                    ) : (
-                        <Badge variant="danger">Not Paid</Badge>
-                    )}
-                  </TableCell>
-                  <TableCell>{moment(order.createdAt).calendar()}</TableCell>
+          </thead>
+          <tbody>
+            {orders.slice(0, 14).map((order) => (
+              <TableRow key={order._id}>
+                <TableCell>
+                  <b>{order.user_id?.name || "N/A"}</b>{" "}
+                </TableCell>
+                <TableCell>{order.user_id?.email || "N/A"}</TableCell>
+                <TableCell>${order.total_price}</TableCell>
+                <TableCell>
+                  {order.payment_status === "completed" ? (
+                    <Badge variant="success">
+                      Paid At {moment(order.paidAt).format("MMM Do YY")}
+                    </Badge>
+                  ) : (
+                    <Badge variant="danger">Not Paid</Badge>
+                  )}
+                </TableCell>
+                <TableCell>{moment(order.createdAt).calendar()}</TableCell>          
                   {status && (
                       <TableCell>
                         <Badge

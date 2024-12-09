@@ -10,6 +10,6 @@ export const store = configureStore({
     verify: verifyReducer,
     products: productReducer,
     cart: cartReducer,
-    order: orderReducer,
+    orders: orderReducer,
   },
 });

@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 // Container cho toàn bộ giỏ hàng
 export const CartContainer = styled.div`
@@ -194,4 +195,61 @@ export const SelectItemCheckbox = styled.input`
   left: -2%;
   top: 50%;
   transform: translateY(-50%);
+`;
+
+export const CardBody = styled.div`
+  padding: 1rem;
+  background-color: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  border-radius: 0.25rem;
+  box-shadow: 0 0.1rem 0.25rem rgba(0, 0, 0, 0.075);
+`;
+export const TableResponsive = styled.div`
+  overflow-x: auto;
+`;
+export const Table = styled.table`
+  width: 100%;
+  margin-bottom: 1rem;
+  color: #212529;
+  border-collapse: collapse;
+`;
+
+export const TableRow = styled.tr`
+  border-bottom: 1px solid #dee2e6;
+  .eye {
+    display: flex;
+    justify-content: flex-end;
+  }
+  .bold {
+    font-weight: bold;
+  }
+`;
+
+export const TableCell = styled.td`
+  padding: 0.75rem;
+  vertical-align: top;
+  border-top: 1px solid #dee2e6;
+`;
+
+export const Badge = styled.span`
+  display: inline-block;
+  padding: 0.3em 0.45em;
+  font-size: 75%;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: 0.375rem;
+  color: ${(props) => (props.variant === "success" ? "#fff" : "#fff")};
+  background-color: ${(props) =>
+    props.variant === "success" ? "#28a745" : "#dc3545"};
+`;
+
+export const IconLink = styled(Link)`
+  color: #28a745;
+  text-decoration: none;
+  &:hover {
+    color: #218838;
+  }
 `;

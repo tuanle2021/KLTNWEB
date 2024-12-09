@@ -6,7 +6,15 @@ const { sendEmail } = require("../helpers/sendEmail");
 const { generateToken } = require("../helpers/createToken");
 exports.register = async (req, res) => {
   try {
-    const { name, email, password, address, phone, gender, isAdmin=false } = req.body;
+    const {
+      name,
+      email,
+      password,
+      address,
+      phone,
+      gender,
+      isAdmin = false,
+    } = req.body;
 
     // Validate dữ liệu
     if (!validateLength(name, 3, 50)) {
@@ -45,7 +53,7 @@ exports.register = async (req, res) => {
       address,
       phone,
       gender,
-      isAdmin: req.user && req.user.isAdmin ? isAdmin : false,// Nếu người dùng hiện tại là quản trị viên thì tạo người dùng mới với quyền quản trị viên
+      isAdmin: req.user && req.user.isAdmin ? isAdmin : false, // Nếu người dùng hiện tại là quản trị viên thì tạo người dùng mới với quyền quản trị viên
     });
 
     // Lưu người dùng vào cơ sở dữ liệu
@@ -190,40 +198,158 @@ exports.getUserById = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+exports.sendVerification = async (req, res) => {
+  try {
+    const userId = req.user.id; // Lấy id của người dùng từ req
+    const user = await User.findById(userId);
 
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (user.verified) {
+      return res.status(400).json({ message: "User already verified" });
+    }
+
+    // Tạo token xác thực
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "1h",
+    });
+
+    // Tạo URL xác thực
+    const url = `${process.env.CLIENT_URL}/verify/${token}`;
+
+    // Gửi email xác thực
+    await sendEmail(user.email, user.name, url);
+
+    res.status(200).json({ message: "Verification email sent" });
+  } catch (error) {
+    console.error("Error sending verification email:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+exports.sendCodeResetPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Tạo mã reset password ngẫu nhiên
+    const resetCode = crypto.randomBytes(3).toString("hex").toUpperCase();
+
+    // Lưu mã reset password vào cơ sở dữ liệu
+    user.resetPasswordCode = resetCode;
+    user.resetPasswordExpires = Date.now() + 3600000; // 1 giờ
+    await user.save();
+
+    // Gửi mã reset password qua email
+    await sendCode(user.email, user.name, resetCode);
+
+    res.status(200).json({ message: "Reset password code sent" });
+  } catch (error) {
+    console.error("Error sending reset password code:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+exports.verifyCodeResetPassword = async (req, res) => {
+  try {
+    const { email, code } = req.body;
+
+    // Tìm người dùng bằng email
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Kiểm tra mã reset password và thời gian hết hạn
+    if (
+      user.resetPasswordCode !== code ||
+      user.resetPasswordExpires < Date.now()
+    ) {
+      return res
+        .status(400)
+        .json({ message: "Invalid or expired reset password code" });
+    }
+
+    // Trả về kết quả kiểm tra
+    res.status(200).json({ message: "Reset password code is valid" });
+  } catch (error) {
+    console.error("Error verifying reset password code:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+exports.resetPassword = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    // Tìm người dùng bằng email
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Cập nhật mật khẩu mới
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(password, salt);
+
+    // Lưu người dùng và trả về kết quả
+    await user.save();
+    res.status(200).json({ message: "Password reset successfully" });
+  } catch (error) {
+    console.error("Error resetting password:", error);
+  }
+};
 exports.createUser = async (req, res) => {
   try {
     const { name, email, phone, address, isAdmin, password, gender } = req.body;
-    console.log("Received input:", { name, email, phone, address, isAdmin, password, gender });
+    console.log("Received input:", {
+      name,
+      email,
+      phone,
+      address,
+      isAdmin,
+      password,
+      gender,
+    });
 
     // Validate data
     if (!validateLength(name, 3, 50)) {
-      console.error("Validation error: Name must be between 3 and 50 characters");
+      console.error(
+        "Validation error: Name must be between 3 and 50 characters"
+      );
       return res
-          .status(400)
-          .json({ error: "Name must be between 3 and 50 characters" });
+        .status(400)
+        .json({ error: "Name must be between 3 and 50 characters" });
     }
     if (!validateEmail(email)) {
       console.error("Validation error: Invalid email format");
       return res.status(400).json({ error: "Invalid email format" });
     }
     if (!validateLength(phone, 10, 15)) {
-      console.error("Validation error: Phone number must be between 10 and 15 characters");
+      console.error(
+        "Validation error: Phone number must be between 10 and 15 characters"
+      );
       return res
-          .status(400)
-          .json({ error: "Phone number must be between 10 and 15 characters" });
+        .status(400)
+        .json({ error: "Phone number must be between 10 and 15 characters" });
     }
     if (!validateLength(password, 6, 100)) {
-      console.error("Validation error: Password must be between 6 and 100 characters");
+      console.error(
+        "Validation error: Password must be between 6 and 100 characters"
+      );
       return res
-          .status(400)
-          .json({ error: "Password must be between 6 and 100 characters" });
+        .status(400)
+        .json({ error: "Password must be between 6 and 100 characters" });
     }
     if (!gender) {
       console.error("Validation error: Gender is required");
-      return res
-          .status(400)
-          .json({ error: "Gender is required" });
+      return res.status(400).json({ error: "Gender is required" });
     }
 
     // Check if email already exists
