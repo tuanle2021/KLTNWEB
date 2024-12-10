@@ -36,6 +36,18 @@ export const register = createAsyncThunk(
   }
 );
 
+ export const sendPasswordResetEmail = createAsyncThunk(
+     'auth/sendPasswordResetEmail',
+     async (email, { rejectWithValue }) => {
+         try {
+             const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/forgot-password`, { email });
+             return response.data;
+         } catch (error) {
+             return rejectWithValue(error.response.data);
+         }
+     }
+ );
+
 const authSlice = createSlice({
   name: "auth",
   initialState: {
@@ -78,6 +90,7 @@ const authSlice = createSlice({
       });
   },
 });
+
 
 export const { logout } = authSlice.actions;
 export default authSlice.reducer;

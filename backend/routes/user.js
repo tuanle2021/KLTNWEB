@@ -11,6 +11,8 @@ const {
   createUser,
   getAllUsers,
   getUserById,
+  forgotPassword,
+  resetPassword, updateProfile,
 } = require("../controllers/userControllers");
 const router = express.Router();
 const { authentication } = require("../middleware/authenUser");
@@ -26,5 +28,8 @@ router.post("/sendCodeResetPassword", sendCodeResetPassword);
 router.post("/verifyCodeResetPassword", verifyCodeResetPassword);
 router.post("/resetPassword", resetPassword);
 router.post("/users", authentication, createUser);
+router.post("/forgot-password", forgotPassword);
+router.post("/reset-password", resetPassword);
+router.put("/update-profile", authentication, updateProfile);
 
 module.exports = router;

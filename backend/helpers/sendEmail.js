@@ -7,31 +7,31 @@ const { EMAIL, CLIENT_ID, CLIENT_SECRET, REFRESH_TOKEN } = process.env;
 
 const auth = new OAuth2(CLIENT_ID, CLIENT_SECRET, REFRESH_TOKEN, oauth_link);
 
+const {
+  MAIL_HOST,
+  MAIL_PORT,
+  MAIL_USERNAME,
+  MAIL_PASSWORD,
+  MAIL_FROM_ADDRESS,
+  MAIL_FROM_NAME,
+} = process.env;
+
 exports.sendEmail = async (email, name, url) => {
   try {
-    // Thiết lập OAuth2
-    auth.setCredentials({
-      refresh_token: REFRESH_TOKEN,
-    });
-
-    const accessToken = await auth.getAccessToken();
-
-    // Tạo transporter
+    // Create transporter
     const transporter = nodemailer.createTransport({
-      service: "gmail",
+      host: MAIL_HOST,
+      port: MAIL_PORT,
+      secure: false, // true for 465, false for other ports
       auth: {
-        type: "OAuth2",
-        user: EMAIL,
-        clientId: CLIENT_ID,
-        clientSecret: CLIENT_SECRET,
-        refreshToken: REFRESH_TOKEN,
-        accessToken: accessToken.token,
+        user: MAIL_USERNAME,
+        pass: MAIL_PASSWORD,
       },
     });
 
-    // Thiết lập nội dung email
+    // Email content
     const mailOptions = {
-      from: EMAIL,
+      from: `"${MAIL_FROM_NAME}" <${MAIL_FROM_ADDRESS}>`,
       to: email,
       subject: "UTE Ecommerce Email Verification",
       html: `
@@ -160,10 +160,10 @@ exports.sendEmail = async (email, name, url) => {
             </div>
         </body>
         </html>
-          `,
+      `,
     };
 
-    // Gửi email
+    // Send email
     const result = await transporter.sendMail(mailOptions);
     return result;
   } catch (error) {

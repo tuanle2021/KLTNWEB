@@ -31,9 +31,9 @@ export default function LoginForm({ setVisible }) {
 
   const loginValidation = Yup.object({
     email: Yup.string()
-      .required("Email address is required.")
-      .email("Must be a valid email.")
-      .max(100),
+        .required("Email address is required.")
+        .email("Must be a valid email.")
+        .max(100),
     password: Yup.string().required("Password is required"),
   });
 
@@ -58,77 +58,82 @@ export default function LoginForm({ setVisible }) {
     }
   };
 
-  return (
-    <FormWrapper>
-      {/* Logo */}
-      <LogoWrapper>
-        <img src="/logo.png" alt="TechStore Logo" />
-      </LogoWrapper>
+  const handleForgotPasswordClick = (e) => {
+    e.preventDefault();
+    navigate("/forgot");
+  };
 
-      {/* Login Form */}
-      <Formik
-        enableReinitialize
-        initialValues={{
-          email,
-          password,
-        }}
-        validationSchema={loginValidation}
-        onSubmit={loginSubmit}
-      >
-        {(formik) => (
-          <Form>
-            <Title>Login Account</Title>
-            <LoginInput
-              type="text"
-              name="email"
-              placeholder="Email address or phone number"
-              onChange={(e) => {
-                handleLoginChange(e);
-                formik.handleChange(e);
-              }}
-              value={formik.values.email}
-            />
-            <LoginInput
-              type="password"
-              name="password"
-              placeholder="Password"
-              onChange={(e) => {
-                handleLoginChange(e);
-                formik.handleChange(e);
-              }}
-              value={formik.values.password}
-              bottom
-            />
-            <Button type="submit" disabled={formik.isSubmitting || loading}>
-              Login
-            </Button>
-            <Button
-              type="button"
-              style={{ backgroundColor: "orange" }}
-              onClick={() => setVisible(true)}
-            >
-              Register now
-            </Button>
-            <ForgotPasswordLink to="/forgot">
-              Forgotten password?
-            </ForgotPasswordLink>
-            <DotLoader
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                marginTop: "10px",
-              }}
-              color="#1876f2"
-              loading={loading}
-              size={30}
-            />
-            {error && <div style={{ color: "#b94a48" }}>{error}</div>}
-            {success && (
-              <div style={{ color: "var(--green-color)" }}>{success}</div>
-            )}
-          </Form>
-        )}
-      </Formik>
-    </FormWrapper>
+  return (
+      <FormWrapper>
+        {/* Logo */}
+        <LogoWrapper>
+          <img src="/logo.png" alt="TechStore Logo" />
+        </LogoWrapper>
+
+        {/* Login Form */}
+        <Formik
+            enableReinitialize
+            initialValues={{
+              email,
+              password,
+            }}
+            validationSchema={loginValidation}
+            onSubmit={loginSubmit}
+        >
+          {(formik) => (
+              <Form>
+                <Title>Login Account</Title>
+                <LoginInput
+                    type="text"
+                    name="email"
+                    placeholder="Email address or phone number"
+                    onChange={(e) => {
+                      handleLoginChange(e);
+                      formik.handleChange(e);
+                    }}
+                    value={formik.values.email}
+                />
+                <LoginInput
+                    type="password"
+                    name="password"
+                    placeholder="Password"
+                    onChange={(e) => {
+                      handleLoginChange(e);
+                      formik.handleChange(e);
+                    }}
+                    value={formik.values.password}
+                    bottom
+                />
+                <Button type="submit" disabled={formik.isSubmitting || loading}>
+                  Login
+                </Button>
+                <Button
+                    type="button"
+                    style={{ backgroundColor: "orange" }}
+                    onClick={() => setVisible(true)}
+                >
+                  Register now
+                </Button>
+                <ForgotPasswordLink to="/forgot" onClick={handleForgotPasswordClick}>
+                  Forgotten password?
+                </ForgotPasswordLink>
+                <DotLoader
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      marginTop: "10px",
+                    }}
+                    color="#1876f2"
+                    loading={loading}
+                    size={30}
+                />
+                {error && <div style={{ color: "#b94a48" }}>{error}</div>}
+                {success && (
+                    <div style={{ color: "var(--green-color)" }}>{success}</div>
+                )}
+              </Form>
+          )}
+        </Formik>
+      </FormWrapper>
   );
 }

@@ -9,6 +9,9 @@ import {
 } from "./styles";
 import { MyProfile, AddressBook, PaymentOptions } from "./Account";
 import OrderListComponent from "./Order";
+import { updateProfile } from "../../redux/slices/orderSlice";
+import { useDispatch } from "react-redux";
+
 
 const ordersData = [
   {
@@ -92,6 +95,7 @@ const ProfilePage = () => {
     newPassword: "",
     confirmPassword: "",
   });
+  const dispatch = useDispatch();
 
   const [selectedItem, setSelectedItem] = useState("My Profile");
 
@@ -100,8 +104,13 @@ const ProfilePage = () => {
     setProfile({ ...profile, [name]: value });
   };
 
-  const handleSaveChanges = () => {
-    console.log("Saving changes...", profile);
+  const handleSaveChanges = async () => {
+    try {
+      await dispatch(updateProfile(profile)).unwrap();
+      alert("Profile saved successfully");
+    } catch (error) {
+      console.error("Error saving profile:", error);
+    }
   };
 
   const [orders, setOrders] = useState([]);
