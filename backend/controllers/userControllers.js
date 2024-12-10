@@ -258,3 +258,132 @@ exports.createUser = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+exports.forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    // Validate email
+    if (!validateEmail(email)) {
+      return res.status(400).json({ error: "Invalid email format" });
+    }
+
+    // Check if user exists
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ error: "Email not found" });
+    }
+
+    // Generate password reset token
+    const resetToken = generateToken({ id: user._id.toString() }, "1h");
+    const resetUrl = `${process.env.BASE_URL}/reset-password/${resetToken}`;
+
+    // Send password reset email
+    try {
+      await sendEmail(user.email, user.name, resetUrl, "Password Reset Request");
+    } catch (emailError) {
+      console.error("Error sending email:", emailError);
+      return res.status(500).json({ error: "Error sending password reset email" });
+    }
+
+    res.status(200).json({ message: "Password reset email sent successfully" });
+  } catch (error) {
+    console.error("Error in forgotPassword:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+exports.resetPassword = async (req, res) => {
+  try {
+    const { token, newPassword } = req.body;
+
+    // Verify token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(decoded.id);
+    if (!user) {
+      return res.status(400).json({ error: "Invalid token or user not found" });
+    }
+
+    // Validate new password
+    if (!validateLength(newPassword, 6, 100)) {
+      return res.status(400).json({ error: "Password must be between 6 and 100 characters" });
+    }
+
+    // Hash new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // Update user's password
+    user.password = hashedPassword;
+    await user.save();
+
+    res.status(200).json({ message: "Password reset successfully" });
+  } catch (error) {
+    console.error("Error in resetPassword:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+exports.updateProfile = async (req, res) => {
+  try {
+    const userId = req.user.id; // Assuming you have user ID in req.user
+    const { firstName, lastName, email, address, currentPassword, newPassword, confirmPassword } = req.body;
+
+    // Validate data
+    if (!validateLength(firstName, 3, 50)) {
+      return res.status(400).json({ error: "First name must be between 3 and 50 characters" });
+    }
+    if (!validateLength(lastName, 3, 50)) {
+      return res.status(400).json({ error: "Last name must be between 3 and 50 characters" });
+    }
+    if (!validateEmail(email)) {
+      return res.status(400).json({ error: "Invalid email format" });
+    }
+    if (currentPassword && !validateLength(currentPassword, 6, 100)) {
+      return res.status(400).json({ error: "Current password must be between 6 and 100 characters" });
+    }
+    if (newPassword && !validateLength(newPassword, 6, 100)) {
+      return res.status(400).json({ error: "New password must be between 6 and 100 characters" });
+    }
+    if (newPassword !== confirmPassword) {
+      return res.status(400).json({ error: "New password and confirm password do not match" });
+    }
+
+    // Split address string into an object
+    const addressParts = address.split(", ");
+    const addressObject = {
+      street: addressParts[0],
+      city: addressParts[1],
+      country: addressParts[2]
+    };
+
+    // Validate address fields
+    if (!addressObject.street || !addressObject.city || !addressObject.country) {
+      return res.status(400).json({ error: "Address, city, and country are required" });
+    }
+
+    // Find user by ID and update profile
+    const updatedUser = await User.findByIdAndUpdate(
+        userId,
+        { firstName, lastName, email, address: addressObject },
+        { new: true, runValidators: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Update password if provided
+    if (currentPassword && newPassword) {
+      const isPasswordValid = await bcrypt.compare(currentPassword, updatedUser.password);
+      if (!isPasswordValid) {
+        return res.status(400).json({ error: "Current password is incorrect" });
+      }
+      updatedUser.password = await bcrypt.hash(newPassword, 10);
+      await updatedUser.save();
+    }
+
+    res.status(200).json({ message: "Profile updated successfully", user: updatedUser });
+  } catch (error) {
+    console.error("Error in updateProfile:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};

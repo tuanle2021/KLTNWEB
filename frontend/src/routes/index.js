@@ -9,6 +9,8 @@ import CheckoutPage from "../pages/CheckoutPage/CheckoutPage";
 import CartPage from "../pages/CartPage/CartPage";
 import ProductPage from "../pages/ProductPage/ProductPage";
 import SuccessPage from "../pages/SuccessPage/SuccessPage";
+import ForgotPasswordPage from "../pages/ForgotPasswordPage/ForgotPasswordPage";
+import ResetPasswordPage from "../pages/ResetPassword/ResetPasswordPage";
 export const routes = [
   {
     path: "/",
@@ -28,6 +30,11 @@ export const routes = [
   {
     path: "/login",
     page: LoginPage,
+    isShowHeader: false,
+  },
+  {
+    path: "/forgot",
+    page: ForgotPasswordPage,
     isShowHeader: false,
   },
   {
@@ -58,6 +65,11 @@ export const routes = [
   {
     path: "/products",
     page: ProductPage,
+    isShowHeader: true,
+  },
+  {
+    path: "/reset-password/*",
+    page: ResetPasswordPage,
     isShowHeader: true,
   },
   {
