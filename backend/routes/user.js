@@ -6,13 +6,14 @@ const {
   sendVerification,
   sendCodeResetPassword,
   verifyCodeResetPassword,
-  resetPassword,
+  // resetPassword,
   requestNewToken,
   createUser,
   getAllUsers,
   getUserById,
   forgotPassword,
-  resetPassword, updateProfile,
+  resetPassword,
+  updateProfile,
 } = require("../controllers/userControllers");
 const router = express.Router();
 const { authentication } = require("../middleware/authenUser");
@@ -26,7 +27,7 @@ router.post("/authen", authentication);
 router.post("/sendVerification", authentication, sendVerification);
 router.post("/sendCodeResetPassword", sendCodeResetPassword);
 router.post("/verifyCodeResetPassword", verifyCodeResetPassword);
-router.post("/resetPassword", resetPassword);
+// router.post("/resetPassword", resetPassword);
 router.post("/users", authentication, createUser);
 router.post("/forgot-password", forgotPassword);
 router.post("/reset-password", resetPassword);

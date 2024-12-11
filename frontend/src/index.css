@@ -51,3 +51,60 @@ body {
   margin: 0 auto;
   padding: 0 10px;
 }
+
+.balls {
+  width: 3em;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.balls div {
+  width: 0.6em;
+  height: 0.6em;
+  border-radius: 50%;
+  background-color: var(--gray);
+  transform: translateY(-100%);
+  animation: wave 0.8s ease-in-out alternate infinite;
+}
+
+.balls div:nth-of-type(1) {
+  animation-delay: -0.4s;
+}
+
+.balls div:nth-of-type(2) {
+  animation-delay: -0.2s;
+}
+
+@keyframes wave {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(100%);
+  }
+}
+
+.loading {
+  top: 50%;
+  left: 50%;
+  width: 2.5em;
+  height: 3em;
+  border: 3px solid transparent;
+  border-top-color: var(--gray);
+  border-bottom-color: var(--gray);
+  border-radius: 50%;
+  animation: spin-stretch 2s ease infinite;
+}
+
+@keyframes spin-stretch {
+  50% {
+    transform: rotate(360deg) scale(0.4, 0.33);
+    border-width: 8px;
+  }
+  100% {
+    transform: rotate(720deg) scale(1, 1);
+    border-width: 3px;
+  }
+}

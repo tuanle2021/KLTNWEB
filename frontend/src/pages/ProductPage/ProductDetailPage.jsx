@@ -15,7 +15,7 @@ const ProductDetailPage = () => {
 
   return (
     <div>
-      {loading && <p>Loading...</p>}
+      {loading && <div className="loading"></div>}
       {error && <p>{error}</p>}
       {/* Roadmap hiển thị đường dẫn */}
       <Roadmap />

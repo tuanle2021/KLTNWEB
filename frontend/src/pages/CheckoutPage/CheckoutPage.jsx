@@ -20,6 +20,8 @@ import {
 } from "./styles";
 import { updateOrder } from "../../redux/slices/orderSlice";
 import { useNavigate } from "react-router-dom";
+import ChatBotButton from "../../components/ChatBot/ChatBotButton";
+
 // Add this inside your CheckoutPage component
 const initialOptions = {
   "client-id":
@@ -117,6 +119,7 @@ const CheckoutPage = () => {
   return (
     <div>
       <Roadmap />
+      <ChatBotButton />
       <CheckoutContainer>
         <BillingDetails>
           <h2>Billing Details</h2>

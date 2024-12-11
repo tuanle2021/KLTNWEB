@@ -11,6 +11,8 @@ import {
   deleteCartItem,
 } from "../../redux/slices/cartSlice";
 import { fetchOrdersByUserId } from "../../redux/slices/orderSlice";
+import ChatBotButton from "../../components/ChatBot/ChatBotButton";
+
 import {
   setOrderItems,
   createOrder,
@@ -130,7 +132,7 @@ const CartPage = () => {
 
   return (
     <CartContainer>
-      {loading && <p>Loading...</p>}
+      {loading && <div className="loading"></div>}{" "}
       {error && (
         <p>
           Error:{" "}
@@ -140,6 +142,7 @@ const CartPage = () => {
             ordersError?.toString()}
         </p>
       )}
+      <ChatBotButton />
       <CartHeader>
         <span>Image</span>
         <span>Product</span>

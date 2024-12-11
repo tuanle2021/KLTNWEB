@@ -21,6 +21,7 @@ import ProductListSection from "./ProductListSection";
 import CategorySection from "./CategorySection";
 import Loading from "../../components/LoadingError/Loading";
 import FeatureSection from "../../components/FeatureComponent/FeatrureSection";
+import ChatBotButton from "../../components/ChatBot/ChatBotButton";
 import { TopBanner } from "./style";
 
 const HomePage = () => {
@@ -70,9 +71,10 @@ const HomePage = () => {
 
   return (
     <div>
-      {loading && <p>Loading</p>}
+      {loading && <div className="loading"></div>}
       {error && <p>{error}</p>}
       <Roadmap />
+      <ChatBotButton />
       <div className="container">
         <TopBanner>
           <PromoSlider />

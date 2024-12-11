@@ -54,7 +54,13 @@ const HeaderComponent = () => {
         <HeaderInner>
           <CategoryMenu />
           <Logo>
-            <Link to="/">MERN Shop</Link>
+            <Link to="/">
+              <img
+                src="/gif/shopLogo.gif"
+                alt="MERN Shop"
+                style={{ width: "3em", height: "3em" }}
+              />
+            </Link>
           </Logo>
           {/* Search Bar */}
           <SearchBarBox />
