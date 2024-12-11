@@ -91,7 +91,6 @@ exports.register = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
-
 exports.activateAccount = async (req, res) => {
   try {
     const { token } = req.body;
@@ -283,32 +282,9 @@ exports.verifyCodeResetPassword = async (req, res) => {
   }
 };
 
-// exports.resetPassword = async (req, res) => {
-//   try {
-//     const { email, password } = req.body;
-
-//     // Tìm người dùng bằng email
-//     const user = await User.findOne({ email });
-
-//     if (!user) {
-//       return res.status(404).json({ message: "User not found" });
-//     }
-
-//     // Cập nhật mật khẩu mới
-//     const salt = await bcrypt.genSalt(10);
-//     user.password = await bcrypt.hash(password, salt);
-
-//     // Lưu người dùng và trả về kết quả
-//     await user.save();
-//     res.status(200).json({ message: "Password reset successfully" });
-//   } catch (error) {
-//     console.error("Error resetting password:", error);
-//   }
-// };
 exports.createUser = async (req, res) => {
   try {
-    const { name, email, phone, address, isAdmin, password, gender } = req.body;
-    console.log("Received input:", {
+    const {
       name,
       email,
       phone,
@@ -316,7 +292,8 @@ exports.createUser = async (req, res) => {
       isAdmin,
       password,
       gender,
-    });
+      verified = false,
+    } = req.body;
 
     // Validate data
     if (!validateLength(name, 3, 50)) {
@@ -371,6 +348,7 @@ exports.createUser = async (req, res) => {
       address,
       password: hashedPassword,
       gender,
+      verified: req.user && req.user.isAdmin ? verified : false, // Giá trị mặc định là false
       isAdmin: req.user && req.user.isAdmin ? isAdmin : false,
     });
 
@@ -485,11 +463,9 @@ exports.updateProfile = async (req, res) => {
       return res.status(400).json({ error: "Invalid email format" });
     }
     if (currentPassword && !validateLength(currentPassword, 6, 100)) {
-      return res
-        .status(400)
-        .json({
-          error: "Current password must be between 6 and 100 characters",
-        });
+      return res.status(400).json({
+        error: "Current password must be between 6 and 100 characters",
+      });
     }
     if (newPassword && !validateLength(newPassword, 6, 100)) {
       return res
@@ -551,5 +527,27 @@ exports.updateProfile = async (req, res) => {
   } catch (error) {
     console.error("Error in updateProfile:", error);
     res.status(500).json({ error: "Internal server error" });
+  }
+};
+exports.deleteUser = async (req, res) => {
+  try {
+    const userId = req.params.id;
+
+    // Kiểm tra quyền hạn của người dùng (chỉ dành cho quản trị viên)
+    if (!req.user || !req.user.isAdmin) {
+      return res.status(403).json({ message: "Access denied" });
+    }
+
+    // Tìm và xóa người dùng theo ID
+    const user = await User.findByIdAndDelete(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({ message: "User deleted successfully" });
+  } catch (error) {
+    console.error("Error in deleteUser:", error);
+    res.status(500).json({ message: "Server error" });
   }
 };

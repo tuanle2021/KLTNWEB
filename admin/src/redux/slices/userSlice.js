@@ -31,12 +31,7 @@ export const createUser = createAsyncThunk(
       const token = state.auth.user.token;
       const response = await axios.post(
         `${process.env.REACT_APP_BACKEND_URL}/register`,
-        userData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // Thêm token vào header
-          },
-        }
+        userData
       );
       return response.data;
     } catch (error) {
@@ -89,7 +84,7 @@ const userSlice = createSlice({
   name: "users",
   initialState: {
     users: [],
-    user:null,
+    user: null,
     loading: false,
     error: null,
   },
@@ -106,7 +101,8 @@ const userSlice = createSlice({
       .addCase(fetchUsers.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload; // Lưu lỗi vào state
-      }).addCase(createUser.pending, (state) => {
+      })
+      .addCase(createUser.pending, (state) => {
         state.loading = true;
       })
       .addCase(createUser.fulfilled, (state, action) => {
@@ -142,27 +138,27 @@ const userSlice = createSlice({
   },
 });
 
-// Thunk to create a new user
+// Thunk để tạo người dùng mới
 export const createUserAdmin = createAsyncThunk(
-    "users/createUser",
-    async (userData, { rejectWithValue, getState }) => {
-      try {
-        const state = getState();
-        const token = state.auth.user.token;
-        const response = await axios.post(
-            `${process.env.REACT_APP_BACKEND_URL}/users`,
-            userData,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`, // Add token to header
-              },
-            }
-        );
-        return response.data;
-      } catch (error) {
-        return rejectWithValue(error.response.data.message);
-      }
+  "users/createUser",
+  async (userData, { rejectWithValue, getState }) => {
+    try {
+      const state = getState();
+      const token = state.auth.user.token;
+      const response = await axios.post(
+        `${process.env.REACT_APP_BACKEND_URL}/users`,
+        userData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Thêm token vào header
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data.message);
     }
+  }
 );
 
 export default userSlice.reducer;

@@ -96,6 +96,9 @@ const productSlice = createSlice({
     setPage: (state, action) => {
       state.currentPage = action.payload;
     },
+    setFilteredProducts: (state, action) => {
+      state.products = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -170,5 +173,5 @@ const productSlice = createSlice({
       });
   },
 });
-export const { setPage } = productSlice.actions;
+export const { setPage, setFilteredProducts } = productSlice.actions;
 export default productSlice.reducer;

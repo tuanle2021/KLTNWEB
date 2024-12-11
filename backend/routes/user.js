@@ -6,7 +6,7 @@ const {
   sendVerification,
   sendCodeResetPassword,
   verifyCodeResetPassword,
-  // resetPassword,
+  deleteUser,
   requestNewToken,
   createUser,
   getAllUsers,
@@ -27,10 +27,10 @@ router.post("/authen", authentication);
 router.post("/sendVerification", authentication, sendVerification);
 router.post("/sendCodeResetPassword", sendCodeResetPassword);
 router.post("/verifyCodeResetPassword", verifyCodeResetPassword);
-// router.post("/resetPassword", resetPassword);
 router.post("/users", authentication, createUser);
 router.post("/forgot-password", forgotPassword);
 router.post("/reset-password", resetPassword);
+router.delete("/users/:id", authentication, deleteUser);
 router.put("/update-profile", authentication, updateProfile);
 
 module.exports = router;

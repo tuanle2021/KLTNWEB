@@ -16,17 +16,20 @@ const ProductListSection = ({
   handleNextPage,
   currentPage,
   totalPages,
+  maxItemsPerRow,
 }) => (
   <>
-    <Line />
+    {maxItemsPerRow !== 4 && <Line />}
     <ProductLists>
-      <Header>
-        <div>
-          <h3>Category</h3>
-          <h1>Brower By Category</h1>
-        </div>
-      </Header>
-      <ProductListContainer>
+      {maxItemsPerRow !== 4 && (
+        <Header>
+          <div>
+            <h3>Category</h3>
+            <h1>Brower By Category</h1>
+          </div>
+        </Header>
+      )}
+      <ProductListContainer maxItemsPerRow={maxItemsPerRow}>
         {products.map((product) => (
           <ProductCart key={product._id} product={product} />
         ))}

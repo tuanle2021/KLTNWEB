@@ -87,6 +87,7 @@ const HomePage = () => {
           handleNextPage={handleNextPage}
           currentPage={currentPage}
           totalPages={totalPages}
+          maxItemsPerRow={5}
         />
         <ProductGrid ref={gridRef} products={memoizedProducts} />
         <FlashSale />

@@ -70,10 +70,7 @@ export const ProductActionIcons = styled.div`
 `;
 
 export const ActionIcon = styled.div`
-  background: #fff;
   padding: 3px 5px;
-  border-radius: 50%;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
   cursor: pointer;
 
   svg {
@@ -83,10 +80,9 @@ export const ActionIcon = styled.div`
   }
 
   &:hover {
-    background: var(--color-secondary);
-
     svg {
-      color: var(--bg-secondary);
+      scale: 1.2;
+      color: red;
     }
   }
 `;

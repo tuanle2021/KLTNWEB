@@ -30,64 +30,18 @@ const CreateUser = () => {
     email: "",
     password: "Huynh123@",
     phone: "",
-    gender: "",
+    gender: "male",
     address: {
       street: "",
       city: "",
-      state: "",
-      zip: "00008",
-      country: "VietNam",
     },
+    verified: true,
     isAdmin: false,
-    password: "",
-    gender: "male",
   });
 
   const handleChange = async (e) => {
     const { name, value, type, checked } = e.target;
     if (type === "checkbox") {
-      if (checked) {
-        let password;
-        let isValid = false;
-        const userData = Cookies.get("user")
-          ? JSON.parse(Cookies.get("user"))
-          : {};
-        const email = userData.email;
-
-        while (!isValid) {
-          const { value: inputPassword } = await Swal.fire({
-            title: "Enter your current password",
-            input: "password",
-            inputPlaceholder: "Enter your password",
-            inputAttributes: {
-              autocapitalize: "off",
-              autocorrect: "off",
-            },
-            showCancelButton: true,
-          });
-
-          if (!inputPassword) {
-            e.target.checked = false;
-            return;
-          }
-
-          password = inputPassword;
-
-          try {
-            await dispatch(login({ email, password }));
-            isValid = true;
-          } catch (error) {
-            await Swal.fire({
-              icon: "error",
-              title: "Incorrect password",
-              text: "Please try again.",
-              timer: 2000,
-              timerProgressBar: true,
-              showConfirmButton: false,
-            });
-          }
-        }
-      }
       setUser({ ...user, [name]: checked });
     } else {
       const nameParts = name.split(".");
@@ -107,18 +61,42 @@ const CreateUser = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(createUserAdmin(user))
-      .unwrap()
-      .then(() => {
-        navigate(`/users`);
-      })
-      .catch((error) => {
-        console.error(error);
+    try {
+      const { name, email, phone, address, isAdmin, password, gender } = user;
+      const { street, city } = address;
+
+      // Kiểm tra các trường bắt buộc
+      if (
+        !name ||
+        !email ||
+        !phone ||
+        !street ||
+        !city ||
+        !password ||
+        !gender
+      ) {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Please fill out all required fields",
+        });
+        return;
+      }
+
+      await dispatch(createUserAdmin(user)).unwrap();
+      navigate(`/users`);
+    } catch (error) {
+      console.error("Failed to create user:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: error.message || "Failed to create user",
       });
+    }
   };
 
   const { name, email, phone, address, isAdmin, password, gender } = user;
-  const { street, city, country } = address;
+  const { street, city } = address;
 
   return (
     <ProfileContainer>
@@ -128,10 +106,7 @@ const CreateUser = () => {
       <Form onSubmit={handleSubmit}>
         <ProfileTop>
           <Header />
-          <Logo
-            src="https://res.cloudinary.com/dihhw7jo1/image/upload/v1727766768/products/MacBook%20Air%2013%20inch%20M1%204.jpg.jpg"
-            alt="Seller Logo"
-          />
+          <Logo src="avatar-user.gif" alt="Seller Logo" />
           <ProfileInfo>
             <div className="detail-info">
               <h2>
@@ -157,13 +132,6 @@ const CreateUser = () => {
                   value={city}
                   onChange={handleChange}
                   placeholder="City"
-                />
-                <Input
-                  type="text"
-                  name="address.country"
-                  value={country}
-                  onChange={handleChange}
-                  placeholder="Country"
                 />
               </p>
               <CheckboxLabel>
@@ -253,16 +221,7 @@ const CreateUser = () => {
           </InfoBlock2>
           <InfoBlock2>
             <h3>Address</h3>
-            <p>
-              Country:{" "}
-              <Input
-                type="text"
-                name="address.country"
-                value={country}
-                onChange={handleChange}
-                placeholder="Country"
-              />
-            </p>
+
             <p>
               <Input
                 type="text"

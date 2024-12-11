@@ -27,10 +27,10 @@ const User = () => {
     dispatch(fetchUsers());
   }, [dispatch]);
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
   return (
     <UserContainer>
+      {loading && <div className="loading"></div>}
+      {error && <p>{error}</p>}
       <div className="header">
         <h2>User</h2>
         <CreateButton onClick={() => navigate(`/create-user`)}>
@@ -55,10 +55,7 @@ const User = () => {
         {users.map((user, index) => (
           <UserCard key={index}>
             <UserHeader />
-            <UserImage
-              src="https://res.cloudinary.com/dihhw7jo1/image/upload/v1727766768/products/MacBook%20Air%2013%20inch%20M1%204.jpg.jpg"
-              alt={user.name}
-            />
+            <UserImage src="avatar-user.gif" alt={user.name} />
             <UserInfo>
               <UserName>{user.name}</UserName>
               <UserID>ID: {user._id}</UserID>

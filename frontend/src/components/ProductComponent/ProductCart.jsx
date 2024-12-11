@@ -58,21 +58,6 @@ const ProductCart = ({ product }) => {
   const handleCardClick = () => {
     navigate(`/product/${_id}`);
   };
-  // Xử lý thêm sản phẩm vào giỏ hàng
-  // const handleAddToCart = (e) => {
-  //   e.stopPropagation();
-  //   e.preventDefault();
-  //   if (user) {
-  //     dispatch(addToCart({ productId: _id, quantity: 1 }));
-  //     setShowAlert(true); // Hiển thị thông báo
-  //     setTimeout(() => {
-  //       setShowAlert(false); // Ẩn thông báo sau 3 giây
-  //     }, 3000);
-  //   } else {
-  //     alert("Please login to add products to cart");
-  //     navigate("/login");
-  //   }
-  // };
   return (
     <>
       {showAlert && (
@@ -91,7 +76,17 @@ const ProductCart = ({ product }) => {
           {/* Các icon hành động (Yêu thích và Xem chi tiết) */}
           <ProductActionIcons>
             <ActionIcon onClick={handleFavoriteClick}>
-              {isFavorited ? <FaHeart /> : <FaRegHeart />}
+              {!isFavorited ? (
+                <FaRegHeart />
+              ) : (
+                <>
+                  <img
+                    src="/gif/heart.gif"
+                    alt="heart animation"
+                    style={{ width: "24px", height: "24px" }}
+                  />
+                </>
+              )}
             </ActionIcon>
           </ProductActionIcons>
 
@@ -104,12 +99,6 @@ const ProductCart = ({ product }) => {
             }
             alt={name}
           />
-          {/* <AddToCartButton onClick={handleAddToCart}>
-            <div style={{ display: "flex", justifyContent: "center" }}>
-              <FiShoppingCart size={16} />
-              <p style={{ marginLeft: "8px" }}> Add To Cart</p>
-            </div>
-          </AddToCartButton> */}
         </ProductImage>
 
         {/* Thông tin chi tiết sản phẩm */}

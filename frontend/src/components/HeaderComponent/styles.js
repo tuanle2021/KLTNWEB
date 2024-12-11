@@ -1,12 +1,15 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+
 export const HeaderContainer = styled.header`
-  background-color: #f0f0f8;
+  background-color: transparent;
   color: #333;
   padding: 15px 0;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   display: flex;
   justify-content: center;
+  border-radius: 20px;
+  border
 `;
 
 export const HeaderInner = styled.div`
@@ -100,7 +103,7 @@ export const ProfileMenu = styled.div`
 `;
 
 export const UserIconWrapper = styled.div`
-  font-size: 1.5em;
+  font-size: 1.2em;
   cursor: pointer;
 `;
 
@@ -114,12 +117,8 @@ export const DropdownContainer = styled.div`
   box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
   padding: 15px 0;
   margin-top: 10px;
-  display: none;
+  display: ${({ visible }) => (visible ? "block" : "none")};
   z-index: 1;
-
-  ${ProfileMenu}:hover & {
-    display: block;
-  }
 
   &::before {
     content: "";

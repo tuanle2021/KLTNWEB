@@ -18,7 +18,9 @@ const TableOrder = ({ orders, status }) => {
   const itemsPerPage = 10;
 
   // Sort orders by createdAt in descending order
-  const sortedOrders = [...orders].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  const sortedOrders = [...orders].sort(
+    (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+  );
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -30,10 +32,10 @@ const TableOrder = ({ orders, status }) => {
   const totalPages = Math.ceil(sortedOrders.length / itemsPerPage);
 
   return (
-      <CardBody>
-        <TableResponsive>
-          <Table>
-            <thead>
+    <CardBody>
+      <TableResponsive>
+        <Table>
+          <thead>
             <TableRow>
               <TableCell>ID</TableCell>
               <TableCell>Name</TableCell>
@@ -46,7 +48,7 @@ const TableOrder = ({ orders, status }) => {
             </TableRow>
           </thead>
           <tbody>
-            {orders.slice(0, 14).map((order) => (
+            {currentOrders.map((order) => (
               <TableRow key={order._id}>
                 <TableCell>
                   <b>{order.user_id?.name || "N/A"}</b>{" "}
@@ -62,40 +64,40 @@ const TableOrder = ({ orders, status }) => {
                     <Badge variant="danger">Not Paid</Badge>
                   )}
                 </TableCell>
-                <TableCell>{moment(order.createdAt).calendar()}</TableCell>          
-                  {status && (
-                      <TableCell>
-                        <Badge
-                            variant={
-                              order.status === "processing" ? "success" : "danger"
-                            }
-                        >
-                          {order.status}
-                        </Badge>
-                      </TableCell>
-                  )}
-                  <TableCell className="eye">
-                    <IconLink to={`/orders/${order._id}`}>
-                      <FaEye fontSize={25} />
-                    </IconLink>
+                <TableCell>{moment(order.createdAt).calendar()}</TableCell>
+                {status && (
+                  <TableCell>
+                    <Badge
+                      variant={
+                        order.status === "processing" ? "success" : "danger"
+                      }
+                    >
+                      {order.status}
+                    </Badge>
                   </TableCell>
-                </TableRow>
+                )}
+                <TableCell className="eye">
+                  <IconLink to={`/orders/${order._id}`}>
+                    <FaEye fontSize={25} />
+                  </IconLink>
+                </TableCell>
+              </TableRow>
             ))}
-            </tbody>
-          </Table>
-        </TableResponsive>
-        <Pagination>
-          {Array.from({ length: totalPages }, (_, index) => (
-              <PaginationButton
-                  key={index + 1}
-                  onClick={() => handlePageChange(index + 1)}
-                  className={currentPage === index + 1 ? "active" : ""}
-              >
-                {index + 1}
-              </PaginationButton>
-          ))}
-        </Pagination>
-      </CardBody>
+          </tbody>
+        </Table>
+      </TableResponsive>
+      <Pagination>
+        {Array.from({ length: totalPages }, (_, index) => (
+          <PaginationButton
+            key={index + 1}
+            onClick={() => handlePageChange(index + 1)}
+            className={currentPage === index + 1 ? "active" : ""}
+          >
+            {index + 1}
+          </PaginationButton>
+        ))}
+      </Pagination>
+    </CardBody>
   );
 };
 

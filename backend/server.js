@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const { readdirSync } = require("fs");
+const helmet = require("helmet"); // Add this line
 const dotenv = require("dotenv");
 dotenv.config();
 

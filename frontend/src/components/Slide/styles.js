@@ -5,6 +5,7 @@ export const PromoContainer = styled.div`
   max-width: 1200px;
   margin: 0 auto;
   overflow: hidden;
+  padding-top: 20px;
 `;
 
 export const PromoContent = styled.div`

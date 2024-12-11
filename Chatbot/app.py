@@ -24,7 +24,7 @@ print('Initializing Predictor...')
 predictor = Predictor(model)
 
 # Chat bot API
-model_path = "/home/tangsan/NLP/KLTNWEB/Chatbot/chatbot"
+model_path = "D:\A_Project_data\KLTNWEB\Chatbot\chatbot"
 
 model = BertForSequenceClassification.from_pretrained(model_path)
 tokenizer= BertTokenizerFast.from_pretrained(model_path)

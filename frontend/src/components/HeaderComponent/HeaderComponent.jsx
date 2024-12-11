@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../../redux/slices/authSlice";
 import { Link, useNavigate } from "react-router-dom";
@@ -12,7 +12,6 @@ import {
   NavItem,
   ShoppingCart,
   ProfileMenu,
-  Button,
   UserIconWrapper,
   DropdownContainer,
   NavButton,
@@ -25,7 +24,6 @@ import {
   UserOutlined,
   DownOutlined,
   ShoppingCartOutlined,
-  ShopOutlined,
 } from "@ant-design/icons";
 
 const HeaderComponent = () => {
@@ -34,6 +32,7 @@ const HeaderComponent = () => {
   const user = useSelector((state) => state.auth.user);
   const cartItems = useSelector((state) => state.cart.items);
   const [dropdownVisible, setDropdownVisible] = useState(false);
+  const dropdownRef = useRef(null);
 
   const handleLogout = () => {
     dispatch(logout());
@@ -48,6 +47,23 @@ const HeaderComponent = () => {
       navigate("/login");
     }
   };
+
+  const handleUserIconClick = () => {
+    setDropdownVisible(!dropdownVisible);
+  };
+
+  const handleClickOutside = (event) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setDropdownVisible(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const totalItems = cartItems.reduce(
     (total, item) => total + item.quantity,
@@ -87,14 +103,14 @@ const HeaderComponent = () => {
           </ShoppingCart>
 
           {/* Profile Menu */}
-          <ProfileMenu>
+          <ProfileMenu ref={dropdownRef}>
             {user ? (
               <>
                 <ProfileMenu>
-                  <UserIconWrapper>
-                    <DownOutlined className="dropdown-icon" />
+                  <UserIconWrapper onClick={handleUserIconClick}>
+                    {user.name} <DownOutlined className="dropdown-icon" />
                   </UserIconWrapper>
-                  <DropdownContainer className="profile-dropdown">
+                  <DropdownContainer visible={dropdownVisible}>
                     <NavItem>
                       <Link to="/profile">
                         <i className="icon">
@@ -141,16 +157,14 @@ const HeaderComponent = () => {
             ) : (
               <>
                 <ProfileMenu>
-                  <UserIconWrapper>
-                    welcome
-                    <DownOutlined className="dropdown-icon" />
+                  <UserIconWrapper onClick={handleUserIconClick}>
+                    Welcome <DownOutlined className="dropdown-icon" />
                   </UserIconWrapper>
-                  <DropdownContainer className="profile-dropdown">
+                  <DropdownContainer visible={dropdownVisible}>
                     <NavItem>
                       <Link
                         style={{
-                          fontSize: "1.7em",
-                          marginRight: "10px",
+                          fontSize: "1.2em",
                           color: "var(--dark-bg-third)",
                         }}
                         to="/login"
@@ -161,8 +175,7 @@ const HeaderComponent = () => {
                     <NavItem>
                       <Link
                         style={{
-                          fontSize: "1.7em",
-                          marginRight: "10px",
+                          fontSize: "1.2em",
                           color: "var(--dark-bg-third)",
                         }}
                         to="/login?register=true"

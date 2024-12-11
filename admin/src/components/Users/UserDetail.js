@@ -1,8 +1,9 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
-import { fetchUserById } from "../../redux/slices/userSlice";
+import { fetchUserById, deleteUser } from "../../redux/slices/userSlice";
 import { FaTrashAlt } from "react-icons/fa";
+import Swal from "sweetalert2";
 
 import {
   ProfileContainer,
@@ -26,60 +27,78 @@ const UserDetail = () => {
     dispatch(fetchUserById(id));
   }, [dispatch, id]);
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
-  if (!userDetail) return <p>No user found</p>;
+  const handleDelete = async () => {
+    try {
+      await dispatch(deleteUser(id)).unwrap();
+      Swal.fire({
+        icon: "success",
+        title: "Deleted!",
+        text: "User has been deleted.",
+      });
+      navigate("/users");
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: error.message || "Failed to delete user",
+      });
+    }
+  };
 
   const { name, address, email, phone } = userDetail;
-  const { street, city, country } = address || {};
+  const { street, city } = address || {};
 
   return (
-    <ProfileContainer>
-      <Button className="go-back" onClick={() => navigate(`/users`)}>
-        Go Back
-      </Button>{" "}
-      <ProfileTop>
-        <Header />
-        <Logo
-          src="https://res.cloudinary.com/dihhw7jo1/image/upload/v1727766768/products/MacBook%20Air%2013%20inch%20M1%204.jpg.jpg"
-          alt="Seller Logo"
-        />
-        <ProfileInfo>
-          <div className="detail-info">
-            <h2>{name}</h2>
+    <>
+      {loading && <div className="loading"></div>}
+      {error && <p>{error}</p>}
+      {!userDetail && <p>No user found</p>}
+      <ProfileContainer>
+        <Button className="go-back" onClick={() => navigate(`/users`)}>
+          Go Back
+        </Button>{" "}
+        <ProfileTop>
+          <Header />
+          <Logo
+            src={`${process.env.PUBLIC_URL}/avatar-user.gif`}
+            alt="Seller Logo"
+          />
+          <ProfileInfo>
+            <div className="detail-info">
+              <h2>{name}</h2>
+              <p>
+                {street}, {city}
+              </p>
+            </div>
+          </ProfileInfo>
+        </ProfileTop>
+        <InfoSection>
+          <InfoBlock>
+            <h3>Total Order</h3>
+            <p className="total-info">4</p>
+            <h3>Total Paid</h3>
+            <p className="total-info">$2380</p>
+          </InfoBlock>
+          <InfoBlock2>
+            <h3>Contacts</h3>
+            <p>Full Name: {name}</p>
+            <p>Email: {email}</p>
+            <p>Phone: {phone}</p>
+          </InfoBlock2>
+          <InfoBlock2>
+            <h3>Address</h3>
             <p>
-              {street}, {city}, {country}
+              Address: {street}, {city}
             </p>
-          </div>
-        </ProfileInfo>
-      </ProfileTop>
-      <InfoSection>
-        <InfoBlock>
-          <h3>Total Order</h3>
-          <p className="total-info">4</p>
-          <h3>Total Paid</h3>
-          <p className="total-info">$2380</p>
-        </InfoBlock>
-        <InfoBlock2>
-          <h3>Contacts</h3>
-          <p>Full Name: {name}</p>
-          <p>Email: {email}</p>
-          <p>Phone: {phone}</p>
-        </InfoBlock2>
-        <InfoBlock2>
-          <h3>Address</h3>
-          <p>Country: {country}</p>
-          <p>
-            Address: {street}, {city}
-          </p>
-        </InfoBlock2>
-      </InfoSection>
-      <div className="del-user">
-        <Button>
-          Delete User <FaTrashAlt />
-        </Button>
-      </div>
-    </ProfileContainer>
+          </InfoBlock2>
+        </InfoSection>
+        <div className="del-user">
+          <Button onClick={handleDelete}>
+            Delete User <FaTrashAlt />
+          </Button>
+        </div>
+      </ProfileContainer>
+    </>
   );
 };
 

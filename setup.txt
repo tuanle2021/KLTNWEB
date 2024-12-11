@@ -22,3 +22,21 @@ hình ảnh sẽ được tải lên thông qua middleware và uploadimage và t
 CLOUD_NAME=
 CLOUD_KEY=
 CLOUD_SECRET=
+
+tải python phiên bản phù hợp sau đó dùng phiên bản python đó tạo môi trường ảo
+C:\Users\huynh\AppData\Local\Programs\Python\Python39\python.exe -m venv myenv
+
+Chạy lệnh sau để cho phép chạy các script để kích hoạt môi trường ảo:
+Set-ExecutionPolicy RemoteSigned
+
+kích hoạt môi trường ảo
+myenv\Scripts\activate
+
+kiểm tra lại python
+python --version
+
+cài các thư viện cần thiết
+pip install Flask==2.0.1 flask-cors==3.0.10 transformers==4.9.2 matplotlib==3.4.2 seaborn==0.11.1 werkzeug==2.0.3
+pip install torch==1.13.1 torchvision==0.14.1 torchaudio==0.13.1 -f https://download.pytorch.org/whl/cu118/torch_stable.html
+
+chạy ứng dụng

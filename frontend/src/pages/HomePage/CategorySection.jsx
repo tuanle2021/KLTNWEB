@@ -1,4 +1,5 @@
 import React from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
   PhoneOutlined,
@@ -9,11 +10,23 @@ import {
 import { FiWatch } from "react-icons/fi";
 import { LuGamepad } from "react-icons/lu";
 import { CategoryContainer, Header, CategoryList, CategoryCard } from "./style";
+import {
+  fetchFilterProduct,
+  setFilteredProducts,
+} from "../../redux/slices/productSlice";
 
 const CategorySection = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleCategoryClick = (category) => {
+  const handleCategoryClick = async (category) => {
+    // Fetch filtered products
+    const result = await dispatch(
+      fetchFilterProduct({ category, page: 1 })
+    ).unwrap();
+    // Set filtered products in state
+    dispatch(setFilteredProducts(result.products));
+    // Navigate to product page
     navigate(`/products?category=${category}`);
   };
 
@@ -26,23 +39,33 @@ const CategorySection = () => {
         </div>
       </Header>
       <CategoryList>
-        <CategoryCard onClick={() => handleCategoryClick("Phones")}>
+        <CategoryCard
+          onClick={() => handleCategoryClick("66fe3bf32f18a9da5b8b0052")}
+        >
           <PhoneOutlined />
           <span>Phones</span>
         </CategoryCard>
-        <CategoryCard onClick={() => handleCategoryClick("Desktops")}>
+        <CategoryCard
+          onClick={() => handleCategoryClick("66fe3e22207cd8d5fc4af242")}
+        >
           <DesktopOutlined />
           <span>Desktops</span>
         </CategoryCard>
-        <CategoryCard onClick={() => handleCategoryClick("Watches")}>
+        <CategoryCard
+          onClick={() => handleCategoryClick("66fe3be02f18a9da5b8b0050")}
+        >
           <FiWatch />
           <span>Watches</span>
         </CategoryCard>
-        <CategoryCard onClick={() => handleCategoryClick("Cameras")}>
+        <CategoryCard
+          onClick={() => handleCategoryClick("670df56c1f3c9852b5e66463")}
+        >
           <CameraOutlined />
           <span>Cameras</span>
         </CategoryCard>
-        <CategoryCard onClick={() => handleCategoryClick("Audio")}>
+        <CategoryCard
+          onClick={() => handleCategoryClick("670e0dc21f3c9852b5e66476")}
+        >
           <AudioOutlined />
           <span>Audio</span>
         </CategoryCard>

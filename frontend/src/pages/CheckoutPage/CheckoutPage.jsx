@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
 import Roadmap from "../../components/RoadmapComponent/Roadmap";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+
 import {
   CheckoutContainer,
   BillingDetails,
@@ -13,14 +14,14 @@ import {
   PlaceOrderButton,
   SummaryItem,
   CheckboxLabel,
-  OrderSuccessContainer,
-  SuccessMessage,
-  OrderDetails,
-  BackToHomeButton,
 } from "./styles";
-import { updateOrder } from "../../redux/slices/orderSlice";
-import { useNavigate } from "react-router-dom";
-// Add this inside your CheckoutPage component
+import {
+  updateOrder,
+  fetchOrdersByUserId,
+  getOrderDetails,
+} from "../../redux/slices/orderSlice";
+import { useNavigate, useParams } from "react-router-dom";
+
 const initialOptions = {
   "client-id":
     "AbmCdXL179Ny3BNoTfT3tNdUeY41eMF77cOxElD41Njja6cBAHc1PqnoZ36aLwRwkuqrxoR-pBQUrZ3h",
@@ -38,30 +39,36 @@ const CheckoutPage = () => {
     emailAddress: "",
   });
   const [orderSuccess, setOrderSuccess] = useState(false);
-  const [orderSummary, setOrderSummary] = useState({ items: [] });
-
+  const [paymentCOD, setPaymentCOD] = useState(false);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { orderId } = useParams();
+  const user = useSelector((state) => state.auth.user);
+  const orderSummary = useSelector((state) => state.orders.order);
 
   useEffect(() => {
-    const selectedProducts = JSON.parse(
-      localStorage.getItem("selectedProducts") || "[]"
-    );
-    setOrderSummary({ items: selectedProducts });
-    console.log(orderSummary);
-  }, []);
+    if (user && user._id) {
+      dispatch(fetchOrdersByUserId(user._id));
+    }
+  }, [dispatch, user]);
+
+  useEffect(() => {
+    if (orderId && (!orderSummary || orderSummary._id !== orderId)) {
+      dispatch(getOrderDetails(orderId));
+    }
+  }, [dispatch, orderId, orderSummary]);
 
   useEffect(() => {
     const userData = Cookies.get("user") ? JSON.parse(Cookies.get("user")) : {};
     setFormData({
       firstName: userData.name || "",
-      streetAddress: userData.address.street || "",
-      city: userData.address.city || "",
-      country: userData.address.country || "",
+      streetAddress: userData.address?.street || "",
+      city: userData.address?.city || "",
+      country: userData.address?.country || "",
       phoneNumber: userData.phone || "",
       emailAddress: userData.email || "",
     });
   }, []);
-  const navigate = useNavigate();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -89,7 +96,7 @@ const CheckoutPage = () => {
   const calculateSubtotal = () => {
     return (
       orderSummary?.items?.reduce(
-        (acc, item) => acc + item.product.price * item.quantity,
+        (acc, item) => acc + item.price * item.quantity,
         0
       ) || 0
     );
@@ -102,7 +109,6 @@ const CheckoutPage = () => {
   const handlePlaceOrder = async () => {
     try {
       const shippingAddress = `${formData.streetAddress}, ${formData.city}, ${formData.country}`;
-      console.log(orderSummary);
       await dispatch(
         updateOrder({
           id: orderSummary._id,
@@ -117,6 +123,10 @@ const CheckoutPage = () => {
       console.error("Failed to place order:", error);
     }
   };
+
+  if (!orderSummary) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div>
@@ -215,7 +225,12 @@ const CheckoutPage = () => {
           </SummaryItem>
           <PaymentMethod>
             <label>
-              <input type="radio" name="payment" value="cash" defaultChecked />
+              <input
+                type="checkbox"
+                name="payment"
+                value="cash"
+                onChange={(e) => setPaymentCOD(e.target.checked)}
+              />
               Cash on delivery
             </label>
           </PaymentMethod>
@@ -226,22 +241,24 @@ const CheckoutPage = () => {
           <PlaceOrderButton onClick={handlePlaceOrder}>
             Place Order
           </PlaceOrderButton>
-          <PayPalScriptProvider options={initialOptions}>
-            <PayPalButtons
-              createOrder={(data, actions) => {
-                return actions.order.create({
-                  purchase_units: [
-                    {
-                      amount: {
-                        value: calculateTotal().toString(),
+          {!paymentCOD && (
+            <PayPalScriptProvider options={initialOptions}>
+              <PayPalButtons
+                createOrder={(data, actions) => {
+                  return actions.order.create({
+                    purchase_units: [
+                      {
+                        amount: {
+                          value: calculateTotal().toString(),
+                        },
                       },
-                    },
-                  ],
-                });
-              }}
-              onApprove={handleApprove}
-            />
-          </PayPalScriptProvider>
+                    ],
+                  });
+                }}
+                onApprove={handleApprove}
+              />
+            </PayPalScriptProvider>
+          )}
         </OrderSummary>
       </CheckoutContainer>
     </div>

@@ -100,10 +100,9 @@ const CartPage = () => {
 
   const handleCheckout = async () => {
     const selectedProducts = selectedItems.map((index) => ({
-      product: items[index].product,
-      quantity: items[index].quantity,
+      product_id: items[index].product._id, // Chỉ gửi product_id
+      quantity: quantities[index],
     }));
-    localStorage.setItem("selectedProducts", JSON.stringify(selectedProducts));
     const orderData = {
       items: selectedProducts,
       shipping_address: " ",
@@ -131,7 +130,7 @@ const CartPage = () => {
 
   return (
     <CartContainer>
-      {loading && <p>Loading...</p>}
+      {loading && <div className="loading"></div>}
       {error && (
         <p>
           Error:{" "}

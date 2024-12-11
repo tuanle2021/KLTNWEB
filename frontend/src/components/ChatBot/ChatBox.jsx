@@ -2,18 +2,28 @@ import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 
 const ChatBox = ({ onClose }) => {
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState(() => {
+    // Tải lịch sử trò chuyện từ localStorage khi component được mount
+    const savedMessages = localStorage.getItem("chatMessages");
+    return savedMessages ? JSON.parse(savedMessages) : [];
+  });
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef(null);
+
+  const saveMessages = (messages) => {
+    localStorage.setItem("chatMessages", JSON.stringify(messages));
+  };
 
   const sendMessage = async () => {
     if (text.trim() === "") return;
 
     const newMessage = { text, sender: "user" };
-    setMessages([...messages, newMessage]);
+    const updatedMessages = [...messages, newMessage];
+    setMessages(updatedMessages);
     setText("");
     setLoading(true);
+    saveMessages(updatedMessages);
 
     try {
       const response = await fetch("http://localhost:5000/pred", {
@@ -32,15 +42,15 @@ const ChatBox = ({ onClose }) => {
       }
 
       const prediction = await response.text();
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        { text: prediction, sender: "bot" },
-      ]);
+      const botMessage = { text: prediction, sender: "bot" };
+      const updatedMessagesWithBot = [...updatedMessages, botMessage];
+      setMessages(updatedMessagesWithBot);
+      saveMessages(updatedMessagesWithBot);
     } catch (error) {
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        { text: "No response received", sender: "bot" },
-      ]);
+      const errorMessage = { text: "No response received", sender: "bot" };
+      const updatedMessagesWithError = [...updatedMessages, errorMessage];
+      setMessages(updatedMessagesWithError);
+      saveMessages(updatedMessagesWithError);
     } finally {
       setLoading(false);
     }
@@ -86,7 +96,7 @@ const ChatBox = ({ onClose }) => {
           type="text"
           value={text}
           onChange={(e) => setText(e.target.value)}
-          onKeyPress={handleKeyPress} // Thêm sự kiện onKeyPress
+          onKeyPress={handleKeyPress}
           placeholder="Type a message..."
         />
         <SendButton onClick={sendMessage}>Send</SendButton>
