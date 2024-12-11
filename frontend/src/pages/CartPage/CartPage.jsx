@@ -11,8 +11,6 @@ import {
   deleteCartItem,
 } from "../../redux/slices/cartSlice";
 import { fetchOrdersByUserId } from "../../redux/slices/orderSlice";
-import ChatBotButton from "../../components/ChatBot/ChatBotButton";
-
 import {
   setOrderItems,
   createOrder,
@@ -85,6 +83,7 @@ const CartPage = () => {
       const item = items[index];
       if (item && item._id) {
         dispatch(updateCartItem({ id: item._id, quantity: quantities[index] }));
+        dispatch(getCart());
       }
     });
   };
@@ -105,7 +104,6 @@ const CartPage = () => {
       quantity: items[index].quantity,
     }));
     localStorage.setItem("selectedProducts", JSON.stringify(selectedProducts));
-    navigate("/checkout");
     const orderData = {
       items: selectedProducts,
       shipping_address: " ",
@@ -122,8 +120,9 @@ const CartPage = () => {
     }
   };
 
-  const handleRemoveItem = (id) => {
-    dispatch(deleteCartItem(id));
+  const handleRemoveItem = async (id) => {
+    await dispatch(deleteCartItem(id));
+    await dispatch(getCart());
   };
 
   const handleReturnShop = () => {
@@ -132,7 +131,7 @@ const CartPage = () => {
 
   return (
     <CartContainer>
-      {loading && <div className="loading"></div>}{" "}
+      {loading && <p>Loading...</p>}
       {error && (
         <p>
           Error:{" "}
@@ -142,7 +141,6 @@ const CartPage = () => {
             ordersError?.toString()}
         </p>
       )}
-      <ChatBotButton />
       <CartHeader>
         <span>Image</span>
         <span>Product</span>

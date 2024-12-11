@@ -15,7 +15,6 @@ import {
   PayPalButtonContainer,
 } from "./styles";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
-import ChatBotButton from "../../components/ChatBot/ChatBotButton";
 import { FaUser, FaTruckField } from "react-icons/fa6";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import CartItem from "../CartPage/CartItem";
@@ -29,10 +28,10 @@ const OrderPage = () => {
     paymentMethod: "",
   });
   const [sdkReady, setSdkReady] = useState(false);
-  const [isPaid, setIsPaid] = useState(false);
-  console.log("Order Data: ", orderData);
+    const [isPaid, setIsPaid] = useState(false);
+  console.log("Order Data: ",orderData);
 
-  useEffect(() => {
+   useEffect(() => {
     const storedOrderData = JSON.parse(localStorage.getItem("orderData")) || {};
     setOrderData(storedOrderData);
 
@@ -57,7 +56,7 @@ const OrderPage = () => {
     }
   }, []);
 
-  const successPaymentHandler = async (paymentResult) => {
+    const successPaymentHandler = async (paymentResult) => {
     console.log(paymentResult);
     // Xử lý kết quả thanh toán thành công
     try {
@@ -94,7 +93,6 @@ const OrderPage = () => {
       <div>
         {/* Roadmap hiển thị đường dẫn */}
         <Roadmap />
-        <ChatBotButton />
         <div className="container">
           <OrderDetailRow>
             <OrderDetailCol>
@@ -116,9 +114,7 @@ const OrderPage = () => {
                 <OrderBoxText>
                   Shipping: {orderData.shippingAddress.country}
                 </OrderBoxText>
-                <OrderBoxText>
-                  Pay method: {orderData.paymentMethod}
-                </OrderBoxText>
+                <OrderBoxText>Pay method: {orderData.paymentMethod}</OrderBoxText>
               </OrderBoxContent>
             </OrderDetailCol>
             <OrderDetailCol>
@@ -172,6 +168,7 @@ const OrderPage = () => {
                 <span>Total:</span>
                 <span>${calculateTotal()}</span>
               </SummaryItem>
+
 
               <CouponContainer>
                 <input type="text" placeholder="Coupon Code" />

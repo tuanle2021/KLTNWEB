@@ -10,15 +10,11 @@ import {
 } from "./styles"; // Assuming styles.js contains the necessary styled-components
 import HeaderComponent from "../../components/HeaderComponent/HeaderComponent";
 import FooterComponent from "../../components/FooterComponent/FooterComponent";
-import ChatBotButton from "../../components/ChatBot/ChatBotButton";
-
 const NotFoundPage = () => {
   return (
     <div>
       <HeaderComponent />
       <Container>
-        <ChatBotButton />
-
         <ContentWrapper>
           {/* SVG Section */}
           <SvgWrapper>

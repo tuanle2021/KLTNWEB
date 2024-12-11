@@ -32,6 +32,7 @@ const HeaderComponent = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((state) => state.auth.user);
+  const cartItems = useSelector((state) => state.cart.items);
   const [dropdownVisible, setDropdownVisible] = useState(false);
 
   const handleLogout = () => {
@@ -47,6 +48,11 @@ const HeaderComponent = () => {
       navigate("/login");
     }
   };
+
+  const totalItems = cartItems.reduce(
+    (total, item) => total + item.quantity,
+    0
+  );
 
   return (
     <HeaderContainer>
@@ -75,7 +81,7 @@ const HeaderComponent = () => {
                   color: "var(--dark-bg-third)",
                 }}
               />
-              <span className="cart-count">3</span>
+              <span className="cart-count">{totalItems}</span>
               {/* Dynamic cart item count */}
             </Link>
           </ShoppingCart>

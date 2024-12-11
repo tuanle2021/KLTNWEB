@@ -1,7 +1,19 @@
 import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { closeCartSidebar } from "../../redux/slices/cartSlice";
+import {
+  closeCartSidebar,
+  getCart,
+  updateQuantity,
+  deleteCartItem,
+  clearSelectedItems,
+} from "../../redux/slices/cartSlice";
+import {
+  setOrderItems,
+  createOrder,
+  setOrderSummary,
+} from "../../redux/slices/orderSlice";
+import Cookies from "js-cookie";
 import {
   SidebarWrapper,
   SidebarHeader,
@@ -13,7 +25,7 @@ import {
   ProductTitle,
   ButtonGroup,
   Button,
-  Overlay, 
+  Overlay,
 } from "./styles";
 
 const CartSidebar = () => {
@@ -21,9 +33,31 @@ const CartSidebar = () => {
   const dispatch = useDispatch();
   const isOpen = useSelector((state) => state.cart.isOpen);
   const cartItems = useSelector((state) => state.cart.items);
+  const totalPrice = useSelector((state) => state.cart.total_price);
   const sidebarRef = useRef(null);
 
   if (!isOpen) return null;
+
+  const handleCheckout = async () => {
+    const selectedProducts = cartItems.map((item) => ({
+      product: item.product,
+      quantity: item.quantity,
+    }));
+    const orderData = {
+      items: selectedProducts,
+      shipping_address: " ",
+    };
+    dispatch(setOrderItems(selectedProducts));
+    try {
+      const order = await dispatch(createOrder(orderData)).unwrap();
+      dispatch(setOrderSummary(order));
+      Cookies.set("orderSummary", JSON.stringify(order));
+      console.log(order);
+      window.location.href = "/checkout";
+    } catch (error) {
+      console.error("Failed to create order:", error);
+    }
+  };
 
   return (
     <>
@@ -56,6 +90,7 @@ const CartSidebar = () => {
             </ProductItem>
           ))}
         </SidebarContent>
+        <div>Total Price: ${totalPrice}</div>
         <ButtonGroup>
           <Button
             onClick={() => {
@@ -65,7 +100,7 @@ const CartSidebar = () => {
           >
             Continue Shopping
           </Button>
-          <Button primary onClick={() => navigate("/checkout")}>
+          <Button primary="true" onClick={handleCheckout}>
             Checkout
           </Button>
         </ButtonGroup>

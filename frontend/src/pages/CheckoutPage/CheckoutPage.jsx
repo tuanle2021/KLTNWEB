@@ -20,8 +20,6 @@ import {
 } from "./styles";
 import { updateOrder } from "../../redux/slices/orderSlice";
 import { useNavigate } from "react-router-dom";
-import ChatBotButton from "../../components/ChatBot/ChatBotButton";
-
 // Add this inside your CheckoutPage component
 const initialOptions = {
   "client-id":
@@ -45,11 +43,10 @@ const CheckoutPage = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const orderSummary = JSON.parse(Cookies.get("orderSummary") || "{}");
-    if (!orderSummary.items) {
-      orderSummary.items = [];
-    }
-    setOrderSummary(orderSummary);
+    const selectedProducts = JSON.parse(
+      localStorage.getItem("selectedProducts") || "[]"
+    );
+    setOrderSummary({ items: selectedProducts });
     console.log(orderSummary);
   }, []);
 
@@ -72,10 +69,15 @@ const CheckoutPage = () => {
   };
 
   const handleApprove = (data, actions) => {
-    return actions.order.capture().then((details) => {
-      alert("Transaction completed by " + details.payer.name.given_name);
-      handlePlaceOrder().then((r) => console.log(r));
-    });
+    return actions.order
+      .capture()
+      .then((details) => {
+        alert("Transaction completed by " + details.payer.name.given_name);
+        handlePlaceOrder().then((r) => console.log(r));
+      })
+      .catch((error) => {
+        console.error("Failed to capture order:", error);
+      });
   };
 
   const handleCheckboxChange = (e) => {
@@ -87,7 +89,7 @@ const CheckoutPage = () => {
   const calculateSubtotal = () => {
     return (
       orderSummary?.items?.reduce(
-        (acc, item) => acc + item.price * item.quantity,
+        (acc, item) => acc + item.product.price * item.quantity,
         0
       ) || 0
     );
@@ -119,7 +121,6 @@ const CheckoutPage = () => {
   return (
     <div>
       <Roadmap />
-      <ChatBotButton />
       <CheckoutContainer>
         <BillingDetails>
           <h2>Billing Details</h2>
@@ -192,7 +193,8 @@ const CheckoutPage = () => {
           {orderSummary?.items?.length > 0 ? (
             orderSummary.items.map((item, index) => (
               <SummaryItem key={index}>
-                <span>{item.name}</span>
+                <span>{item?.product_id?.name}</span>
+                <span>X {item?.quantity}</span>
                 <span>${item.price}</span>
               </SummaryItem>
             ))
