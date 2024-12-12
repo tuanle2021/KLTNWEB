@@ -11,7 +11,7 @@ import { activateAccount } from "../../redux/slices/verifySlice";
 import { useParams, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 
-const ActivateAccountComponent = () => {
+const ActivateForm = () => {
   const { token } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -82,4 +82,4 @@ const ActivateAccountComponent = () => {
   );
 };
 
-export default ActivateAccountComponent;
+export default ActivateForm;

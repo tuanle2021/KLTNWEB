@@ -4,6 +4,7 @@ import { logout } from "../../redux/slices/authSlice";
 import { Link, useNavigate } from "react-router-dom";
 import CategoryMenu from "../Category/CategoryMenu";
 import SearchBarBox from "./SearchBar";
+import Swal from "sweetalert2";
 
 import {
   HeaderContainer,
@@ -43,8 +44,18 @@ const HeaderComponent = () => {
     if (user) {
       navigate("/cart");
     } else {
-      alert("Please login to view cart");
-      navigate("/login");
+      Swal.fire({
+        icon: "warning",
+        title: "Please login",
+        text: "You need to login to view your cart.",
+        showCancelButton: true,
+        confirmButtonText: "Login",
+        cancelButtonText: "Cancel",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate("/login");
+        }
+      });
     }
   };
 
@@ -89,7 +100,7 @@ const HeaderComponent = () => {
 
           {/* Shopping Cart */}
           <ShoppingCart>
-            <Link to="/cart">
+            <a href="/cart" onClick={handleCartClick}>
               <ShoppingCartOutlined
                 style={{
                   fontSize: "1.7em",
@@ -99,7 +110,7 @@ const HeaderComponent = () => {
               />
               <span className="cart-count">{totalItems}</span>
               {/* Dynamic cart item count */}
-            </Link>
+            </a>
           </ShoppingCart>
 
           {/* Profile Menu */}

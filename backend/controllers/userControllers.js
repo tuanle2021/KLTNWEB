@@ -96,7 +96,10 @@ exports.activateAccount = async (req, res) => {
     const { token } = req.body;
     const user = jwt.verify(token, process.env.JWT_SECRET);
     const check = await User.findById(user.id);
-    if (check.verified == true) {
+    if (!check) {
+      return res.status(400).json({ message: "User not found" });
+    }
+    if (check.verified) {
       return res
         .status(400)
         .json({ message: "This email is already activated" });
@@ -104,11 +107,11 @@ exports.activateAccount = async (req, res) => {
       await User.findByIdAndUpdate(user.id, { verified: true });
       return res
         .status(200)
-        .json({ message: "Account has beeen activated successfully." });
+        .json({ message: "Account has been activated successfully." });
     }
   } catch (error) {
     console.error("Error in activateAccount:", error);
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 

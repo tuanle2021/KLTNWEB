@@ -97,10 +97,10 @@ const CartPage = () => {
       return acc;
     }, 0);
   };
-
   const handleCheckout = async () => {
+    console.log(selectedItems);
     const selectedProducts = selectedItems.map((index) => ({
-      product_id: items[index].product._id, // Chỉ gửi product_id
+      product_id: items[index].product._id,
       quantity: quantities[index],
     }));
     const orderData = {

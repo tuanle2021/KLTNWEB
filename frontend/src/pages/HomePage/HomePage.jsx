@@ -23,7 +23,7 @@ import Loading from "../../components/LoadingError/Loading";
 import FeatureSection from "../../components/FeatureComponent/FeatrureSection";
 import ChatBotButton from "../../components/ChatBot/ChatBotButton";
 import { TopBanner } from "./style";
-
+import ActivateForm from "./ActivateForm";
 const HomePage = () => {
   const dispatch = useDispatch();
   const gridRef = useRef();

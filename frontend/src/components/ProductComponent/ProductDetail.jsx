@@ -7,6 +7,7 @@ import {
   getCart,
 } from "../../redux/slices/cartSlice";
 import CartSidebar from "../../pages/CartPage/CartSidebar";
+import Swal from "sweetalert2";
 import {
   ProductDetailContainer,
   ProductDetailImage,
@@ -56,8 +57,18 @@ const ProductDetail = ({ product }) => {
       await dispatch(getCart()); // Load lại giỏ hàng sau khi thêm sản phẩm
       dispatch(openCartSidebar()); // Mở sidebar
     } else {
-      alert("Please login to add to cart");
-      navigate("/login");
+      Swal.fire({
+        icon: "warning",
+        title: "Please login",
+        text: "You need to login to view your cart.",
+        showCancelButton: true,
+        confirmButtonText: "Login",
+        cancelButtonText: "Cancel",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate("/login");
+        }
+      });
     }
   };
 

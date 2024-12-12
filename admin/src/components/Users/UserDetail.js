@@ -24,8 +24,10 @@ const UserDetail = () => {
   const { userDetail, loading, error } = useSelector((state) => state.users);
 
   useEffect(() => {
-    dispatch(fetchUserById(id));
-  }, [dispatch, id]);
+    if (!userDetail || userDetail._id !== id) {
+      dispatch(fetchUserById(id));
+    }
+  }, [dispatch, id, userDetail]);
 
   const handleDelete = async () => {
     try {
@@ -44,7 +46,7 @@ const UserDetail = () => {
       });
     }
   };
-
+  console.log(userDetail);
   const { name, address, email, phone } = userDetail;
   const { street, city } = address || {};
 

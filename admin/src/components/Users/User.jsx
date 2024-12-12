@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchUsers } from "../../redux/slices/userSlice";
+import { fetchUserById, fetchUsers } from "../../redux/slices/userSlice";
 import { useNavigate } from "react-router-dom";
 import {
   UserContainer,
@@ -26,6 +26,15 @@ const User = () => {
   useEffect(() => {
     dispatch(fetchUsers());
   }, [dispatch]);
+
+  const handleProfileClick = async (userId) => {
+    try {
+      await dispatch(fetchUserById(userId)).unwrap();
+      navigate(`/users/${userId}`);
+    } catch (error) {
+      console.error("Failed to fetch user details:", error);
+    }
+  };
 
   return (
     <UserContainer>
@@ -60,7 +69,7 @@ const User = () => {
               <UserName>{user.name}</UserName>
               <UserID>ID: {user._id}</UserID>
               <UserEmail>{user.email}</UserEmail>
-              <ProfileButton onClick={() => navigate(`/users/${user._id}`)}>
+              <ProfileButton onClick={() => handleProfileClick(user._id)}>
                 Profile
               </ProfileButton>
             </UserInfo>

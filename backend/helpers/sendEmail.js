@@ -7,31 +7,31 @@ const { EMAIL, CLIENT_ID, CLIENT_SECRET, REFRESH_TOKEN } = process.env;
 
 const auth = new OAuth2(CLIENT_ID, CLIENT_SECRET, REFRESH_TOKEN, oauth_link);
 
-const {
-  MAIL_HOST,
-  MAIL_PORT,
-  MAIL_USERNAME,
-  MAIL_PASSWORD,
-  MAIL_FROM_ADDRESS,
-  MAIL_FROM_NAME,
-} = process.env;
-
 exports.sendEmail = async (email, name, url) => {
   try {
-    // Create transporter
+    // Thiết lập OAuth2
+    auth.setCredentials({
+      refresh_token: REFRESH_TOKEN,
+    });
+
+    const accessToken = await auth.getAccessToken();
+
+    // Tạo transporter
     const transporter = nodemailer.createTransport({
-      host: MAIL_HOST,
-      port: MAIL_PORT,
-      secure: false, // true for 465, false for other ports
+      service: "gmail",
       auth: {
-        user: MAIL_USERNAME,
-        pass: MAIL_PASSWORD,
+        type: "OAuth2",
+        user: EMAIL,
+        clientId: CLIENT_ID,
+        clientSecret: CLIENT_SECRET,
+        refreshToken: REFRESH_TOKEN,
+        accessToken: accessToken.token,
       },
     });
 
-    // Email content
+    // Thiết lập nội dung email
     const mailOptions = {
-      from: `"${MAIL_FROM_NAME}" <${MAIL_FROM_ADDRESS}>`,
+      from: EMAIL,
       to: email,
       subject: "UTE Ecommerce Email Verification",
       html: `
@@ -146,9 +146,7 @@ exports.sendEmail = async (email, name, url) => {
                 <div class="email-body">
                     <p>Hello ${name},</p>
                     <p>Thank you for registering with UTE Ecommerce. To complete your registration, please verify your email address by clicking the button below.</p>
-                    <a href="${url}">Verify Your Email</a>
-                    <p>If the button above doesn't work, you can copy and paste the following URL into your web browser:</p>
-                    <p><a href="${url}">${url}</a></p>
+                    <a href="${url}">Verify Your Email</a>                
                     <p>If you did not request this email, please ignore it. Your account will not be activated without your verification.</p>
                 </div>
 
@@ -160,10 +158,10 @@ exports.sendEmail = async (email, name, url) => {
             </div>
         </body>
         </html>
-      `,
+          `,
     };
 
-    // Send email
+    // Gửi email
     const result = await transporter.sendMail(mailOptions);
     return result;
   } catch (error) {

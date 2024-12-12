@@ -84,7 +84,7 @@ const userSlice = createSlice({
   name: "users",
   initialState: {
     users: [],
-    user: null,
+    userDetail: null,
     loading: false,
     error: null,
   },
