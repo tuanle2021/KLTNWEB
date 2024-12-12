@@ -30,6 +30,16 @@ const productSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    discount: {
+      type: Number,
+      default: 0, // Giảm giá theo phần trăm
+    },
+    discountStartDate: {
+      type: Date,
+    },
+    discountEndDate: {
+      type: Date,
+    },
   },
   {
     timestamps: true, // Tự động thêm createdAt và updatedAt
