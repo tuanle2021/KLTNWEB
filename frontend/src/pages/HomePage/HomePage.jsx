@@ -45,7 +45,6 @@ const HomePage = () => {
   useEffect(() => {
     dispatch(fetchFilterProduct({ page: currentPage, limit: productsPerPage }));
   }, [dispatch, currentPage, productsPerPage]);
-
   useEffect(() => {
     setLocalProducts(products);
     setLocalFeaturedProducts(featuredProducts);
@@ -68,7 +67,8 @@ const HomePage = () => {
     () => localFeaturedProducts,
     [localFeaturedProducts]
   );
-
+  console.log(memoizedFilterProducts);
+  console.log(memoizedProducts);
   return (
     <div>
       {loading && <div className="loading"></div>}

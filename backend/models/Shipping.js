@@ -13,7 +13,7 @@ const shippingSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["in_transit", "delivered"],
+      enum: ["pending_confirmation", "preparing", "in_transit", "delivered"],
       required: true,
     },
   },

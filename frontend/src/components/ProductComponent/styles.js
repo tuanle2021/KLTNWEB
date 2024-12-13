@@ -17,118 +17,6 @@ export const AddToCartButton = styled.button`
   }
 `;
 
-// Container của toàn bộ card sản phẩm
-export const ProductCardContainer = styled.div`
-  width: 200px;
-  padding: 2px;
-  border-radius: 10px;
-  // text-align: center;
-  background: #fff;
-  position: relative;
-  transition: box-shadow 0.3s ease;
-  cursor: pointer;
-  &:hover ${AddToCartButton} {
-    display: block;
-  }
-  &:hover {
-    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-  }
-`;
-export const ProductImage = styled.div`
-  width: 100%;
-  height: auto;
-  margin-bottom: 38px;
-  backgound-color: var(--bg-primary);
-`;
-
-// Hình ảnh sản phẩm
-export const Image = styled.img`
-  width: 100%;
-  height: auto;
-  padding: 5px 15px;
-`;
-
-// Nhãn giảm giá
-export const DiscountBadge = styled.div`
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  background: #ff0000;
-  color: #fff;
-  padding: 5px 10px;
-  border-radius: 5px;
-  font-weight: bold;
-`;
-
-// Các icon hành động (Yêu thích và Xem chi tiết)
-export const ProductActionIcons = styled.div`
-  position: absolute;
-  top: 10px;
-  right: 1px;
-  display: inline;
-  gap: 10px;
-`;
-
-export const ActionIcon = styled.div`
-  padding: 3px 5px;
-  cursor: pointer;
-
-  svg {
-    margin-top: 3px;
-    color: var(--color-secondary);
-    font-size: 1.2em;
-  }
-
-  &:hover {
-    svg {
-      scale: 1.2;
-      color: red;
-    }
-  }
-`;
-
-// Container cho thông tin chi tiết sản phẩm
-export const ProductDetails = styled.div`
-  margin-top: 5px;
-`;
-
-// Tên sản phẩm
-export const ProductName = styled.h3`
-  font-size: 1.2em;
-  margin: 5px 0 10px;
-  color: #333;
-`;
-
-// Giá sản phẩm
-export const ProductPrice = styled.div`
-  display: flex;
-  // justify-content: center;
-  gap: 10px;
-  align-items: center;
-
-  span {
-    font-size: 1.5em;
-    color: #ff0000;
-  }
-
-  small {
-    font-size: 1em;
-    text-decoration: line-through;
-    color: #aaa;
-  }
-`;
-
-// Đánh giá sản phẩm
-export const ProductRating = styled.div`
-  margin-top: 10px;
-  font-size: 0.9em;
-  color: #666;
-
-  span {
-    color: #ffa500; // Màu vàng cho các ngôi sao
-  }
-`;
-
 // Container của toàn bộ trang chi tiết sản phẩm
 export const ProductDetailContainer = styled.div`
   display: flex;
@@ -257,6 +145,121 @@ export const Container = styled.div`
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 `;
 
+// Container của toàn bộ card sản phẩm
+export const ProductCardContainer = styled.div`
+  width: 220px;
+  padding: 15px;
+  border-radius: 10px;
+  background: #ffffff;
+  position: relative;
+  transition: box-shadow 0.3s ease;
+  cursor: pointer;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+
+  &:hover {
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+  }
+`;
+
+export const ProductImage = styled.div`
+  width: 100%;
+  height: auto;
+  margin-bottom: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+`;
+
+// Hình ảnh sản phẩm
+export const Image = styled.img`
+  width: 100%;
+  height: auto;
+  padding: 10px;
+  border-radius: 8px;
+`;
+
+// Nhãn giảm giá
+export const DiscountBadge = styled.div`
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: #ff6f61;
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 0.9em;
+  font-weight: bold;
+`;
+
+// Các icon hành động
+export const ProductActionIcons = styled.div`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  gap: 10px;
+`;
+
+export const ActionIcon = styled.div`
+  padding: 3px 5px;
+  cursor: pointer;
+
+  svg {
+    margin-top: 3px;
+    color: var(--color-secondary);
+    font-size: 1.2em;
+  }
+
+  &:hover {
+    svg {
+      scale: 1.2;
+      color: red;
+    }
+  }
+`;
+
+// Container thông tin chi tiết sản phẩm
+export const ProductDetails = styled.div`
+  text-align: center;
+`;
+
+export const ProductName = styled.h3`
+  font-size: 1.1em;
+  margin: 5px 0;
+  color: #333;
+`;
+
+export const ProductPrice = styled.div`
+  margin: 10px 0;
+  font-size: 1.2em;
+
+  span {
+    color: #ff6f61;
+    font-weight: bold;
+  }
+
+  small {
+    margin-left: 10px;
+    font-size: 0.9em;
+    text-decoration: line-through;
+    color: #999;
+  }
+`;
+
+export const ProductRating = styled.div`
+  margin-top: 10px;
+  font-size: 0.9em;
+  color: #666;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+`;
+
+export const StarsContainer = styled.div`
+  display: flex;
+  gap: 2px;
+`;
+
 export const AlertContainer = styled.div`
   position: fixed;
   top: 20px;
@@ -292,7 +295,13 @@ export const Alert = styled.div`
     props.severity === "success" ? "#28a745" : "#dc3545"};
   color: white;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
   p {
     margin-left: 10px;
   }
+`;
+
+export const Star = styled.img`
+  width: 15px;
+  height: 15px;
 `;

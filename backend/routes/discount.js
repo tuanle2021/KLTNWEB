@@ -5,6 +5,7 @@ const {
   applyDiscountToProduct,
   useCoupon,
   getAllCoupons,
+  getAllDiscounts,
 } = require("../controllers/discountController");
 const { authentication } = require("../middleware/authenUser");
 

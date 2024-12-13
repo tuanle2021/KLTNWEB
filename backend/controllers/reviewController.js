@@ -1,5 +1,5 @@
 const Review = require("../models/Review");
-
+const Product = require("../models/Product");
 // Thêm review
 exports.addReview = async (req, res) => {
   try {
@@ -14,6 +14,14 @@ exports.addReview = async (req, res) => {
     });
 
     const savedReview = await newReview.save();
+    // Tính lại điểm rating trung bình cho sản phẩm
+    const reviews = await Review.find({ product_id });
+    const totalRating = reviews.reduce((acc, review) => acc + review.rating, 0);
+    const averageRating = totalRating / reviews.length;
+
+    // Cập nhật điểm rating cho sản phẩm
+    await Product.findByIdAndUpdate(product_id, { ratings: averageRating });
+
     res.status(201).json(savedReview);
   } catch (error) {
     console.error("Error adding review:", error);
@@ -61,6 +69,28 @@ exports.deleteReviewById = async (req, res) => {
     res.status(200).json({ message: "Review deleted successfully" });
   } catch (error) {
     console.error("Error deleting review:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+// Cập nhật số lượng review cho tất cả sản phẩm
+exports.updateNumberOfReviewsForAllProducts = async (req, res) => {
+  try {
+    const products = await Product.find();
+
+    for (const product of products) {
+      const reviewCount = await Review.countDocuments({
+        product_id: product._id,
+      });
+      await Product.findByIdAndUpdate(product._id, {
+        numberOfReviews: reviewCount,
+      });
+    }
+
+    res
+      .status(200)
+      .json({ message: "Number of reviews updated for all products" });
+  } catch (error) {
+    console.error("Error updating number of reviews for all products:", error);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
