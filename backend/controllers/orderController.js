@@ -96,11 +96,6 @@ const updateOrderStatus = async (req, res) => {
     const { id } = req.params;
     const { status } = req.body;
 
-    // Kiểm tra quyền hạn của người dùng (chỉ admin mới được phép cập nhật)
-    if (!req.user || !req.user.isAdmin) {
-      return res.status(403).json({ message: "Access denied" });
-    }
-
     // Tìm đơn hàng theo ID
     const order = await Order.findById(id);
     if (!order) {
@@ -143,8 +138,8 @@ const updateOrderItems = async (req, res) => {
         const product = await Product.findById(item.product_id);
         if (!product) {
           return res
-              .status(404)
-              .json({ message: `Product not found: ${item.product_id}` });
+            .status(404)
+            .json({ message: `Product not found: ${item.product_id}` });
         }
         const itemTotalPrice = product.price * item.quantity;
         total_price += itemTotalPrice;

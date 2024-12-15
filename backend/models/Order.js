@@ -13,7 +13,7 @@ const orderSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["processing", "shipped", "cancelled"],
+      enum: ["processing", "shipped", "cancelled", "awaiting_payment"],
       default: "processing",
     },
     shipping_address: {
@@ -22,9 +22,15 @@ const orderSchema = new mongoose.Schema(
     },
     payment_status: {
       type: String,
-      enum: ["pending", "completed", "failed"],
+      enum: ["pending", "completed"],
       default: "pending",
     },
+    method: {
+      type: String,
+      enum: ["cod", "paypal", "bank_transfer"],
+      required: true,
+    },
+
     items: [
       {
         product_id: {
@@ -42,6 +48,10 @@ const orderSchema = new mongoose.Schema(
         },
       },
     ],
+    coupon: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Coupon",
+    },
   },
   {
     timestamps: true, // Tự động thêm createdAt và updatedAt

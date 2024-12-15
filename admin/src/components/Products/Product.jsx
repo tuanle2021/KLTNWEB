@@ -29,7 +29,7 @@ const MainProducts = () => {
   useEffect(() => {
     dispatch(fetchCategories());
   }, [dispatch]);
-
+  console.log("categories", categories);
   const handlePageChange = (page) => {
     dispatch(setPage(page));
   };

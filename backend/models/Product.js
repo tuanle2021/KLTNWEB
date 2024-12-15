@@ -44,6 +44,16 @@ const productSchema = new mongoose.Schema(
     discountEndDate: {
       type: Date,
     },
+    brand: {
+      type: String,
+      required: true,
+    },
+    attributes: [
+      {
+        name: { type: String, required: true },
+        value: { type: String, required: true },
+      },
+    ],
   },
   {
     timestamps: true,

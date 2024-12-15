@@ -78,11 +78,10 @@ const Categories = () => {
     }
   };
 
-  if(loading) return <p>Loading...</p>
-  if(error) return <p>{error}</p>
-
   return (
     <CategoryContainer>
+      {loading && <p>Loading...</p>}
+      {error && <p>{error}</p>}
       <h2>Categories</h2>
 
       <CategoryInner>

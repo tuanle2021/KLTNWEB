@@ -161,9 +161,18 @@ const deleteProductById = async (req, res) => {
   }
 };
 // Controller để lấy sản phẩm với phân trang
-const getProducts = async (req, res) => {
-  const { page, limit, category, filter, minPrice, maxPrice, sortByPrice } =
-    req.query;
+const getFillteProducts = async (req, res) => {
+  const {
+    page,
+    limit,
+    category,
+    brand,
+    filter,
+    minPrice,
+    maxPrice,
+    sortByPrice,
+  } = req.query;
+
   // Validate price fields
   if (minPrice && isNaN(Number(minPrice))) {
     return res.status(400).json({ message: "Invalid minPrice value" });
@@ -171,6 +180,7 @@ const getProducts = async (req, res) => {
   if (maxPrice && isNaN(Number(maxPrice))) {
     return res.status(400).json({ message: "Invalid maxPrice value" });
   }
+
   const skip = (page - 1) * limit;
   const query = {};
 
@@ -178,15 +188,22 @@ const getProducts = async (req, res) => {
     query.category_id = category;
   }
 
+  if (brand) {
+    query.brand_id = brand;
+  }
+
   if (filter) {
     query.filter = filter;
   }
+
   if (minPrice) {
     query.price = { ...query.price, $gte: Number(minPrice) };
   }
+
   if (maxPrice) {
     query.price = { ...query.price, $lte: Number(maxPrice) };
   }
+
   const sort = {};
   if (sortByPrice) {
     sort.price = sortByPrice === "asc" ? 1 : -1;
@@ -194,7 +211,7 @@ const getProducts = async (req, res) => {
 
   try {
     const products = await Product.find(query)
-      .skip((page - 1) * limit)
+      .skip(skip)
       .limit(Number(limit))
       .sort(sortByPrice ? { price: sortByPrice } : {});
 
@@ -212,11 +229,12 @@ const getProducts = async (req, res) => {
     res.status(500).json({ message: "Error fetching products" });
   }
 };
+
 module.exports = {
   addProduct,
   getAllProducts,
   getProductById,
   updateProductById,
   deleteProductById,
-  getProducts,
+  getFillteProducts,
 };
