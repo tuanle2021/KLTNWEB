@@ -22,5 +22,5 @@ router.get("/products", getFillteProducts);
 router.get("/products/:id", getProductById);
 router.put("/products/:id", authentication, updateProductById);
 router.delete("/products/:id", authentication, deleteProductById);
-router.get("/products/top-views", getTopProductsByViews);
+router.get("/product/top-views", getTopProductsByViews);
 module.exports = router;

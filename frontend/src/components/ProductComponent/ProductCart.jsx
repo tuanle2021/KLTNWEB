@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchProductById } from "../../redux/slices/productSlice";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
+import { addFavorite, removeFavorite } from "../../redux/slices/favoriteSlice";
 
 import {
   ProductCardContainer,
@@ -23,13 +24,13 @@ import {
   Star,
 } from "./styles";
 
-const ProductCart = ({ product }) => {
+const ProductCart = ({ product, favorited }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [isFavorited, setIsFavorited] = useState(false);
+  const [isFavorited, setIsFavorited] = useState(favorited);
   const [showAlert, setShowAlert] = useState(false);
-
+  console.log("favorited", favorited);
   useEffect(() => {
     if (!product) {
       dispatch(fetchProductById(product));
@@ -38,6 +39,11 @@ const ProductCart = ({ product }) => {
 
   const handleFavoriteClick = (e) => {
     e.stopPropagation();
+    if (isFavorited) {
+      dispatch(removeFavorite(product._id));
+    } else {
+      dispatch(addFavorite(product._id));
+    }
     setIsFavorited(!isFavorited);
   };
 

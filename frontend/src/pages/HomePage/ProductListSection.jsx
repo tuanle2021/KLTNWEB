@@ -17,6 +17,7 @@ const ProductListSection = ({
   currentPage,
   totalPages,
   maxItemsPerRow,
+  favorites,
 }) => (
   <>
     {maxItemsPerRow !== 4 && <Line />}
@@ -30,9 +31,21 @@ const ProductListSection = ({
         </Header>
       )}
       <ProductListContainer maxItemsPerRow={maxItemsPerRow}>
-        {products.map((product) => (
-          <ProductCart key={product._id} product={product} />
-        ))}
+        {products.map((product) => {
+          const isFavorite =
+            favorites &&
+            favorites.length > 0 &&
+            favorites.some((fav) => fav._id === product._id)
+              ? true
+              : false;
+          return (
+            <ProductCart
+              key={product._id}
+              product={product}
+              favorited={isFavorite}
+            />
+          );
+        })}
       </ProductListContainer>
       <Pagination>
         <PaginationButton

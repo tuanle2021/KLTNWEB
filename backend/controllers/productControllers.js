@@ -289,13 +289,15 @@ const getTopProductsByViews = async (req, res) => {
     const { limit } = req.query;
 
     // Validate the limit parameter
-    if (!limit || isNaN(Number(limit))) {
-      return res.status(400).json({ message: "Invalid limit value" });
-    }
+    const maxLimit = 20;
+    const validLimit =
+      limit && !isNaN(Number(limit))
+        ? Math.min(Number(limit), maxLimit)
+        : maxLimit;
 
     const products = await Product.find()
       .sort({ views: -1 }) // Sắp xếp theo views giảm dần
-      .limit(Number(limit)); // Giới hạn số lượng sản phẩm
+      .limit(validLimit); // Giới hạn số lượng sản phẩm
 
     res.status(200).json(products);
   } catch (error) {

@@ -85,7 +85,7 @@ const HeaderComponent = () => {
     <HeaderContainer>
       <div className="container">
         <HeaderInner>
-          <CategoryMenu />
+          {/* <CategoryMenu /> */}
           <Logo>
             <Link to="/">
               <img

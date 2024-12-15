@@ -165,7 +165,7 @@ export const ProductImage = styled.div`
   width: 100%;
   height: auto;
   margin-bottom: 20px;
-  background-color: #f9f9f9;
+  background-color: transparent;
   border-radius: 8px;
 `;
 

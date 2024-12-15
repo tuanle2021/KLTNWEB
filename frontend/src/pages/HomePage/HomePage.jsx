@@ -15,6 +15,8 @@ import {
   setPage,
   fetchTopProductsByViews,
 } from "../../redux/slices/productSlice";
+import { getFavorites } from "../../redux/slices/favoriteSlice";
+import { getCart } from "../../redux/slices/cartSlice";
 import Roadmap from "../../components/RoadmapComponent/Roadmap";
 import FlashSale from "../../components/QuickviewComponent/QuickView";
 import ProductGrid from "./ProductGrid";
@@ -40,9 +42,13 @@ const HomePage = () => {
     productsPerPage,
     totalPages,
   } = useSelector((state) => state.products);
+  const { favorites } = useSelector((state) => state.favorites) || {};
 
   useEffect(() => {
+    dispatch(getFavorites());
     dispatch(fetchProducts());
+    dispatch(getCart());
+    dispatch(fetchTopProductsByViews(10));
   }, [dispatch]);
 
   useEffect(() => {
@@ -54,10 +60,6 @@ const HomePage = () => {
     setLocalTopProducts(topProducts);
     setLocalFeaturedProducts(featuredProducts);
   }, [products, featuredProducts, topProducts]);
-
-  useEffect(() => {
-    dispatch(fetchTopProductsByViews(10)); // Fetch top 10 products by views
-  }, [dispatch]);
 
   const handlePreviousPage = useCallback(() => {
     if (currentPage > 1) {
@@ -80,6 +82,8 @@ const HomePage = () => {
     () => localFeaturedProducts,
     [localFeaturedProducts]
   );
+  const memoizedFavorites = useMemo(() => favorites, [favorites]);
+  console.log(memoizedFavorites);
   console.log(memoizedFilterProducts);
   console.log(memoizedTopProducts);
   return (
@@ -101,8 +105,13 @@ const HomePage = () => {
           currentPage={currentPage}
           totalPages={totalPages}
           maxItemsPerRow={5}
+          favorites={memoizedFavorites}
         />
-        <ProductGrid ref={gridRef} products={memoizedTopProducts} />
+        <ProductGrid
+          ref={gridRef}
+          products={memoizedTopProducts}
+          favorites={memoizedFavorites}
+        />
         <FlashSale />
         <FeatureSection />
       </div>

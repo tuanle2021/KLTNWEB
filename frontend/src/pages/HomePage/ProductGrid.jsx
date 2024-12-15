@@ -8,7 +8,7 @@ import {
   CountdownItem,
 } from "./style";
 
-const ProductGrid = React.forwardRef(({ products }, ref) => {
+const ProductGrid = React.forwardRef(({ products, favorites }, ref) => {
   const gridRef = useRef();
 
   useImperativeHandle(ref, () => ({
@@ -55,9 +55,21 @@ const ProductGrid = React.forwardRef(({ products }, ref) => {
         </Countdown>
       </Header>
       <StyledProductGrid ref={gridRef}>
-        {products.map((product) => (
-          <ProductCart key={product._id} product={product} />
-        ))}
+        {products.map((product) => {
+          const isFavorite =
+            favorites &&
+            favorites.length > 0 &&
+            favorites.some((fav) => fav._id === product._id)
+              ? true
+              : false;
+          return (
+            <ProductCart
+              key={product._id}
+              product={product}
+              favorited={isFavorite}
+            />
+          );
+        })}
       </StyledProductGrid>
     </div>
   );
