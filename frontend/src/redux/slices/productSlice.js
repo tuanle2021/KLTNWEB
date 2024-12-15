@@ -37,7 +37,7 @@ export const fetchProductById = createAsyncThunk(
     try {
       console.log("Fetching product with ID:", id); // Add this line to log the ID
       const response = await axios.get(
-        `${process.env.REACT_APP_BACKEND_URL}/products/${id}`
+        `${process.env.REACT_APP_BACKEND_URL}/products/${id}?increaseViews=true`
       );
       return response.data;
     } catch (error) {
@@ -62,14 +62,14 @@ export const updateProduct = createAsyncThunk(
   }
 );
 
-// Async thunk để tìm kiếm sản phẩm
-export const searchProducts = createAsyncThunk(
-  "products/searchProducts",
-  async (query, { rejectWithValue }) => {
+// Async thunk để fetch sản phẩm theo views giảm dần
+export const fetchTopProductsByViews = createAsyncThunk(
+  "products/fetchTopProductsByViews",
+  async (limit, { rejectWithValue }) => {
     try {
       const { data } = await axios.get(
-        `${process.env.REACT_APP_BACKEND_URL}/products/search`,
-        { params: { query } }
+        `${process.env.REACT_APP_BACKEND_URL}/products/top-views`,
+        { params: { limit } }
       );
       return data;
     } catch (error) {
@@ -77,12 +77,11 @@ export const searchProducts = createAsyncThunk(
     }
   }
 );
-
 const productSlice = createSlice({
   name: "products",
   initialState: {
     featuredProducts: [],
-    searchedProducts: [],
+    topProducts: [],
     products: [],
     product: null,
     loading: false,
@@ -102,18 +101,6 @@ const productSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(searchProducts.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(searchProducts.fulfilled, (state, action) => {
-        state.loading = false;
-        state.searchedProducts = action.payload;
-      })
-      .addCase(searchProducts.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      })
       .addCase(fetchProducts.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -168,6 +155,18 @@ const productSlice = createSlice({
         }
       })
       .addCase(updateProduct.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(fetchTopProductsByViews.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchTopProductsByViews.fulfilled, (state, action) => {
+        state.loading = false;
+        state.topProducts = action.payload;
+      })
+      .addCase(fetchTopProductsByViews.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

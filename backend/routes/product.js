@@ -8,6 +8,7 @@ const {
   updateProductById,
   deleteProductById,
   getFillteProducts,
+  getTopProductsByViews,
 } = require("../controllers/productControllers");
 const { authentication } = require("../middleware/authenUser");
 const { uploadImages } = require("../controllers/uploadImage");
@@ -21,4 +22,5 @@ router.get("/products", getFillteProducts);
 router.get("/products/:id", getProductById);
 router.put("/products/:id", authentication, updateProductById);
 router.delete("/products/:id", authentication, deleteProductById);
+router.get("/products/top-views", getTopProductsByViews);
 module.exports = router;

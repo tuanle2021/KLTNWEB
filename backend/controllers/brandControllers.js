@@ -78,9 +78,20 @@ const updateBrandById = async (req, res) => {
   }
 };
 
+// Controller để lấy danh sách brands theo category
+const getBrandsByCategory = async (req, res) => {
+  try {
+    const { categoryId } = req.params;
+    const brands = await Brand.find({ categories: categoryId });
+    res.status(200).json(brands);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+};
 module.exports = {
   addBrand,
   getAllBrands,
   deleteBrandById,
   updateBrandById,
+  getBrandsByCategory,
 };

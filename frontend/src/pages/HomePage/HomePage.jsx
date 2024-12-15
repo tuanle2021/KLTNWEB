@@ -13,24 +13,25 @@ import {
   fetchFilterProduct,
   fetchProducts,
   setPage,
+  fetchTopProductsByViews,
 } from "../../redux/slices/productSlice";
 import Roadmap from "../../components/RoadmapComponent/Roadmap";
 import FlashSale from "../../components/QuickviewComponent/QuickView";
 import ProductGrid from "./ProductGrid";
 import ProductListSection from "./ProductListSection";
 import CategorySection from "./CategorySection";
-import Loading from "../../components/LoadingError/Loading";
 import FeatureSection from "../../components/FeatureComponent/FeatrureSection";
 import ChatBotButton from "../../components/ChatBot/ChatBotButton";
 import { TopBanner } from "./style";
-import ActivateForm from "./ActivateForm";
 const HomePage = () => {
   const dispatch = useDispatch();
   const gridRef = useRef();
   const [localProducts, setLocalProducts] = useState([]);
+  const [localTopProducts, setLocalTopProducts] = useState([]);
   const [localFeaturedProducts, setLocalFeaturedProducts] = useState([]);
 
   const {
+    topProducts,
     products,
     featuredProducts,
     loading,
@@ -39,16 +40,24 @@ const HomePage = () => {
     productsPerPage,
     totalPages,
   } = useSelector((state) => state.products);
+
   useEffect(() => {
     dispatch(fetchProducts());
   }, [dispatch]);
+
   useEffect(() => {
     dispatch(fetchFilterProduct({ page: currentPage, limit: productsPerPage }));
   }, [dispatch, currentPage, productsPerPage]);
+
   useEffect(() => {
     setLocalProducts(products);
+    setLocalTopProducts(topProducts);
     setLocalFeaturedProducts(featuredProducts);
-  }, [products, featuredProducts]);
+  }, [products, featuredProducts, topProducts]);
+
+  useEffect(() => {
+    dispatch(fetchTopProductsByViews(10)); // Fetch top 10 products by views
+  }, [dispatch]);
 
   const handlePreviousPage = useCallback(() => {
     if (currentPage > 1) {
@@ -63,12 +72,16 @@ const HomePage = () => {
   }, [dispatch, currentPage, totalPages]);
 
   const memoizedProducts = useMemo(() => localProducts, [localProducts]);
+  const memoizedTopProducts = useMemo(
+    () => localTopProducts,
+    [localTopProducts]
+  );
   const memoizedFilterProducts = useMemo(
     () => localFeaturedProducts,
     [localFeaturedProducts]
   );
   console.log(memoizedFilterProducts);
-  console.log(memoizedProducts);
+  console.log(memoizedTopProducts);
   return (
     <div>
       {loading && <div className="loading"></div>}
@@ -89,7 +102,7 @@ const HomePage = () => {
           totalPages={totalPages}
           maxItemsPerRow={5}
         />
-        <ProductGrid ref={gridRef} products={memoizedProducts} />
+        <ProductGrid ref={gridRef} products={memoizedTopProducts} />
         <FlashSale />
         <FeatureSection />
       </div>
