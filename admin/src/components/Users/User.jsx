@@ -38,7 +38,11 @@ const User = () => {
 
   return (
     <UserContainer>
-      {loading && <div className="loading"></div>}
+      {loading && (
+        <div className="loading">
+          <div></div>
+        </div>
+      )}{" "}
       {error && <p>{error}</p>}
       <div className="header">
         <h2>User</h2>
@@ -46,7 +50,6 @@ const User = () => {
           Create new
         </CreateButton>
       </div>
-
       {/* Thanh tìm kiếm và lựa chọn */}
       <SearchContainer>
         <input type="text" placeholder="Search" />
@@ -59,7 +62,6 @@ const User = () => {
           </select>
         </SelectGroup>
       </SearchContainer>
-
       <UserGrid>
         {users.map((user, index) => (
           <UserCard key={index}>

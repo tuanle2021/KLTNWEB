@@ -46,13 +46,16 @@ const MainProducts = () => {
   };
   return (
     <ProductContainer>
-      {loading && <p>Loading...</p>}
+      {loading && (
+        <div className="loading">
+          <div></div>
+        </div>
+      )}{" "}
       {error && <p>Error: {error}</p>}
       <ProductHeader>
         <h2>Products</h2>
         <button onClick={handleCreate}>Create new</button>
       </ProductHeader>
-
       <SearchBar>
         <input type="text" placeholder="Search..." />
         <SelectGroup>
@@ -72,7 +75,6 @@ const MainProducts = () => {
           </select>
         </SelectGroup>
       </SearchBar>
-
       <ProductGrid>
         {products.map((product) => (
           <ProductCard
@@ -82,7 +84,6 @@ const MainProducts = () => {
           /> // Sử dụng ProductCard component
         ))}
       </ProductGrid>
-
       <Pagination>
         <button
           onClick={() => handlePageChange(currentPage - 1)}

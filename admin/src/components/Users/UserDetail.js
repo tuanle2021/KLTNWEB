@@ -52,7 +52,11 @@ const UserDetail = () => {
 
   return (
     <>
-      {loading && <div className="loading"></div>}
+      {loading && (
+        <div className="loading">
+          <div></div>
+        </div>
+      )}{" "}
       {error && <p>{error}</p>}
       {!userDetail && <p>No user found</p>}
       <ProfileContainer>
