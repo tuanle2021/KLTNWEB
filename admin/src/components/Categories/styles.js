@@ -154,3 +154,24 @@ export const ActionButton = styled.button`
     background-color: #e0e0e0;
   }
 `;
+export const HeaderInner = styled.div`
+  display: flex;
+  justify-content: left;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #ddd;
+  h4 {
+    margin-bottom: 7px;
+  }
+  .active {
+    border-bottom: 2px solid red;
+    font-weight: bold;
+    color: red;
+    transition: all 0.3s ease-in-out;
+  }
+`;
+
+export const HeaderItem = styled.h4`
+  padding: 5px 20px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+`;

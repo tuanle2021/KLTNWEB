@@ -1,20 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FaPen, FaTrashAlt } from "react-icons/fa";
-import {
-  CategoryContainer,
-  FormGroup,
-  FormLabel,
-  FormInput,
-  FormTextarea,
-  SubmitButton,
-  CategoryTable,
-  TableHeader,
-  TableRow,
-  TableCell,
-  ActionButton,
-  CategoryInner,
-  CategoryForm,
-} from "./styles";
+import { CategoryContainer, HeaderInner, HeaderItem } from "./styles";
+
 import Swal from "sweetalert2";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -23,7 +10,13 @@ import {
   deleteCategory,
   updateCategory,
 } from "../../redux/slices/categorySlice";
-import { fetchBrands } from "../../redux/slices/brandSlice";
+import {
+  fetchBrands,
+  addBrand,
+  deleteBrand,
+  updateBrand,
+} from "../../redux/slices/brandSlice";
+import CategoryInner from "./CategoryInner";
 
 const Categories = () => {
   const dispatch = useDispatch();
@@ -36,9 +29,9 @@ const Categories = () => {
     description: "",
     brands: [],
   });
-  console.log(categories, brands);
   const [editMode, setEditMode] = useState(false);
-  const [editCategoryId, setEditCategoryId] = useState(null);
+  const [editId, setEditId] = useState(null);
+  const [activeTab, setActiveTab] = useState("category");
 
   useEffect(() => {
     dispatch(fetchCategories());
@@ -64,29 +57,56 @@ const Categories = () => {
     });
   };
 
+  const handleCategoryChange = (e) => {
+    const selectedCategories = Array.from(
+      e.target.selectedOptions,
+      (option) => option.value
+    );
+    setFormData({
+      ...formData,
+      categories: selectedCategories,
+    });
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (editMode) {
-      dispatch(updateCategory({ id: editCategoryId, categoryData: formData }));
+      if (activeTab === "category") {
+        dispatch(updateCategory({ id: editId, categoryData: formData }));
+      } else {
+        dispatch(updateBrand({ id: editId, brandData: formData }));
+      }
     } else {
-      dispatch(addCategory(formData));
+      if (activeTab === "category") {
+        dispatch(addCategory(formData));
+      } else {
+        dispatch(addBrand(formData));
+      }
     }
     setFormData({ name: "", description: "", brands: [] });
     setEditMode(false);
-    setEditCategoryId(null);
+    setEditId(null);
   };
 
-  const handleEdit = (category) => {
-    setFormData({
-      name: category.name,
-      description: category.description,
-      brands: category.brands.map((brand) => brand._id),
-    });
+  const handleEdit = (item) => {
+    if (activeTab === "category") {
+      setFormData({
+        name: item.name,
+        description: item.description,
+        brands: item.brands.map((brand) => brand._id),
+      });
+    } else {
+      setFormData({
+        name: item.name,
+        description: item.description,
+        categories: item.categories.map((category) => category._id),
+      });
+    }
     setEditMode(true);
-    setEditCategoryId(category._id);
+    setEditId(item._id);
   };
 
-  const handleDelete = (categoryId) => {
+  const handleDelete = (itemId) => {
     Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -97,10 +117,21 @@ const Categories = () => {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        dispatch(deleteCategory(categoryId));
-        Swal.fire("Deleted!", "Your category has been deleted.");
+        if (activeTab === "category") {
+          dispatch(deleteCategory(itemId));
+        } else {
+          dispatch(deleteBrand(itemId));
+        }
+        Swal.fire("Deleted!", "Your item has been deleted.");
       }
     });
+  };
+
+  const handleTabClick = (tab) => {
+    setActiveTab(tab);
+    setFormData({ name: "", description: "", brands: [] });
+    setEditMode(false);
+    setEditId(null);
   };
 
   return (
@@ -111,98 +142,52 @@ const Categories = () => {
         </div>
       )}
       {error && <p>{error}</p>}
-      <h2>Categories</h2>
 
-      <CategoryInner>
-        <CategoryForm as="form" onSubmit={handleSubmit}>
-          <FormGroup>
-            <FormLabel>Name</FormLabel>
-            <div className="input">
-              <FormInput
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleInputChange}
-                placeholder="Type here"
-              />
-            </div>
-          </FormGroup>
+      <HeaderInner>
+        <HeaderItem
+          className={activeTab === "category" ? "active" : ""}
+          onClick={() => handleTabClick("category")}
+        >
+          Category
+        </HeaderItem>
+        <HeaderItem
+          className={activeTab === "brand" ? "active" : ""}
+          onClick={() => handleTabClick("brand")}
+        >
+          Brand
+        </HeaderItem>
+      </HeaderInner>
 
-          <FormGroup>
-            <FormLabel>Description</FormLabel>
-            <FormTextarea
-              name="description"
-              value={formData.description}
-              onChange={handleInputChange}
-              placeholder="Type here"
-            />
-          </FormGroup>
+      {activeTab === "category" && (
+        <CategoryInner
+          formData={formData}
+          setFormData={setFormData}
+          handleInputChange={handleInputChange}
+          handleBrandChange={handleBrandChange}
+          handleSubmit={handleSubmit}
+          handleEdit={handleEdit}
+          handleDelete={handleDelete}
+          editMode={editMode}
+          categories={categories}
+          brands={brands}
+        />
+      )}
 
-          <FormGroup>
-            <FormLabel>Brands</FormLabel>
-            <select
-              multiple
-              name="brands"
-              value={formData.brands}
-              onChange={handleBrandChange}
-            >
-              {brands.map((brand) => (
-                <option key={brand._id} value={brand._id}>
-                  {brand.name}
-                </option>
-              ))}
-            </select>
-          </FormGroup>
-
-          <FormGroup>
-            <SubmitButton type="submit">
-              {editMode ? "Update category" : "Create category"}
-            </SubmitButton>
-          </FormGroup>
-        </CategoryForm>
-
-        <CategoryTable>
-          <thead>
-            <TableRow>
-              <TableHeader></TableHeader>
-              <TableHeader>ID</TableHeader>
-              <TableHeader>Name</TableHeader>
-              <TableHeader>Description</TableHeader>
-              <TableHeader>Brands</TableHeader>
-              <TableHeader>Action</TableHeader>
-            </TableRow>
-          </thead>
-          <tbody>
-            {categories.map((category) => (
-              <TableRow key={category._id}>
-                <TableCell>
-                  <input type="checkbox" />
-                </TableCell>
-                <TableCell>{category._id}</TableCell>
-                <TableCell>{category.name}</TableCell>
-                <TableCell>{category.description}</TableCell>
-                <TableCell>
-                  {category.brands.map((brand) => brand.name).join(", ")}
-                </TableCell>
-                <TableCell>
-                  <ActionButton
-                    className="edit"
-                    onClick={() => handleEdit(category)}
-                  >
-                    <FaPen />
-                  </ActionButton>
-                  <ActionButton
-                    className="delete"
-                    onClick={() => handleDelete(category._id)}
-                  >
-                    <FaTrashAlt />
-                  </ActionButton>
-                </TableCell>
-              </TableRow>
-            ))}
-          </tbody>
-        </CategoryTable>
-      </CategoryInner>
+      {activeTab === "brand" && (
+        <CategoryInner
+          formData={formData}
+          setFormData={setFormData}
+          handleInputChange={handleInputChange}
+          handleCategoryChange={handleCategoryChange}
+          handleSubmit={handleSubmit}
+          handleEdit={handleEdit}
+          handleDelete={handleDelete}
+          editMode={editMode}
+          categories={categories}
+          brands={brands}
+          isBrand={true}
+        />
+      )}
     </CategoryContainer>
   );
 };
