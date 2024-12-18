@@ -58,7 +58,7 @@ const productSchema = new mongoose.Schema(
     },
     attributes: [
       {
-        name: { type: String, required: true },
+        name: { type: String, required: true, enum: ["color", "memory"] },
         value: { type: String, required: true },
       },
     ],

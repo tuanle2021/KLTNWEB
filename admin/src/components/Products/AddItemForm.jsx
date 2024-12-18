@@ -23,7 +23,6 @@ import {
   FormSelect,
   SubmitButton,
   AttributeContainer,
-  AttributeSelect,
   AttributeValueInput,
   ColorPicker,
   ColorOption,
@@ -100,13 +99,24 @@ const AddItemForm = () => {
     fileInputRef.current.click();
   };
 
-  const handleAttributeChange = (e) => {
-    const { value } = e.target;
-    if (!selectedAttributes.includes(value)) {
-      setSelectedAttributes([...selectedAttributes, value]);
+  const handleAttributeChange = (e, attribute) => {
+    const { checked } = e.target;
+    if (checked) {
+      setSelectedAttributes([...selectedAttributes, attribute]);
       setFormData({
         ...formData,
-        attributes: [...formData.attributes, { name: value, values: [] }],
+        attributes: [...formData.attributes, { name: attribute, values: [] }],
+      });
+    } else {
+      const updatedAttributes = selectedAttributes.filter(
+        (attr) => attr !== attribute
+      );
+      setSelectedAttributes(updatedAttributes);
+      setFormData({
+        ...formData,
+        attributes: formData.attributes.filter(
+          (attr) => attr.name !== attribute
+        ),
       });
     }
   };
@@ -122,28 +132,17 @@ const AddItemForm = () => {
     updatedAttributes[index].values.push("");
     setFormData({ ...formData, attributes: updatedAttributes });
   };
-  const handleAddCustomAttribute = () => {
-    setSelectedAttributes([...selectedAttributes, "custom"]);
-    setFormData({
-      ...formData,
-      attributes: [...formData.attributes, { name: "", values: [""] }],
-    });
-  };
 
-  const handleCustomAttributeChange = (index, name, value) => {
+  const handleColorChange = (index, color) => {
     const updatedAttributes = [...formData.attributes];
-    updatedAttributes[index] = { name, values: [value] };
+    if (!updatedAttributes[index].values.includes(color)) {
+      updatedAttributes[index].values.push(color);
+    } else {
+      updatedAttributes[index].values = updatedAttributes[index].values.filter(
+        (c) => c !== color
+      );
+    }
     setFormData({ ...formData, attributes: updatedAttributes });
-  };
-
-  const handleRemoveAttribute = (index) => {
-    const updatedAttributes = [...selectedAttributes];
-    updatedAttributes.splice(index, 1);
-    setSelectedAttributes(updatedAttributes);
-
-    const updatedFormAttributes = [...formData.attributes];
-    updatedFormAttributes.splice(index, 1);
-    setFormData({ ...formData, attributes: updatedFormAttributes });
   };
 
   const handleSubmit = (e) => {
@@ -308,75 +307,84 @@ const AddItemForm = () => {
       {/* Attributes */}
       <FormGroup>
         <FormLabel>Attributes</FormLabel>
-        <AttributeSelect onChange={handleAttributeChange}>
-          <option value="">Select attribute</option>
-          <option value="color">Color</option>
-          <option value="size">Size</option>
-          <option value="memory">Memory</option>
-          <option value="classification">Classification</option>
-        </AttributeSelect>
-        {selectedAttributes.map((attribute, index) => (
-          <AttributeContainer key={index}>
+        {["color", "memory"].map((attribute) => (
+          <AttributeContainer key={attribute}>
+            <input
+              type="checkbox"
+              checked={selectedAttributes.includes(attribute)}
+              onChange={(e) => handleAttributeChange(e, attribute)}
+            />
             <FormLabel>{attribute}</FormLabel>
-            {attribute === "color" ? (
-              <ColorPicker>
-                <ColorOption style={{ backgroundColor: "#FFFFFF" }} />
-                <ColorOption style={{ backgroundColor: "#FF4B4B" }} />
-                <ColorOption style={{ backgroundColor: "#000000" }} />
-                <ColorOption style={{ backgroundColor: "#0000FF" }} />
-                <ColorOption style={{ backgroundColor: "#00FF00" }} />
-                <ColorOption style={{ backgroundColor: "#FFFF00" }} />
-                <ColorOption style={{ backgroundColor: "#FFA500" }} />
-                <ColorOption style={{ backgroundColor: "#800080" }} />
-              </ColorPicker>
-            ) : (
+            {selectedAttributes.includes(attribute) && (
               <>
-                {formData.attributes[index]?.values.map((value, valueIndex) => (
-                  <AttributeValueInput
-                    key={valueIndex}
-                    type="text"
-                    value={value}
-                    onChange={(e) =>
-                      handleAttributeValueChange(
-                        index,
-                        valueIndex,
-                        e.target.value
-                      )
-                    }
-                    placeholder={`Enter ${attribute} value`}
-                  />
-                ))}
-                <button
-                  type="button"
-                  onClick={() => handleAddAttributeValue(index)}
-                >
-                  Add Value
-                </button>
+                {attribute === "color" ? (
+                  <ColorPicker>
+                    {[
+                      "#FFFFFF",
+                      "#FF4B4B",
+                      "#000000",
+                      "#0000FF",
+                      "#00FF00",
+                      "#FFFF00",
+                      "#FFA500",
+                      "#800080",
+                      "#FFC0CB",
+                      "#A52A2A",
+                    ].map((color) => (
+                      <ColorOption
+                        key={color}
+                        style={{
+                          backgroundColor: color,
+                          border: formData.attributes[
+                            selectedAttributes.indexOf(attribute)
+                          ]?.values.includes(color)
+                            ? "2px solid #000"
+                            : "none",
+                        }}
+                        onClick={() =>
+                          handleColorChange(
+                            selectedAttributes.indexOf(attribute),
+                            color
+                          )
+                        }
+                      />
+                    ))}
+                  </ColorPicker>
+                ) : (
+                  <>
+                    {formData.attributes
+                      .find((attr) => attr.name === attribute)
+                      ?.values.map((value, valueIndex) => (
+                        <AttributeValueInput
+                          key={valueIndex}
+                          type="text"
+                          value={value}
+                          onChange={(e) =>
+                            handleAttributeValueChange(
+                              selectedAttributes.indexOf(attribute),
+                              valueIndex,
+                              e.target.value
+                            )
+                          }
+                          placeholder={`Enter ${attribute} value`}
+                        />
+                      ))}
+                    <button
+                      type="button"
+                      onClick={() =>
+                        handleAddAttributeValue(
+                          selectedAttributes.indexOf(attribute)
+                        )
+                      }
+                    >
+                      Add Value
+                    </button>
+                  </>
+                )}
               </>
             )}
-            {attribute === "custom" && (
-              <div>
-                <FormInput
-                  type="text"
-                  placeholder="Attribute name"
-                  onChange={(e) =>
-                    handleCustomAttributeChange(
-                      index,
-                      e.target.value,
-                      formData.attributes[index]?.values[0] || ""
-                    )
-                  }
-                />
-              </div>
-            )}
-            <button type="button" onClick={() => handleRemoveAttribute(index)}>
-              Remove
-            </button>
           </AttributeContainer>
         ))}
-        <button type="button" onClick={handleAddCustomAttribute}>
-          Add Custom Attribute
-        </button>
       </FormGroup>
 
       {/* Submit button */}
