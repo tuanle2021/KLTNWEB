@@ -37,7 +37,7 @@ export const fetchProductById = createAsyncThunk(
     try {
       console.log("Fetching product with ID:", id); // Add this line to log the ID
       const response = await axios.get(
-        `${process.env.REACT_APP_BACKEND_URL}/products/${id}`
+        `${process.env.REACT_APP_BACKEND_URL}/products/${id}?increaseViews=true`
       );
       return response.data;
     } catch (error) {
@@ -62,10 +62,26 @@ export const updateProduct = createAsyncThunk(
   }
 );
 
+// Async thunk để fetch sản phẩm theo views giảm dần
+export const fetchTopProductsByViews = createAsyncThunk(
+  "products/fetchTopProductsByViews",
+  async (limit, { rejectWithValue }) => {
+    try {
+      const { data } = await axios.get(
+        `${process.env.REACT_APP_BACKEND_URL}/product/top-views`,
+        { params: { limit } }
+      );
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response.data.message);
+    }
+  }
+);
 const productSlice = createSlice({
   name: "products",
   initialState: {
     featuredProducts: [],
+    topProducts: [],
     products: [],
     product: null,
     loading: false,
@@ -78,6 +94,9 @@ const productSlice = createSlice({
   reducers: {
     setPage: (state, action) => {
       state.currentPage = action.payload;
+    },
+    setFilteredProducts: (state, action) => {
+      state.products = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -138,8 +157,20 @@ const productSlice = createSlice({
       .addCase(updateProduct.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+      .addCase(fetchTopProductsByViews.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchTopProductsByViews.fulfilled, (state, action) => {
+        state.loading = false;
+        state.topProducts = action.payload;
+      })
+      .addCase(fetchTopProductsByViews.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       });
   },
 });
-export const { setPage } = productSlice.actions;
+export const { setPage, setFilteredProducts } = productSlice.actions;
 export default productSlice.reducer;

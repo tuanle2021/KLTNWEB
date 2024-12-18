@@ -1,5 +1,5 @@
-import styled from "styled-components";
-
+import { styled, keyframes } from "styled-components";
+import { Link } from "react-router-dom";
 // Container cho toàn bộ giỏ hàng
 export const CartContainer = styled.div`
   width: 80%;
@@ -42,10 +42,21 @@ export const ProductName = styled.span`
 `;
 
 // Giá sản phẩm
-export const ProductPrice = styled.span`
-  font-size: 1em;
-  font-weight: bold;
-  color: #e91e63;
+export const ProductPrice = styled.div`
+  margin: 10px 0;
+  font-size: 1.2em;
+
+  span {
+    color: #ff6f61;
+    font-weight: bold;
+  }
+
+  small {
+    margin-left: 10px;
+    font-size: 0.9em;
+    text-decoration: line-through;
+    color: #999;
+  }
 `;
 
 // Số lượng sản phẩm
@@ -194,4 +205,173 @@ export const SelectItemCheckbox = styled.input`
   left: -2%;
   top: 50%;
   transform: translateY(-50%);
+`;
+
+export const CardBody = styled.div`
+  padding: 1rem;
+  background-color: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  border-radius: 0.25rem;
+  box-shadow: 0 0.1rem 0.25rem rgba(0, 0, 0, 0.075);
+`;
+export const TableResponsive = styled.div`
+  overflow-x: auto;
+`;
+export const Table = styled.table`
+  width: 100%;
+  margin-bottom: 1rem;
+  color: #212529;
+  border-collapse: collapse;
+`;
+
+export const TableRow = styled.tr`
+  border-bottom: 1px solid #dee2e6;
+  .eye {
+    display: flex;
+    justify-content: flex-end;
+  }
+  .bold {
+    font-weight: bold;
+  }
+`;
+
+export const TableCell = styled.td`
+  padding: 0.75rem;
+  vertical-align: top;
+  border-top: 1px solid #dee2e6;
+`;
+
+export const Badge = styled.span`
+  display: inline-block;
+  padding: 0.3em 0.45em;
+  font-size: 75%;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: 0.375rem;
+  color: ${(props) => (props.variant === "success" ? "#fff" : "#fff")};
+  background-color: ${(props) =>
+    props.variant === "success" ? "#28a745" : "#dc3545"};
+`;
+
+export const IconLink = styled(Link)`
+  color: #28a745;
+  text-decoration: none;
+  &:hover {
+    color: #218838;
+  }
+`;
+
+export const Overlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 10;
+`;
+
+export const slideIn = keyframes`
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+`;
+
+export const SidebarWrapper = styled.div`
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 400px;
+  height: 100%;
+  background-color: #fff;
+  box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  animation: ${slideIn} 0.3s ease-out;
+`;
+
+export const SidebarHeader = styled.div`
+  padding: 16px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+export const CloseButton = styled.button`
+  background: none;
+  border: none;
+  font-size: 30px;
+  cursor: pointer;
+`;
+
+export const SidebarContent = styled.div`
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
+`;
+
+export const ProductItem = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+`;
+
+export const ProductImageSidebar = styled.img`
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  margin-right: 16px;
+`;
+
+export const ProductInfo = styled.div`
+  flex: 1;
+`;
+
+export const ProductTitle = styled.a`
+  font-size: 16px;
+  color: #1e88e5;
+  text-decoration: none;
+  margin-bottom: 8px;
+  display: inline-block;
+`;
+
+export const Price = styled.div`
+  font-size: 16px;
+  font-weight: bold;
+`;
+
+export const Footer = styled.div`
+  padding: 16px;
+  border-top: 1px solid #eee;
+`;
+
+export const TotalInfo = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 16px;
+`;
+
+export const ButtonGroup = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
+export const Button = styled.button`
+  flex: 1;
+  padding: 10px;
+  font-size: 14px;
+  color: #fff;
+  background-color: ${({ primary }) => (primary ? "#1e88e5" : "#9e9e9e")};
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: ${({ primary }) => (primary ? "0" : "8px")};
 `;

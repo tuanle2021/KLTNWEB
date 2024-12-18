@@ -6,7 +6,15 @@ const { sendEmail } = require("../helpers/sendEmail");
 const { generateToken } = require("../helpers/createToken");
 exports.register = async (req, res) => {
   try {
-    const { name, email, password, address, phone, gender, isAdmin=false } = req.body;
+    const {
+      name,
+      email,
+      password,
+      address,
+      phone,
+      gender,
+      isAdmin = false,
+    } = req.body;
 
     // Validate dữ liệu
     if (!validateLength(name, 3, 50)) {
@@ -45,7 +53,7 @@ exports.register = async (req, res) => {
       address,
       phone,
       gender,
-      isAdmin: req.user && req.user.isAdmin ? isAdmin : false,// Nếu người dùng hiện tại là quản trị viên thì tạo người dùng mới với quyền quản trị viên
+      isAdmin: req.user && req.user.isAdmin ? isAdmin : false, // Nếu người dùng hiện tại là quản trị viên thì tạo người dùng mới với quyền quản trị viên
     });
 
     // Lưu người dùng vào cơ sở dữ liệu
@@ -83,13 +91,15 @@ exports.register = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
-
 exports.activateAccount = async (req, res) => {
   try {
     const { token } = req.body;
     const user = jwt.verify(token, process.env.JWT_SECRET);
     const check = await User.findById(user.id);
-    if (check.verified == true) {
+    if (!check) {
+      return res.status(400).json({ message: "User not found" });
+    }
+    if (check.verified) {
       return res
         .status(400)
         .json({ message: "This email is already activated" });
@@ -97,11 +107,11 @@ exports.activateAccount = async (req, res) => {
       await User.findByIdAndUpdate(user.id, { verified: true });
       return res
         .status(200)
-        .json({ message: "Account has beeen activated successfully." });
+        .json({ message: "Account has been activated successfully." });
     }
   } catch (error) {
     console.error("Error in activateAccount:", error);
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
@@ -190,40 +200,136 @@ exports.getUserById = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+exports.sendVerification = async (req, res) => {
+  try {
+    const userId = req.user.id; // Lấy id của người dùng từ req
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (user.verified) {
+      return res.status(400).json({ message: "User already verified" });
+    }
+
+    // Tạo token xác thực
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "1h",
+    });
+
+    // Tạo URL xác thực
+    const url = `${process.env.CLIENT_URL}/verify/${token}`;
+
+    // Gửi email xác thực
+    await sendEmail(user.email, user.name, url);
+
+    res.status(200).json({ message: "Verification email sent" });
+  } catch (error) {
+    console.error("Error sending verification email:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+exports.sendCodeResetPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Tạo mã reset password ngẫu nhiên
+    const resetCode = crypto.randomBytes(3).toString("hex").toUpperCase();
+
+    // Lưu mã reset password vào cơ sở dữ liệu
+    user.resetPasswordCode = resetCode;
+    user.resetPasswordExpires = Date.now() + 3600000; // 1 giờ
+    await user.save();
+
+    // Gửi mã reset password qua email
+    await sendCode(user.email, user.name, resetCode);
+
+    res.status(200).json({ message: "Reset password code sent" });
+  } catch (error) {
+    console.error("Error sending reset password code:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+exports.verifyCodeResetPassword = async (req, res) => {
+  try {
+    const { email, code } = req.body;
+
+    // Tìm người dùng bằng email
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Kiểm tra mã reset password và thời gian hết hạn
+    if (
+      user.resetPasswordCode !== code ||
+      user.resetPasswordExpires < Date.now()
+    ) {
+      return res
+        .status(400)
+        .json({ message: "Invalid or expired reset password code" });
+    }
+
+    // Trả về kết quả kiểm tra
+    res.status(200).json({ message: "Reset password code is valid" });
+  } catch (error) {
+    console.error("Error verifying reset password code:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
 
 exports.createUser = async (req, res) => {
   try {
-    const { name, email, phone, address, isAdmin, password, gender } = req.body;
-    console.log("Received input:", { name, email, phone, address, isAdmin, password, gender });
+    const {
+      name,
+      email,
+      phone,
+      address,
+      isAdmin,
+      password,
+      gender,
+      verified = false,
+    } = req.body;
 
     // Validate data
     if (!validateLength(name, 3, 50)) {
-      console.error("Validation error: Name must be between 3 and 50 characters");
+      console.error(
+        "Validation error: Name must be between 3 and 50 characters"
+      );
       return res
-          .status(400)
-          .json({ error: "Name must be between 3 and 50 characters" });
+        .status(400)
+        .json({ error: "Name must be between 3 and 50 characters" });
     }
     if (!validateEmail(email)) {
       console.error("Validation error: Invalid email format");
       return res.status(400).json({ error: "Invalid email format" });
     }
     if (!validateLength(phone, 10, 15)) {
-      console.error("Validation error: Phone number must be between 10 and 15 characters");
+      console.error(
+        "Validation error: Phone number must be between 10 and 15 characters"
+      );
       return res
-          .status(400)
-          .json({ error: "Phone number must be between 10 and 15 characters" });
+        .status(400)
+        .json({ error: "Phone number must be between 10 and 15 characters" });
     }
     if (!validateLength(password, 6, 100)) {
-      console.error("Validation error: Password must be between 6 and 100 characters");
+      console.error(
+        "Validation error: Password must be between 6 and 100 characters"
+      );
       return res
-          .status(400)
-          .json({ error: "Password must be between 6 and 100 characters" });
+        .status(400)
+        .json({ error: "Password must be between 6 and 100 characters" });
     }
     if (!gender) {
       console.error("Validation error: Gender is required");
-      return res
-          .status(400)
-          .json({ error: "Gender is required" });
+      return res.status(400).json({ error: "Gender is required" });
     }
 
     // Check if email already exists
@@ -245,6 +351,7 @@ exports.createUser = async (req, res) => {
       address,
       password: hashedPassword,
       gender,
+      verified: req.user && req.user.isAdmin ? verified : false, // Giá trị mặc định là false
       isAdmin: req.user && req.user.isAdmin ? isAdmin : false,
     });
 
@@ -279,10 +386,17 @@ exports.forgotPassword = async (req, res) => {
 
     // Send password reset email
     try {
-      await sendEmail(user.email, user.name, resetUrl, "Password Reset Request");
+      await sendEmail(
+        user.email,
+        user.name,
+        resetUrl,
+        "Password Reset Request"
+      );
     } catch (emailError) {
       console.error("Error sending email:", emailError);
-      return res.status(500).json({ error: "Error sending password reset email" });
+      return res
+        .status(500)
+        .json({ error: "Error sending password reset email" });
     }
 
     res.status(200).json({ message: "Password reset email sent successfully" });
@@ -305,7 +419,9 @@ exports.resetPassword = async (req, res) => {
 
     // Validate new password
     if (!validateLength(newPassword, 6, 100)) {
-      return res.status(400).json({ error: "Password must be between 6 and 100 characters" });
+      return res
+        .status(400)
+        .json({ error: "Password must be between 6 and 100 characters" });
     }
 
     // Hash new password
@@ -325,26 +441,44 @@ exports.resetPassword = async (req, res) => {
 exports.updateProfile = async (req, res) => {
   try {
     const userId = req.user.id; // Assuming you have user ID in req.user
-    const { firstName, lastName, email, address, currentPassword, newPassword, confirmPassword } = req.body;
+    const {
+      firstName,
+      lastName,
+      email,
+      address,
+      currentPassword,
+      newPassword,
+      confirmPassword,
+    } = req.body;
 
     // Validate data
     if (!validateLength(firstName, 3, 50)) {
-      return res.status(400).json({ error: "First name must be between 3 and 50 characters" });
+      return res
+        .status(400)
+        .json({ error: "First name must be between 3 and 50 characters" });
     }
     if (!validateLength(lastName, 3, 50)) {
-      return res.status(400).json({ error: "Last name must be between 3 and 50 characters" });
+      return res
+        .status(400)
+        .json({ error: "Last name must be between 3 and 50 characters" });
     }
     if (!validateEmail(email)) {
       return res.status(400).json({ error: "Invalid email format" });
     }
     if (currentPassword && !validateLength(currentPassword, 6, 100)) {
-      return res.status(400).json({ error: "Current password must be between 6 and 100 characters" });
+      return res.status(400).json({
+        error: "Current password must be between 6 and 100 characters",
+      });
     }
     if (newPassword && !validateLength(newPassword, 6, 100)) {
-      return res.status(400).json({ error: "New password must be between 6 and 100 characters" });
+      return res
+        .status(400)
+        .json({ error: "New password must be between 6 and 100 characters" });
     }
     if (newPassword !== confirmPassword) {
-      return res.status(400).json({ error: "New password and confirm password do not match" });
+      return res
+        .status(400)
+        .json({ error: "New password and confirm password do not match" });
     }
 
     // Split address string into an object
@@ -352,19 +486,25 @@ exports.updateProfile = async (req, res) => {
     const addressObject = {
       street: addressParts[0],
       city: addressParts[1],
-      country: addressParts[2]
+      country: addressParts[2],
     };
 
     // Validate address fields
-    if (!addressObject.street || !addressObject.city || !addressObject.country) {
-      return res.status(400).json({ error: "Address, city, and country are required" });
+    if (
+      !addressObject.street ||
+      !addressObject.city ||
+      !addressObject.country
+    ) {
+      return res
+        .status(400)
+        .json({ error: "Address, city, and country are required" });
     }
 
     // Find user by ID and update profile
     const updatedUser = await User.findByIdAndUpdate(
-        userId,
-        { firstName, lastName, email, address: addressObject },
-        { new: true, runValidators: true }
+      userId,
+      { firstName, lastName, email, address: addressObject },
+      { new: true, runValidators: true }
     );
 
     if (!updatedUser) {
@@ -373,7 +513,10 @@ exports.updateProfile = async (req, res) => {
 
     // Update password if provided
     if (currentPassword && newPassword) {
-      const isPasswordValid = await bcrypt.compare(currentPassword, updatedUser.password);
+      const isPasswordValid = await bcrypt.compare(
+        currentPassword,
+        updatedUser.password
+      );
       if (!isPasswordValid) {
         return res.status(400).json({ error: "Current password is incorrect" });
       }
@@ -381,9 +524,33 @@ exports.updateProfile = async (req, res) => {
       await updatedUser.save();
     }
 
-    res.status(200).json({ message: "Profile updated successfully", user: updatedUser });
+    res
+      .status(200)
+      .json({ message: "Profile updated successfully", user: updatedUser });
   } catch (error) {
     console.error("Error in updateProfile:", error);
     res.status(500).json({ error: "Internal server error" });
+  }
+};
+exports.deleteUser = async (req, res) => {
+  try {
+    const userId = req.params.id;
+
+    // Kiểm tra quyền hạn của người dùng (chỉ dành cho quản trị viên)
+    if (!req.user || !req.user.isAdmin) {
+      return res.status(403).json({ message: "Access denied" });
+    }
+
+    // Tìm và xóa người dùng theo ID
+    const user = await User.findByIdAndDelete(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({ message: "User deleted successfully" });
+  } catch (error) {
+    console.error("Error in deleteUser:", error);
+    res.status(500).json({ message: "Server error" });
   }
 };

@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchUsers } from "../../redux/slices/userSlice";
+import { fetchUserById, fetchUsers } from "../../redux/slices/userSlice";
 import { useNavigate } from "react-router-dom";
 import {
   UserContainer,
@@ -27,17 +27,29 @@ const User = () => {
     dispatch(fetchUsers());
   }, [dispatch]);
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
+  const handleProfileClick = async (userId) => {
+    try {
+      await dispatch(fetchUserById(userId)).unwrap();
+      navigate(`/users/${userId}`);
+    } catch (error) {
+      console.error("Failed to fetch user details:", error);
+    }
+  };
+
   return (
     <UserContainer>
+      {loading && (
+        <div className="loading">
+          <div></div>
+        </div>
+      )}{" "}
+      {error && <p>{error}</p>}
       <div className="header">
         <h2>User</h2>
         <CreateButton onClick={() => navigate(`/create-user`)}>
           Create new
         </CreateButton>
       </div>
-
       {/* Thanh tìm kiếm và lựa chọn */}
       <SearchContainer>
         <input type="text" placeholder="Search" />
@@ -50,20 +62,16 @@ const User = () => {
           </select>
         </SelectGroup>
       </SearchContainer>
-
       <UserGrid>
         {users.map((user, index) => (
           <UserCard key={index}>
             <UserHeader />
-            <UserImage
-              src="https://res.cloudinary.com/dihhw7jo1/image/upload/v1727766768/products/MacBook%20Air%2013%20inch%20M1%204.jpg.jpg"
-              alt={user.name}
-            />
+            <UserImage src="avatar-user.gif" alt={user.name} />
             <UserInfo>
               <UserName>{user.name}</UserName>
               <UserID>ID: {user._id}</UserID>
               <UserEmail>{user.email}</UserEmail>
-              <ProfileButton onClick={() => navigate(`/users/${user._id}`)}>
+              <ProfileButton onClick={() => handleProfileClick(user._id)}>
                 Profile
               </ProfileButton>
             </UserInfo>

@@ -12,10 +12,15 @@ const Order = () => {
     dispatch(fetchOrders());
   }, [dispatch]);
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
+
   return (
     <OrderContainer>
+      {loading && (
+        <div className="loading">
+          <div></div>
+        </div>
+      )}
+      {error && <p>{error}</p>}
       <h2>Order</h2>
       <SearchBar>
         <input type="text" placeholder="Search..." />

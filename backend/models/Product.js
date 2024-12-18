@@ -30,9 +30,36 @@ const productSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    numberOfReviews: {
+      type: Number,
+      default: 0,
+    },
+    discount: {
+      type: Number,
+      default: 0,
+    },
+    discountStartDate: {
+      type: Date,
+    },
+    discountEndDate: {
+      type: Date,
+    },
+    brand: {
+      type: String,
+    },
+    views: {
+      type: Number,
+      default: 0,
+    },
+    attributes: [
+      {
+        name: { type: String, required: true },
+        value: { type: String, required: true },
+      },
+    ],
   },
   {
-    timestamps: true, // Tự động thêm createdAt và updatedAt
+    timestamps: true,
   }
 );
 

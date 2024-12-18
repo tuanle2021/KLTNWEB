@@ -6,6 +6,8 @@ import DotLoader from "react-spinners/DotLoader";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { register } from "../../redux/slices/authSlice"; // Import thunk register
+import Swal from "sweetalert2";
+
 import {
   FormWrapper,
   LogoWrapper,
@@ -25,7 +27,6 @@ const userInfos = {
   address: {
     street: "",
     city: "",
-    country: "",
   },
   phone: "",
   gender: "",
@@ -83,10 +84,6 @@ const RegisterPage = ({ setVisible }) => {
         .required("City is required.")
         .min(2, "City must be at least 2 characters.")
         .max(50, "City can't be more than 50 characters."),
-      country: Yup.string()
-        .required("Country is required.")
-        .min(2, "Country must be at least 2 characters.")
-        .max(50, "Country can't be more than 50 characters."),
     }),
     phone: Yup.string()
       .required("Phone number is required.")
@@ -107,8 +104,14 @@ const RegisterPage = ({ setVisible }) => {
       dispatch(register({ name, email, password, address, phone, gender }))
         .unwrap()
         .then((data) => {
-          setVisible(false); // Hide the register form and show the login form
-          navigate("/dashboard"); // Điều hướng đến trang dashboard sau khi đăng ký thành công
+          Swal.fire({
+            icon: "success",
+            title: "Registration Successful",
+            text: "You have successfully registered!",
+            confirmButtonText: "OK",
+          }).then(() => {
+            setVisible(false); // Hide the register form and show the login form
+          });
         })
         .catch((error) => {
           console.error("Registration failed:", error);
@@ -133,7 +136,6 @@ const RegisterPage = ({ setVisible }) => {
           address: {
             street: user.address.street,
             city: user.address.city,
-            country: user.address.country,
           },
           phone,
           gender,
@@ -172,12 +174,6 @@ const RegisterPage = ({ setVisible }) => {
               type="text"
               placeholder="City"
               name="address.city"
-              onChange={handleRegisterChange}
-            />
-            <RegisterInput
-              type="text"
-              placeholder="Country"
-              name="address.country"
               onChange={handleRegisterChange}
             />
             <RegisterInput

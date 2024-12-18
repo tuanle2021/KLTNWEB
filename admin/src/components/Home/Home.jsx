@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchOrders } from "../../redux/slices/orderSlice";
+import { fetchProducts } from "../../redux/slices/productSlice";
 import {
   ContentMain,
   ContentHeader,
@@ -19,13 +20,20 @@ import { FaShoppingBag } from "react-icons/fa";
 import { BiSolidShoppingBags } from "react-icons/bi";
 import { IoLogoUsd } from "react-icons/io";
 import TableOrder from "./TableOrder";
+
 const Home = () => {
   const dispatch = useDispatch();
-  const { orders, loading, error } = useSelector((state) => state.orders);
+  const { orders, loading: ordersLoading, error: ordersError } = useSelector((state) => state.orders);
+  const { products, totalProducts, loading: productsLoading, error: productsError } = useSelector((state) => state.products);
 
   useEffect(() => {
     dispatch(fetchOrders());
+    dispatch(fetchProducts());
   }, [dispatch]);
+
+  const totalSales = orders
+    .filter((order) => order.payment_status === "completed")
+    .reduce((total, order) => total + order.total_price, 0);
 
   return (
     <ContentMain>
@@ -43,7 +51,7 @@ const Home = () => {
                 </Icon>
                 <Text>
                   <Title>Total Sales</Title>
-                  <Value>$3800</Value>
+                  <Value>${totalSales}</Value>
                 </Text>
               </IconText>
             </CardBody>
@@ -58,7 +66,7 @@ const Home = () => {
                 </Icon>
                 <Text>
                   <Title>Total Orders</Title>
-                  <Value>5</Value>
+                  <Value>{orders.length}</Value>
                 </Text>
               </IconText>
             </CardBody>
@@ -73,7 +81,7 @@ const Home = () => {
                 </Icon>
                 <Text>
                   <Title>Total Products</Title>
-                  <Value>250</Value>
+                  <Value>{totalProducts}</Value>
                 </Text>
               </IconText>
             </CardBody>

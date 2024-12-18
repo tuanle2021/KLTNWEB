@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { fetchProducts, setPage } from "../../redux/slices/productSlice";
 import { fetchCategories } from "../../redux/slices/categorySlice";
 import ProductCard from "./ProductCard";
@@ -14,6 +15,7 @@ import {
 
 const MainProducts = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { categories = [] } = useSelector((state) => state.categories) || {};
   const { products, totalPages, currentPage, loading, error } = useSelector(
     (state) => state.products
@@ -27,7 +29,7 @@ const MainProducts = () => {
   useEffect(() => {
     dispatch(fetchCategories());
   }, [dispatch]);
-
+  console.log("categories", categories);
   const handlePageChange = (page) => {
     dispatch(setPage(page));
   };
@@ -39,17 +41,21 @@ const MainProducts = () => {
   const handleClearEdit = () => {
     setEditProduct(null);
   };
-
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
-
+  const handleCreate = () => {
+    navigate("/addproduct");
+  };
   return (
     <ProductContainer>
+      {loading && (
+        <div className="loading">
+          <div></div>
+        </div>
+      )}{" "}
+      {error && <p>Error: {error}</p>}
       <ProductHeader>
         <h2>Products</h2>
-        <button onClick={() => setEditProduct(null)}>Create new</button>
+        <button onClick={handleCreate}>Create new</button>
       </ProductHeader>
-
       <SearchBar>
         <input type="text" placeholder="Search..." />
         <SelectGroup>
@@ -69,7 +75,6 @@ const MainProducts = () => {
           </select>
         </SelectGroup>
       </SearchBar>
-
       <ProductGrid>
         {products.map((product) => (
           <ProductCard
@@ -79,7 +84,6 @@ const MainProducts = () => {
           /> // Sử dụng ProductCard component
         ))}
       </ProductGrid>
-
       <Pagination>
         <button
           onClick={() => handlePageChange(currentPage - 1)}

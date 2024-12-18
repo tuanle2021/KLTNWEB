@@ -49,7 +49,7 @@ export const fetchProductById = createAsyncThunk(
   async (id, { rejectWithValue }) => {
     try {
       const { data } = await axios.get(
-        `${process.env.REACT_APP_BACKEND_URL}/products/${id}`
+        `${process.env.REACT_APP_BACKEND_URL}/products/${id}?increaseViews=false`
       );
       return data;
     } catch (error) {

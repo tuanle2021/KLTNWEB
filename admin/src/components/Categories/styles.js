@@ -2,6 +2,7 @@ import styled from "styled-components";
 
 // Container chính cho danh mục
 export const CategoryContainer = styled.div`
+  position: relative;
   background-color: #fff;
   padding: 20px;
   border-radius: 8px;

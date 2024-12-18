@@ -1,0 +1,8 @@
+Flask==2.0.1
+flask-cors==3.0.10
+torch==1.13.1+cu118
+torchvision==0.14.1+cu118
+torchaudio==0.13.1+cu118
+transformers==4.9.2
+matplotlib==3.4.2
+seaborn==0.11.1

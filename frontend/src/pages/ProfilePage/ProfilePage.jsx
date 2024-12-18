@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import Roadmap from "../../components/RoadmapComponent/Roadmap";
 import {
   ProfileContainer,
@@ -8,82 +9,10 @@ import {
   ProfileForm,
 } from "./styles";
 import { MyProfile, AddressBook, PaymentOptions } from "./Account";
-import OrderListComponent from "./Order";
 import { updateProfile } from "../../redux/slices/orderSlice";
-import { useDispatch } from "react-redux";
-
-
-const ordersData = [
-  {
-    status: "processing",
-    product: [
-      {
-        name: "Mô hình con chuột",
-        price: "15.000",
-        stock: "12",
-        ratings: "0",
-        image:
-          "https://res.cloudinary.com/dihhw7jo1/image/upload/v1727766681/products/laptop%20asus%20vivobook%203.jpg.jpg",
-      },
-      {
-        name: "Mô hình toy con chuột cao su",
-        price: "15.000",
-        stock: "12",
-        ratings: "0",
-        image:
-          "https://res.cloudinary.com/dihhw7jo1/image/upload/v1727766681/products/laptop%20asus%20vivobook%203.jpg.jpg",
-      },
-    ],
-    total: "29.000",
-    createdAt: "2021-09-01",
-  },
-  {
-    status: "processing",
-    product: [
-      {
-        name: "Mô hình con chuột",
-        price: "15.000",
-        stock: "12",
-        ratings: "0",
-        image:
-          "https://res.cloudinary.com/dihhw7jo1/image/upload/v1727766681/products/laptop%20asus%20vivobook%203.jpg.jpg",
-      },
-      {
-        name: "Mô hình toy con chuột cao su",
-        price: "15.000",
-        stock: "12",
-        ratings: "0",
-        image:
-          "https://res.cloudinary.com/dihhw7jo1/image/upload/v1727766681/products/laptop%20asus%20vivobook%203.jpg.jpg",
-      },
-    ],
-    total: "29.000",
-    createdAt: "2021-09-01",
-  },
-  {
-    status: "shipped",
-    product: [
-      {
-        name: "Mô hình con chuột giả trang trí halloween, đồ chơi cho bé, trẻ em, toy con chuột cao su",
-        price: "15.000",
-        stock: "12",
-        ratings: "0",
-        image:
-          "https://res.cloudinary.com/dihhw7jo1/image/upload/v1727766681/products/laptop%20asus%20vivobook%203.jpg.jpg",
-      },
-      {
-        name: "Mô hình con chuột giả trang trí halloween, đồ chơi cho bé, trẻ em, toy con chuột cao su",
-        price: "15.000",
-        stock: "12",
-        ratings: "0",
-        image:
-          "https://res.cloudinary.com/dihhw7jo1/image/upload/v1727766681/products/laptop%20asus%20vivobook%203.jpg.jpg",
-      },
-    ],
-    total: "29.000",
-    createdAt: "2021-09-01",
-  },
-];
+import { useDispatch, useSelector } from "react-redux";
+import { fetchOrdersByUserId } from "../../redux/slices/orderSlice";
+import OrderListComponent from "../../components/Profile/OrderList";
 
 const ProfilePage = () => {
   const [profile, setProfile] = useState({
@@ -96,8 +25,9 @@ const ProfilePage = () => {
     confirmPassword: "",
   });
   const dispatch = useDispatch();
-
-  const [selectedItem, setSelectedItem] = useState("My Profile");
+  const { user } = useSelector((state) => state.auth);
+  const { orders } = useSelector((state) => state.orders);
+  const location = useLocation();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -113,42 +43,43 @@ const ProfilePage = () => {
     }
   };
 
-  const [orders, setOrders] = useState([]);
-
   useEffect(() => {
-    // Simulate fetching data from an API
-    setOrders(ordersData);
-  }, []);
+    if (user) {
+      dispatch(fetchOrdersByUserId(user.id));
+    }
+  }, [dispatch, user]);
 
   const renderForm = () => {
+    const hash = location.hash.replace("#", "");
     const filteredOrders = orders.filter(
-      (order) => order.status === selectedItem.toLowerCase()
+        (order) => order.status === hash.toLowerCase()
     );
-    switch (selectedItem) {
-      case "My Profile":
+
+    switch (hash) {
+      case "my-profile":
         return (
-          <MyProfile
-            profile={profile}
-            handleChange={handleChange}
-            handleSaveChanges={handleSaveChanges}
-          />
+            <MyProfile
+                profile={profile}
+                handleChange={handleChange}
+                handleSaveChanges={handleSaveChanges}
+            />
         );
-      case "Address Book":
+      case "address-book":
         return <AddressBook />;
-      case "My Payment Options":
+      case "my-payment-options":
         return <PaymentOptions />;
-      case "Processing":
-      case "Shipped":
-      case "Cancelled":
-      case "Returned":
+      case "processing":
+      case "shipped":
+      case "cancelled":
+      case "awaiting_payment":
         return (
-          <OrderListComponent title={selectedItem} orders={filteredOrders} />
+            <OrderListComponent title={hash} orders={filteredOrders} />
         );
-      case "My WishList":
+      case "my-wishlist":
         return (
-          <ProfileForm>
-            <h2>My WishList</h2>
-          </ProfileForm>
+            <ProfileForm>
+              <h2>My WishList</h2>
+            </ProfileForm>
         );
       default:
         return null;
@@ -156,77 +87,74 @@ const ProfilePage = () => {
   };
 
   return (
-    <div>
-      {/* Roadmap hiển thị đường dẫn */}
-      <Roadmap />
-      <ProfileContainer>
-        {/* Sidebar chứa các mục quản lý tài khoản */}
-        <Sidebar>
-          <SidebarGroup>
-            <h4>My Account</h4>
-            <SidebarItem
-              className={selectedItem === "My Profile" ? "active" : ""}
-              onClick={() => setSelectedItem("My Profile")}
-            >
-              My Profile
-            </SidebarItem>
-            <SidebarItem
-              className={selectedItem === "Address Book" ? "active" : ""}
-              onClick={() => setSelectedItem("Address Book")}
-            >
-              Address Book
-            </SidebarItem>
-            <SidebarItem
-              className={selectedItem === "My Payment Options" ? "active" : ""}
-              onClick={() => setSelectedItem("My Payment Options")}
-            >
-              My Payment Options
-            </SidebarItem>
-          </SidebarGroup>
+      <div>
+        <Roadmap />
+        <ProfileContainer>
+          <Sidebar>
+            <SidebarGroup>
+              <h4>My Account</h4>
+              <SidebarItem
+                  className={location.hash === "#my-profile" ? "active" : ""}
+                  onClick={() => (window.location.hash = "#my-profile")}
+              >
+                My Profile
+              </SidebarItem>
+              <SidebarItem
+                  className={location.hash === "#address-book" ? "active" : ""}
+                  onClick={() => (window.location.hash = "#address-book")}
+              >
+                Address Book
+              </SidebarItem>
+              <SidebarItem
+                  className={location.hash === "#my-payment-options" ? "active" : ""}
+                  onClick={() => (window.location.hash = "#my-payment-options")}
+              >
+                My Payment Options
+              </SidebarItem>
+            </SidebarGroup>
 
-          <SidebarGroup>
-            <h4>My Orders</h4>
-            <SidebarItem
-              className={selectedItem === "Processing" ? "active" : ""}
-              onClick={() => setSelectedItem("Processing")}
-            >
-              Processing
-            </SidebarItem>
-            <SidebarItem
-              className={selectedItem === "Shipped" ? "active" : ""}
-              onClick={() => setSelectedItem("Shipped")}
-            >
-              Shipped
-            </SidebarItem>
-            <SidebarItem
-              className={selectedItem === "Cancelled" ? "active" : ""}
-              onClick={() => setSelectedItem("Cancelled")}
-            >
-              Cancelled
-            </SidebarItem>
-            <SidebarItem
-              className={selectedItem === "Returned" ? "active" : ""}
-              onClick={() => setSelectedItem("Returned")}
-            >
-              Returned
-            </SidebarItem>
-          </SidebarGroup>
+            <SidebarGroup>
+              <h4>My Orders</h4>
+              <SidebarItem
+                  className={location.hash === "#awaiting_payment" ? "active" : ""}
+                  onClick={() => (window.location.hash = "#awaiting_payment")}
+              >
+                Awaiting Payment
+              </SidebarItem>
+              <SidebarItem
+                  className={location.hash === "#processing" ? "active" : ""}
+                  onClick={() => (window.location.hash = "#processing")}
+              >
+                Processing
+              </SidebarItem>
+              <SidebarItem
+                  className={location.hash === "#shipped" ? "active" : ""}
+                  onClick={() => (window.location.hash = "#shipped")}
+              >
+                Shipped
+              </SidebarItem>
+              <SidebarItem
+                  className={location.hash === "#cancelled" ? "active" : ""}
+                  onClick={() => (window.location.hash = "#cancelled")}
+              >
+                Cancelled
+              </SidebarItem>
+            </SidebarGroup>
 
-          <SidebarGroup>
-            <h4>My WishList</h4>
-            <SidebarItem
-              className={selectedItem === "My WishList" ? "active" : ""}
-              onClick={() => setSelectedItem("My WishList")}
-            >
-              My WishList
-            </SidebarItem>
-          </SidebarGroup>
-        </Sidebar>
+            <SidebarGroup>
+              <h4>My WishList</h4>
+              <SidebarItem
+                  className={location.hash === "#my-wishlist" ? "active" : ""}
+                  onClick={() => (window.location.hash = "#my-wishlist")}
+              >
+                My WishList
+              </SidebarItem>
+            </SidebarGroup>
+          </Sidebar>
 
-        {/* Form chỉnh sửa thông tin tài khoản */}
-        {renderForm()}
-      </ProfileContainer>
-    </div>
+          {renderForm()}
+        </ProfileContainer>
+      </div>
   );
 };
 

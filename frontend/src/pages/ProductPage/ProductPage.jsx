@@ -5,12 +5,15 @@ import { fetchFilterProduct, setPage } from "../../redux/slices/productSlice";
 import CategorySection from "../HomePage/CategorySection";
 import ProductListSection from "../HomePage/ProductListSection";
 import FilterSidebar from "../../components/Category/index";
+import { ViewProduct } from "./styles";
+
 const useQuery = () => {
   return new URLSearchParams(useLocation().search);
 };
 
 const ProductPage = () => {
   const dispatch = useDispatch();
+  const location = useLocation();
   const query = useQuery();
   const category = query.get("category");
 
@@ -22,7 +25,7 @@ const ProductPage = () => {
     if (category) {
       dispatch(fetchFilterProduct({ category, page: currentPage }));
     }
-  }, [dispatch, category, currentPage]);
+  }, [dispatch, category, currentPage, location.search]);
 
   const handlePreviousPage = () => {
     if (currentPage > 1) {
@@ -39,14 +42,17 @@ const ProductPage = () => {
   return (
     <div className="container">
       <CategorySection />
-      <FilterSidebar />
-      <ProductListSection
-        products={products}
-        handlePreviousPage={handlePreviousPage}
-        handleNextPage={handleNextPage}
-        currentPage={currentPage}
-        totalPages={totalPages}
-      />
+      <ViewProduct>
+        <FilterSidebar />
+        <ProductListSection
+          products={products}
+          handlePreviousPage={handlePreviousPage}
+          handleNextPage={handleNextPage}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          maxItemsPerRow={4}
+        />
+      </ViewProduct>
     </div>
   );
 };

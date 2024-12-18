@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import moment from "moment";
+import { useNavigate } from "react-router-dom";
 import {
   CardBody,
   TableResponsive,
@@ -16,9 +17,12 @@ import { FaEye } from "react-icons/fa";
 const TableOrder = ({ orders, status }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
+  const navigate = useNavigate();
 
   // Sort orders by createdAt in descending order
-  const sortedOrders = [...orders].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  const sortedOrders = [...orders].sort(
+      (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+  );
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -46,16 +50,18 @@ const TableOrder = ({ orders, status }) => {
             </TableRow>
             </thead>
             <tbody>
-            {currentOrders.map((order, index) => (
+            {currentOrders.map((order) => (
                 <TableRow key={order._id}>
-                  <TableCell>{index + 1 + (currentPage - 1) * itemsPerPage}</TableCell>
+                  <TableCell>
+                    <b>{order._id || "N/A"}</b>{" "}
+                  </TableCell>
                   <TableCell>
                     <b>{order.user_id?.name || "N/A"}</b>{" "}
                   </TableCell>
                   <TableCell>{order.user_id?.email || "N/A"}</TableCell>
                   <TableCell>${order.total_price}</TableCell>
                   <TableCell>
-                    {order.payment_status === "pending" ? (
+                    {order.payment_status === "completed" ? (
                         <Badge variant="success">
                           Paid At {moment(order.paidAt).format("MMM Do YY")}
                         </Badge>
@@ -76,9 +82,9 @@ const TableOrder = ({ orders, status }) => {
                       </TableCell>
                   )}
                   <TableCell className="eye">
-                    <IconLink to={`/orders/${order._id}`}>
-                      <FaEye fontSize={25} />
-                    </IconLink>
+                    <div onClick={() => navigate(`/orders/${order._id}`)} style={{cursor: 'pointer'}}>
+                      <FaEye fontSize={25}/>
+                    </div>
                   </TableCell>
                 </TableRow>
             ))}

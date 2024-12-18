@@ -10,12 +10,16 @@ const categorySchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    brands: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Brand",
+      },
+    ],
   },
   {
-    timestamps: true, // Tự động thêm createdAt và updatedAt
+    timestamps: true,
   }
 );
-
 const Category = mongoose.model("Category", categorySchema);
-
 module.exports = Category;

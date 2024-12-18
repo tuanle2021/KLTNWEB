@@ -22,10 +22,21 @@ export const ProductGrid = styled.div`
 export const ProductLists = styled.div``;
 
 export const ProductListContainer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(${(props) => props.maxItemsPerRow || 4}, 1fr);
+  gap: 15px;
+
+  @media (max-width: 1200px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media (max-width: 900px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 export const Pagination = styled.div`

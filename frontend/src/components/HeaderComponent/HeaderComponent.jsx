@@ -1,18 +1,18 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../../redux/slices/authSlice";
+import { Link, useNavigate } from "react-router-dom";
 import CategoryMenu from "../Category/CategoryMenu";
-import { Link } from "react-router-dom";
-import { IoSearch } from "react-icons/io5";
+import SearchBarBox from "./SearchBar";
+import Swal from "sweetalert2";
+
 import {
   HeaderContainer,
   HeaderInner,
   Logo,
-  SearchBar,
   NavItem,
   ShoppingCart,
   ProfileMenu,
-  Button,
   UserIconWrapper,
   DropdownContainer,
   NavButton,
@@ -25,59 +25,102 @@ import {
   UserOutlined,
   DownOutlined,
   ShoppingCartOutlined,
-  ShopOutlined,
 } from "@ant-design/icons";
 
 const HeaderComponent = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const user = useSelector((state) => state.auth.user);
+  const cartItems = useSelector((state) => state.cart.items);
+  const [dropdownVisible, setDropdownVisible] = useState(false);
+  const dropdownRef = useRef(null);
+
   const handleLogout = () => {
     dispatch(logout());
   };
+
+  const handleCartClick = (e) => {
+    e.preventDefault();
+    if (user) {
+      navigate("/cart");
+    } else {
+      Swal.fire({
+        icon: "warning",
+        title: "Please login",
+        text: "You need to login to view your cart.",
+        showCancelButton: true,
+        confirmButtonText: "Login",
+        cancelButtonText: "Cancel",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate("/login");
+        }
+      });
+    }
+  };
+
+  const handleUserIconClick = () => {
+    setDropdownVisible(!dropdownVisible);
+  };
+
+  const handleClickOutside = (event) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setDropdownVisible(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const totalItems = cartItems.length;
 
   return (
     <HeaderContainer>
       <div className="container">
         <HeaderInner>
-          <Logo href="/">
-            <ShopOutlined style={{ fontSize: "2em", marginRight: "10px" }} />
+          {/* <CategoryMenu /> */}
+          <Logo>
+            <Link to="/">
+              <img
+                src="/gif/shopLogo.gif"
+                alt="MERN Shop"
+                style={{ width: "3em", height: "3em" }}
+              />
+            </Link>
           </Logo>
-          <CategoryMenu />
           {/* Search Bar */}
-          <SearchBar>
-            <input type="text" placeholder="Search for tech products..." />
-            <button type="submit">
-              <IoSearch />
-            </button>
-          </SearchBar>
+          <SearchBarBox />
 
           {/* Shopping Cart */}
           <ShoppingCart>
-            <a href="/cart">
+            <a href="/cart" onClick={handleCartClick}>
               <ShoppingCartOutlined
                 style={{
-                  fontSize: "1.5em",
+                  fontSize: "1.7em",
                   marginRight: "10px",
                   color: "var(--dark-bg-third)",
                 }}
               />
-              <span className="cart-count">3</span>
+              <span className="cart-count">{totalItems}</span>
               {/* Dynamic cart item count */}
             </a>
           </ShoppingCart>
 
           {/* Profile Menu */}
-          <ProfileMenu>
+          <ProfileMenu ref={dropdownRef}>
             {user ? (
               <>
                 <ProfileMenu>
-                  <UserIconWrapper>
-                    <UserOutlined />
-                    <DownOutlined className="dropdown-icon" />
+                  <UserIconWrapper onClick={handleUserIconClick}>
+                    {user.name} <DownOutlined className="dropdown-icon" />
                   </UserIconWrapper>
-                  <DropdownContainer className="profile-dropdown">
+                  <DropdownContainer visible={dropdownVisible}>
                     <NavItem>
-                      <Link to="/profile">
+                      <Link to="/profile#my-profile">
                         <i className="icon">
                           <UserOutlined />
                         </i>{" "}
@@ -85,7 +128,7 @@ const HeaderComponent = () => {
                       </Link>
                     </NavItem>
                     <NavItem>
-                      <Link to="/orders">
+                      <Link to="/profile#awaiting_payment">
                         <i className="icon">
                           <InboxOutlined />
                         </i>{" "}
@@ -93,7 +136,7 @@ const HeaderComponent = () => {
                       </Link>
                     </NavItem>
                     <NavItem>
-                      <Link to="/cancellations">
+                      <Link to="/profile#cancelled">
                         <i className="icon">
                           <CloseCircleOutlined />
                         </i>{" "}
@@ -101,11 +144,11 @@ const HeaderComponent = () => {
                       </Link>
                     </NavItem>
                     <NavItem>
-                      <Link to="/reviews">
+                      <Link to="/profile#my-wishlist">
                         <i className="icon">
                           <StarOutlined />
                         </i>{" "}
-                        My Reviews
+                        My Wishlist
                       </Link>
                     </NavItem>
                     <NavItem>
@@ -120,18 +163,37 @@ const HeaderComponent = () => {
                 </ProfileMenu>
               </>
             ) : (
-              <NavButton>
-                <NavItem>
-                  <Link to="/login">
-                    <Button>Login</Button>
-                  </Link>
-                </NavItem>
-                <NavItem>
-                  <Link to="/login?register=true">
-                    <Button>Register</Button>
-                  </Link>
-                </NavItem>
-              </NavButton>
+              <>
+                <ProfileMenu>
+                  <UserIconWrapper onClick={handleUserIconClick}>
+                    Welcome <DownOutlined className="dropdown-icon" />
+                  </UserIconWrapper>
+                  <DropdownContainer visible={dropdownVisible}>
+                    <NavItem>
+                      <Link
+                        style={{
+                          fontSize: "1.2em",
+                          color: "var(--dark-bg-third)",
+                        }}
+                        to="/login"
+                      >
+                        Login
+                      </Link>
+                    </NavItem>
+                    <NavItem>
+                      <Link
+                        style={{
+                          fontSize: "1.2em",
+                          color: "var(--dark-bg-third)",
+                        }}
+                        to="/login?register=true"
+                      >
+                        Register
+                      </Link>
+                    </NavItem>
+                  </DropdownContainer>
+                </ProfileMenu>
+              </>
             )}
           </ProfileMenu>
         </HeaderInner>

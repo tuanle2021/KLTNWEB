@@ -2,6 +2,7 @@ import styled from "styled-components";
 
 // Container chính của User
 export const UserContainer = styled.div`
+  position: relative;
   background-color: #fff;
   padding: 20px;
   border-radius: 8px;
@@ -102,6 +103,7 @@ export const UserCard = styled.div`
 export const UserImage = styled.img`
   width: 80px;
   height: 80px;
+  background-color: #fff;
   border-radius: 50%;
   border: 3px solid #fff;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -190,6 +192,8 @@ export const ProfileInfo = styled.div`
   .detail-info {
     margin-left: 230px;
   }
+    label {
+    margin-right: 10px;
 `;
 export const Header = styled.div`
   background-color: #f6d9ab;
@@ -200,6 +204,7 @@ export const Header = styled.div`
 export const Logo = styled.img`
   width: 150px;
   height: 150px;
+  background-color: #fff;
   border-radius: 10px;
   border: 3px solid #fff;
   box-shadow: 0 4px 7px rgba(0, 0, 0, 0.2);

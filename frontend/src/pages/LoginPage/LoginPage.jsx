@@ -3,7 +3,6 @@ import { useLocation } from "react-router-dom";
 import LoginForm from "../../components/Login/LoginForm";
 import RegisterForm from "../../components/Login/RegisterForm";
 import { Container } from "./styles";
-import HeaderComponent from "../../components/HeaderComponent/HeaderComponent";
 
 const LoginPage = () => {
   const [visible, setVisible] = useState(false);

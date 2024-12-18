@@ -3,7 +3,7 @@ const Category = require("../models/Category");
 // Controller để thêm danh mục mới
 const addCategory = async (req, res) => {
   try {
-    const { name, description } = req.body;
+    const { name, description, brands } = req.body;
 
     // Kiểm tra các trường bắt buộc
     if (!name || !description) {
@@ -14,6 +14,7 @@ const addCategory = async (req, res) => {
     const newCategory = new Category({
       name,
       description,
+      brands: brands || [], // Nếu không có danh sách brands, đặt giá trị mặc định là mảng rỗng
     });
 
     // Lưu danh mục vào cơ sở dữ liệu
@@ -57,11 +58,11 @@ const deleteCategoryById = async (req, res) => {
 const updateCategoryById = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, description } = req.body;
+    const { name, description, brands } = req.body;
 
     const category = await Category.findByIdAndUpdate(
       id,
-      { name, description },
+      { name, description, brands },
       { new: true, runValidators: true }
     );
 

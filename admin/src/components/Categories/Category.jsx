@@ -78,13 +78,15 @@ const Categories = () => {
     }
   };
 
-  if(loading) return <p>Loading...</p>
-  if(error) return <p>{error}</p>
-
   return (
     <CategoryContainer>
+      {loading && (
+        <div className="loading">
+          <div></div>
+        </div>
+      )}{" "}
+      {error && <p>{error}</p>}
       <h2>Categories</h2>
-
       <CategoryInner>
         {/* Form thêm danh mục */}
         <CategoryForm as="form" onSubmit={handleSubmit}>

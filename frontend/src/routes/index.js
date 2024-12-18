@@ -28,6 +28,11 @@ export const routes = [
     isShowHeader: true,
   },
   {
+    path: "/my-orders",
+    page: ProfilePage,
+    isShowHeader: true,
+  },
+  {
     path: "/login",
     page: LoginPage,
     isShowHeader: false,
@@ -53,9 +58,9 @@ export const routes = [
     isShowHeader: true,
   },
   {
-    path: "/activate/:token", // Đảm bảo route này tồn tại
+    path: "/activate/:token",
     page: ActivateForm,
-    isShowHeader: false,
+    isShowHeader: true,
   },
   {
     path: "/product/:id",

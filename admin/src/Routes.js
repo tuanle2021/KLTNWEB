@@ -71,7 +71,7 @@ const AppRoutes = () => {
             <Route path="/users/:id" element={<UserDetail />} />
             <Route path="/create-user" element={<CreateUser />} />
             <Route path="/orders" element={<OrderScreen />} />
-            <Route path="/orders/:id" element={<OrderDetailScreen />} />
+            <Route path="/orders/:orderId" element={<OrderDetailScreen />} />
             <Route path="/" element={<HomePage />} />
           </Route>
         </Routes>

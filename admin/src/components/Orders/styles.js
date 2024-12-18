@@ -1,6 +1,7 @@
 import styled from "styled-components";
 // Container chứa toàn bộ đơn hàng
 export const OrderContainer = styled.div`
+  position: relative;
   padding: 20px;
   background-color: #fff;
   border-radius: 8px;
