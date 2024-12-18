@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import moment from "moment";
+import { useNavigate } from "react-router-dom";
 import {
   CardBody,
   TableResponsive,
@@ -16,6 +17,7 @@ import { FaEye } from "react-icons/fa";
 const TableOrder = ({ orders, status }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
+  const navigate = useNavigate();
 
   // Sort orders by createdAt in descending order
   const sortedOrders = [...orders].sort(

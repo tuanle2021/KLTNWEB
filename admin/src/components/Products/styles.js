@@ -2,7 +2,11 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 // Thẻ chứa sản phẩm
 export const CardContainer = styled.div`
+<<<<<<< HEAD
   position: relative;
+=======
+position: relative;
+>>>>>>> ab0dc78f956c0940da33b05143456108ae516085
   border: 1px solid #ddd;
   border-radius: 8px;
   padding: 15px;

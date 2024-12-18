@@ -27,7 +27,11 @@ const Breadcrumb = styled.div`
 
 const ProductContent = styled.div`
   display: flex;
+<<<<<<< HEAD
   gap: 30px;
+=======
+  gap: 40px;
+>>>>>>> ab0dc78f956c0940da33b05143456108ae516085
 `;
 
 const ImageGallery = styled.div`
@@ -53,9 +57,12 @@ const MainImage = styled.img`
 
 const ProductInfo = styled.div`
   flex: 1;
+<<<<<<< HEAD
   border-radius: 10px;
   background: #fff;
   padding: 30px;
+=======
+>>>>>>> ab0dc78f956c0940da33b05143456108ae516085
 `;
 
 const ProductTitle = styled.h1`
@@ -357,7 +364,11 @@ const ProductDetail = ({ product }) => {
   };
 
   const handleQuantityChange = (type) => {
+<<<<<<< HEAD
     if (type === "increment" && quantity < stock) {
+=======
+    if (type === "increment") {
+>>>>>>> ab0dc78f956c0940da33b05143456108ae516085
       setQuantity((prev) => prev + 1);
     } else if (type === "decrement" && quantity > 1) {
       setQuantity((prev) => prev - 1);
@@ -365,6 +376,7 @@ const ProductDetail = ({ product }) => {
   };
 
   const averageRating =
+<<<<<<< HEAD
     reviews.length > 0
       ? reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length
       : 0;
@@ -376,6 +388,13 @@ const ProductDetail = ({ product }) => {
             reviews.filter((review) => review.rating === rating).length
         )
       : [0, 0, 0, 0, 0];
+=======
+    reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length;
+
+  const ratingCounts = [5, 4, 3, 2, 1].map(
+    (rating) => reviews.filter((review) => review.rating === rating).length
+  );
+>>>>>>> ab0dc78f956c0940da33b05143456108ae516085
   const renderStars = (rating) => {
     const fullStars = Math.floor(rating);
     const halfStar = rating % 1 >= 0.5;
@@ -531,6 +550,7 @@ const ProductDetail = ({ product }) => {
                 <BarBackground>
                   <BarFill
                     color={
+<<<<<<< HEAD
                       reviews.length > 0
                         ? [
                             "#4caf50",
@@ -544,6 +564,13 @@ const ProductDetail = ({ product }) => {
                     width={
                       reviews.length > 0 ? (count / reviews.length) * 100 : 100
                     }
+=======
+                      ["#4caf50", "#8bc34a", "#cddc39", "#ffeb3b", "#f44336"][
+                        index
+                      ]
+                    }
+                    width={(count / reviews.length) * 100}
+>>>>>>> ab0dc78f956c0940da33b05143456108ae516085
                   />
                 </BarBackground>
                 <span>{count}</span>
