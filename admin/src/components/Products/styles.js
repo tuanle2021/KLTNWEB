@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 // Thẻ chứa sản phẩm
 export const CardContainer = styled.div`
-position: relative;
+  position: relative;
   border: 1px solid #ddd;
   border-radius: 8px;
   padding: 15px;
@@ -247,9 +247,12 @@ export const FormInput = styled.input`
 
 export const FormTextarea = styled.textarea`
   width: 100%;
+  min-height: 200px;
+  max-height: 900px;
   padding: 10px;
   border: 1px solid #ddd;
   border-radius: 4px;
+  resize: none;
 `;
 
 export const ImageUploadContainer = styled.div`

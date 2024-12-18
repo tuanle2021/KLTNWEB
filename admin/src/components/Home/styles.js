@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 
 export const ContentMain = styled.section`
+  position: relative;
   padding: 10px;
   flex: 1;
 `;

@@ -23,9 +23,18 @@ import TableOrder from "./TableOrder";
 
 const Home = () => {
   const dispatch = useDispatch();
-  const { orders, loading: ordersLoading, error: ordersError } = useSelector((state) => state.orders);
-  const { products, totalProducts, loading: productsLoading, error: productsError } = useSelector((state) => state.products);
-
+  const {
+    orders,
+    loading: ordersLoading,
+    error: ordersError,
+  } = useSelector((state) => state.orders);
+  const {
+    products,
+    totalProducts,
+    loading: productsLoading,
+    error: productsError,
+  } = useSelector((state) => state.products);
+  console.log(orders, products);
   useEffect(() => {
     dispatch(fetchOrders());
     dispatch(fetchProducts());
@@ -37,6 +46,13 @@ const Home = () => {
 
   return (
     <ContentMain>
+      {(ordersLoading || productsLoading) && (
+        <div className="loading">
+          <div></div>
+        </div>
+      )}
+
+      {(ordersError || productsError) && <p>{ordersError}</p>}
       <ContentHeader>
         <ContentTittle> Dashboard </ContentTittle>
       </ContentHeader>

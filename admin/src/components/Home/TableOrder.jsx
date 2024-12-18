@@ -37,7 +37,7 @@ const TableOrder = ({ orders, status }) => {
         <Table>
           <thead>
             <TableRow>
-              <TableCell>ID</TableCell>
+              <TableCell>#</TableCell>
               <TableCell>Name</TableCell>
               <TableCell>Email</TableCell>
               <TableCell>Total Price</TableCell>
@@ -48,8 +48,11 @@ const TableOrder = ({ orders, status }) => {
             </TableRow>
           </thead>
           <tbody>
-            {currentOrders.map((order) => (
+            {currentOrders.map((order, index) => (
               <TableRow key={order._id}>
+                <TableCell>
+                  {index + 1 + (currentPage - 1) * itemsPerPage}
+                </TableCell>
                 <TableCell>
                   <b>{order.user_id?.name || "N/A"}</b>{" "}
                 </TableCell>

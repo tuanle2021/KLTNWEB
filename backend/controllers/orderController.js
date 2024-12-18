@@ -2,6 +2,7 @@ const Order = require("../models/Order");
 const OrderItem = require("../models/OrderItem");
 const Product = require("../models/Product");
 const Payment = require("../models/Payment");
+const Cart = require("../models/Cart");
 
 const createOrder = async (req, res) => {
   try {
@@ -28,6 +29,10 @@ const createOrder = async (req, res) => {
         quantity: item.quantity,
         price: product.price,
       });
+
+      // Cập nhật số lượng sản phẩm trong bảng Product
+      product.stock -= item.quantity;
+      await product.save();
     }
 
     // Tạo đơn hàng mới
@@ -42,7 +47,6 @@ const createOrder = async (req, res) => {
     const savedOrder = await newOrder.save();
 
     // Tạo các OrderItem tương ứng
-    // Tạo các OrderItem tương ứng
     for (const orderItem of orderItems) {
       const newOrderItem = new OrderItem({
         order_id: savedOrder._id,
@@ -52,6 +56,16 @@ const createOrder = async (req, res) => {
       });
       await newOrderItem.save();
     }
+
+    // Xóa các sản phẩm đã mua khỏi giỏ hàng
+    await Cart.updateOne(
+      { user_id: user_id },
+      {
+        $pull: {
+          items: { product_id: { $in: items.map((item) => item.product_id) } },
+        },
+      }
+    );
 
     res.status(201).json(savedOrder);
   } catch (error) {
@@ -91,6 +105,7 @@ const getOrdersByUserId = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+
 const updateOrderStatus = async (req, res) => {
   try {
     const { id } = req.params;
@@ -103,7 +118,11 @@ const updateOrderStatus = async (req, res) => {
     }
 
     // Cập nhật trạng thái đơn hàng
-    order.status = status;
+    if (["processing", "shipped", "cancelled"].includes(status)) {
+      order.status = status;
+    } else {
+      return res.status(400).json({ message: "Invalid status value" });
+    }
     const updatedOrder = await order.save();
 
     res.status(200).json(updatedOrder);
@@ -161,7 +180,7 @@ const updateOrderItems = async (req, res) => {
     }
 
     // Cập nhật trạng thái thanh toán nếu có
-    if (payment_status) {
+    if (payment_status === "completed") {
       order.payment_status = payment_status;
       order.status = "processing";
     }

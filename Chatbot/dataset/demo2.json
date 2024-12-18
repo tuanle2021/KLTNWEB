@@ -1,0 +1,43 @@
+[
+  {
+    "clientId": "1",
+    "Điện thoại Samsung": 18,
+    "Điện thoại Apple": 20,
+    "Đồng hồ Xiaomi": 10,
+    "Đồng hồ Apple": 15,
+    "Search": "Điện thoại Samsung"
+  },
+  {
+    "clientId": "2",
+    "Điện thoại Samsung": 18,
+    "Điện thoại Apple": 20,
+    "Đồng hồ Xiaomi": 10,
+    "Đồng hồ Apple": 15,
+    "Search": "Điện thoại Apple"
+  },
+  {
+    "clientId": "3",
+    "Điện thoại Samsung": 18,
+    "Điện thoại Apple": 20,
+    "Đồng hồ Xiaomi": 10,
+    "Đồng hồ Apple": 15,
+    "Search": "Đồng hồ Apple"
+  },
+  {
+    "clientId": "4",
+    "Điện thoại Samsung": 18,
+    "Điện thoại Apple": 20,
+    "Đồng hồ Xiaomi": 10,
+    "Đồng hồ Apple": 15,
+    "Đồng hồ Samsung": 5,
+    "Search": "Đồng hồ Samsung"
+  },
+  {
+    "clientId": "5",
+    "Điện thoại Samsung": 18,
+    "Laptop Samsung": 20,
+    "Đồng hồ Xiaomi": 10,
+    "Đồng hồ Apple": 15,
+    "Search": "Điện thoại Samsung"
+  }
+]

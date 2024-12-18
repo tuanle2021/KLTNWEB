@@ -1,48 +1,43 @@
 import React, { useState, useEffect } from "react";
 import { FaPen, FaTrashAlt } from "react-icons/fa";
 import {
-  CategoryContainer,
+  BrandContainer,
   FormGroup,
   FormLabel,
   FormInput,
   FormTextarea,
   SubmitButton,
-  CategoryTable,
+  BrandTable,
   TableHeader,
   TableRow,
   TableCell,
   ActionButton,
-  CategoryInner,
-  CategoryForm,
+  BrandInner,
+  BrandForm,
 } from "./styles";
-import Swal from "sweetalert2";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  fetchCategories,
-  addCategory,
-  deleteCategory,
-  updateCategory,
-} from "../../redux/slices/categorySlice";
-import { fetchBrands } from "../../redux/slices/brandSlice";
-
-const Categories = () => {
+  fetchBrands,
+  addBrand,
+  deleteBrand,
+  updateBrand,
+} from "../../redux/slices/brandSlice";
+import { fetchCategories } from "../../redux/slices/categorySlice";
+import Swal from "sweetalert2";
+const Brands = () => {
   const dispatch = useDispatch();
-  const { categories, loading, error } = useSelector(
-    (state) => state.categories
-  );
-  const { brands } = useSelector((state) => state.brands);
+  const { brands, loading, error } = useSelector((state) => state.brands);
+  const { categories } = useSelector((state) => state.categories);
   const [formData, setFormData] = useState({
     name: "",
-    description: "",
-    brands: [],
+    categories: [],
   });
-  console.log(categories, brands);
   const [editMode, setEditMode] = useState(false);
-  const [editCategoryId, setEditCategoryId] = useState(null);
+  const [editBrandId, setEditBrandId] = useState(null);
 
   useEffect(() => {
-    dispatch(fetchCategories());
     dispatch(fetchBrands());
+    dispatch(fetchCategories());
   }, [dispatch]);
 
   const handleInputChange = (e) => {
@@ -53,40 +48,40 @@ const Categories = () => {
     });
   };
 
-  const handleBrandChange = (e) => {
-    const selectedBrands = Array.from(
+  const handleCategoryChange = (e) => {
+    const selectedCategories = Array.from(
       e.target.selectedOptions,
       (option) => option.value
     );
     setFormData({
       ...formData,
-      brands: selectedBrands,
+      categories: selectedCategories,
     });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (editMode) {
-      dispatch(updateCategory({ id: editCategoryId, categoryData: formData }));
+      dispatch(updateBrand({ id: editBrandId, brandData: formData }));
     } else {
-      dispatch(addCategory(formData));
+      dispatch(addBrand(formData));
     }
-    setFormData({ name: "", description: "", brands: [] });
+    setFormData({ name: "", description: "", categories: [] });
     setEditMode(false);
-    setEditCategoryId(null);
+    setEditBrandId(null);
   };
 
-  const handleEdit = (category) => {
+  const handleEdit = (brand) => {
     setFormData({
-      name: category.name,
-      description: category.description,
-      brands: category.brands.map((brand) => brand._id),
+      name: brand.name,
+      description: brand.description,
+      categories: brand.categories.map((category) => category._id),
     });
     setEditMode(true);
-    setEditCategoryId(category._id);
+    setEditBrandId(brand._id);
   };
 
-  const handleDelete = (categoryId) => {
+  const handleDelete = (brandId) => {
     Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -97,24 +92,27 @@ const Categories = () => {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        dispatch(deleteCategory(categoryId));
-        Swal.fire("Deleted!", "Your category has been deleted.");
+        dispatch(deleteBrand(brandId));
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
+          title: "Your brand has been deleted",
+          showConfirmButton: false,
+          timer: 1500,
+          toast: true,
+        });
       }
     });
   };
 
   return (
-    <CategoryContainer>
-      {loading && (
-        <div className="loading">
-          <div></div>
-        </div>
-      )}
-      {error && <p>{error}</p>}
-      <h2>Categories</h2>
+    <BrandContainer>
+      {loading && <p>Loading...</p>}
+      {error && <p>{error.message}</p>}
+      <h2>Brands</h2>
 
-      <CategoryInner>
-        <CategoryForm as="form" onSubmit={handleSubmit}>
+      <BrandInner>
+        <BrandForm as="form" onSubmit={handleSubmit}>
           <FormGroup>
             <FormLabel>Name</FormLabel>
             <div className="input">
@@ -129,26 +127,16 @@ const Categories = () => {
           </FormGroup>
 
           <FormGroup>
-            <FormLabel>Description</FormLabel>
-            <FormTextarea
-              name="description"
-              value={formData.description}
-              onChange={handleInputChange}
-              placeholder="Type here"
-            />
-          </FormGroup>
-
-          <FormGroup>
-            <FormLabel>Brands</FormLabel>
+            <FormLabel>Categories</FormLabel>
             <select
               multiple
-              name="brands"
-              value={formData.brands}
-              onChange={handleBrandChange}
+              name="categories"
+              value={formData.categories}
+              onChange={handleCategoryChange}
             >
-              {brands.map((brand) => (
-                <option key={brand._id} value={brand._id}>
-                  {brand.name}
+              {categories.map((category) => (
+                <option key={category._id} value={category._id}>
+                  {category.name}
                 </option>
               ))}
             </select>
@@ -156,44 +144,42 @@ const Categories = () => {
 
           <FormGroup>
             <SubmitButton type="submit">
-              {editMode ? "Update category" : "Create category"}
+              {editMode ? "Update brand" : "Create brand"}
             </SubmitButton>
           </FormGroup>
-        </CategoryForm>
+        </BrandForm>
 
-        <CategoryTable>
+        <BrandTable>
           <thead>
             <TableRow>
               <TableHeader></TableHeader>
               <TableHeader>ID</TableHeader>
               <TableHeader>Name</TableHeader>
-              <TableHeader>Description</TableHeader>
-              <TableHeader>Brands</TableHeader>
+              <TableHeader>Categories</TableHeader>
               <TableHeader>Action</TableHeader>
             </TableRow>
           </thead>
           <tbody>
-            {categories.map((category) => (
-              <TableRow key={category._id}>
+            {brands.map((brand) => (
+              <TableRow key={brand._id}>
                 <TableCell>
                   <input type="checkbox" />
                 </TableCell>
-                <TableCell>{category._id}</TableCell>
-                <TableCell>{category.name}</TableCell>
-                <TableCell>{category.description}</TableCell>
+                <TableCell>{brand._id}</TableCell>
+                <TableCell>{brand.name}</TableCell>
                 <TableCell>
-                  {category.brands.map((brand) => brand.name).join(", ")}
+                  {brand.categories.map((category) => category.name).join(", ")}
                 </TableCell>
                 <TableCell>
                   <ActionButton
                     className="edit"
-                    onClick={() => handleEdit(category)}
+                    onClick={() => handleEdit(brand)}
                   >
                     <FaPen />
                   </ActionButton>
                   <ActionButton
                     className="delete"
-                    onClick={() => handleDelete(category._id)}
+                    onClick={() => handleDelete(brand._id)}
                   >
                     <FaTrashAlt />
                   </ActionButton>
@@ -201,10 +187,10 @@ const Categories = () => {
               </TableRow>
             ))}
           </tbody>
-        </CategoryTable>
-      </CategoryInner>
-    </CategoryContainer>
+        </BrandTable>
+      </BrandInner>
+    </BrandContainer>
   );
 };
 
-export default Categories;
+export default Brands;

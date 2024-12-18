@@ -1,0 +1,122 @@
+[
+  {
+    "product_id": "1",
+    "name": "Laptop Asus",
+    "views": 1500,
+    "purchases": 300,
+    "likes": 250,
+    "numberOfReviews": 200,
+    "ratings": 4.5,
+    "cancellations": 10
+  },
+  {
+    "product_id": "2",
+    "name": "Laptop Asus",
+    "views": 2500,
+    "purchases": 450,
+    "likes": 400,
+    "numberOfReviews": 500,
+    "ratings": 4.8,
+    "cancellations": 5
+  },
+  {
+    "product_id": "3",
+    "name": "Laptop Asus",
+    "views": 2500,
+    "purchases": 450,
+    "likes": 400,
+    "numberOfReviews": 500,
+    "ratings": 4.8,
+    "cancellations": 5
+  },
+  {
+    "product_id": "4",
+    "name": "Phone Samsung",
+    "views": 2500,
+    "purchases": 450,
+    "likes": 400,
+    "numberOfReviews": 500,
+    "ratings": 4.8,
+    "cancellations": 5
+  },
+  {
+    "product_id": "5",
+    "name": "Phone Samsung",
+    "views": 2500,
+    "purchases": 450,
+    "likes": 400,
+    "numberOfReviews": 500,
+    "ratings": 4.8,
+    "cancellations": 5
+  },
+  {
+    "product_id": "6",
+    "name": "Phone Samsung",
+    "views": 2500,
+    "purchases": 450,
+    "likes": 400,
+    "numberOfReviews": 500,
+    "ratings": 4.8,
+    "cancellations": 5
+  },
+  {
+    "product_id": "7",
+    "name": "Watch Xiaomi",
+    "views": 2500,
+    "purchases": 450,
+    "likes": 400,
+    "numberOfReviews": 500,
+    "ratings": 4.8,
+    "cancellations": 5
+  },
+  {
+    "product_id": "8",
+    "name": "Watch Xiaomi",
+    "views": 2500,
+    "purchases": 450,
+    "likes": 400,
+    "numberOfReviews": 500,
+    "ratings": 4.8,
+    "cancellations": 5
+  },
+  {
+    "product_id": "9",
+    "name": "Watch Xiaomi",
+    "views": 2500,
+    "purchases": 450,
+    "likes": 400,
+    "numberOfReviews": 500,
+    "ratings": 4.8,
+    "cancellations": 5
+  },
+  {
+    "product_id": "10",
+    "name": "Tablet Samsung",
+    "views": 2500,
+    "purchases": 450,
+    "likes": 400,
+    "numberOfReviews": 500,
+    "ratings": 4.8,
+    "cancellations": 5
+  },
+  {
+    "product_id": "11",
+    "name": "Tablet Samsung",
+    "views": 2500,
+    "purchases": 450,
+    "likes": 400,
+    "numberOfReviews": 500,
+    "ratings": 4.8,
+    "cancellations": 5
+  },
+  {
+    "product_id": "12",
+    "name": "Tablet Samsung",
+    "views": 2500,
+    "purchases": 450,
+    "likes": 400,
+    "numberOfReviews": 500,
+    "ratings": 4.8,
+    "cancellations": 5
+  }
+]
