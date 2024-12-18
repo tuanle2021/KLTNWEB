@@ -1,8 +1,4 @@
 const User = require("../models/User");
-const Cart = require("../models/Cart");
-const Order = require("../models/Order");
-const CartItem = require("../models/CartItem");
-
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { validateLength, validateEmail } = require("../helpers/validation");
@@ -544,15 +540,11 @@ exports.deleteUser = async (req, res) => {
     if (!req.user || !req.user.isAdmin) {
       return res.status(403).json({ message: "Access denied" });
     }
-    await Cart.deleteOne({ user_id: userId });
 
-    await CartItem.deleteMany({ user_id: userId });
+    // Tìm và xóa người dùng theo ID
+    const user = await User.findByIdAndDelete(userId);
 
-    await Order.deleteMany({ user_id: userId });
-
-    const deletedUser = await User.findByIdAndDelete(userId);
-
-    if (!deletedUser) {
+    if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 

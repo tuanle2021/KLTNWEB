@@ -22,15 +22,8 @@ const CartItem = ({
 }) => {
   console.log(item);
   const now = new Date();
-  const {
-    price,
-    discount,
-    stock,
-    discountStartDate,
-    discountEndDate,
-    images,
-    name,
-  } = item.product;
+  const { price, discount, discountStartDate, discountEndDate, images, name } =
+    item.product;
   const isDiscountValid =
     discount &&
     new Date(discountStartDate) <= now &&
@@ -64,7 +57,6 @@ const CartItem = ({
       <ProductQuantity
         type="number"
         min="1"
-        max={stock}
         value={quantities[index]}
         onChange={(e) =>
           handleQuantityChange(index, parseInt(e.target.value, 10))

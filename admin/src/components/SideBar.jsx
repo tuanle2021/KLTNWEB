@@ -93,14 +93,6 @@ const Sidebar = ({ isMobile, isMinimized, toggleSidebar, toggleMinimize }) => {
                 </MenuLink>
               </MenuItem>
               <MenuItem>
-                <MenuLink isMinimized={isMinimized} to="/brands">
-                  <Icon>
-                    <FaList fontSize={25} />
-                  </Icon>
-                  {!isMinimized && <Text>Brands</Text>}
-                </MenuLink>
-              </MenuItem>
-              <MenuItem>
                 <MenuLink isMinimized={isMinimized} to="/orders">
                   <Icon>
                     <BiSolidShoppingBags fontSize={25} />

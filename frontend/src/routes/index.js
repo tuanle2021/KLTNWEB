@@ -28,6 +28,11 @@ export const routes = [
     isShowHeader: true,
   },
   {
+    path: "/my-orders",
+    page: ProfilePage,
+    isShowHeader: true,
+  },
+  {
     path: "/login",
     page: LoginPage,
     isShowHeader: false,

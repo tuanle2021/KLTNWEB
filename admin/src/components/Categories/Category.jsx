@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { FaPen, FaTrashAlt } from "react-icons/fa";
+
 import {
   CategoryContainer,
   FormGroup,
   FormLabel,
   FormInput,
   FormTextarea,
+  FileInput,
   SubmitButton,
   CategoryTable,
   TableHeader,
@@ -15,7 +17,6 @@ import {
   CategoryInner,
   CategoryForm,
 } from "./styles";
-import Swal from "sweetalert2";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchCategories,
@@ -23,26 +24,21 @@ import {
   deleteCategory,
   updateCategory,
 } from "../../redux/slices/categorySlice";
-import { fetchBrands } from "../../redux/slices/brandSlice";
 
 const Categories = () => {
   const dispatch = useDispatch();
   const { categories, loading, error } = useSelector(
     (state) => state.categories
   );
-  const { brands } = useSelector((state) => state.brands);
   const [formData, setFormData] = useState({
     name: "",
     description: "",
-    brands: [],
   });
-  console.log(categories, brands);
   const [editMode, setEditMode] = useState(false);
   const [editCategoryId, setEditCategoryId] = useState(null);
 
   useEffect(() => {
     dispatch(fetchCategories());
-    dispatch(fetchBrands());
   }, [dispatch]);
 
   const handleInputChange = (e) => {
@@ -53,25 +49,16 @@ const Categories = () => {
     });
   };
 
-  const handleBrandChange = (e) => {
-    const selectedBrands = Array.from(
-      e.target.selectedOptions,
-      (option) => option.value
-    );
-    setFormData({
-      ...formData,
-      brands: selectedBrands,
-    });
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
     if (editMode) {
+      console.log("editMode", editMode);
       dispatch(updateCategory({ id: editCategoryId, categoryData: formData }));
     } else {
+      console.log("editMode", editMode);
       dispatch(addCategory(formData));
     }
-    setFormData({ name: "", description: "", brands: [] });
+    setFormData({ name: "", description: "" });
     setEditMode(false);
     setEditCategoryId(null);
   };
@@ -80,27 +67,15 @@ const Categories = () => {
     setFormData({
       name: category.name,
       description: category.description,
-      brands: category.brands.map((brand) => brand._id),
     });
     setEditMode(true);
     setEditCategoryId(category._id);
   };
 
   const handleDelete = (categoryId) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        dispatch(deleteCategory(categoryId));
-        Swal.fire("Deleted!", "Your category has been deleted.");
-      }
-    });
+    if (window.confirm("Are you sure you want to delete this category?")) {
+      dispatch(deleteCategory(categoryId));
+    }
   };
 
   return (
@@ -109,11 +84,11 @@ const Categories = () => {
         <div className="loading">
           <div></div>
         </div>
-      )}
+      )}{" "}
       {error && <p>{error}</p>}
       <h2>Categories</h2>
-
       <CategoryInner>
+        {/* Form thêm danh mục */}
         <CategoryForm as="form" onSubmit={handleSubmit}>
           <FormGroup>
             <FormLabel>Name</FormLabel>
@@ -139,28 +114,13 @@ const Categories = () => {
           </FormGroup>
 
           <FormGroup>
-            <FormLabel>Brands</FormLabel>
-            <select
-              multiple
-              name="brands"
-              value={formData.brands}
-              onChange={handleBrandChange}
-            >
-              {brands.map((brand) => (
-                <option key={brand._id} value={brand._id}>
-                  {brand.name}
-                </option>
-              ))}
-            </select>
-          </FormGroup>
-
-          <FormGroup>
             <SubmitButton type="submit">
               {editMode ? "Update category" : "Create category"}
             </SubmitButton>
           </FormGroup>
         </CategoryForm>
 
+        {/* Bảng danh sách các danh mục */}
         <CategoryTable>
           <thead>
             <TableRow>
@@ -168,7 +128,6 @@ const Categories = () => {
               <TableHeader>ID</TableHeader>
               <TableHeader>Name</TableHeader>
               <TableHeader>Description</TableHeader>
-              <TableHeader>Brands</TableHeader>
               <TableHeader>Action</TableHeader>
             </TableRow>
           </thead>
@@ -181,9 +140,6 @@ const Categories = () => {
                 <TableCell>{category._id}</TableCell>
                 <TableCell>{category.name}</TableCell>
                 <TableCell>{category.description}</TableCell>
-                <TableCell>
-                  {category.brands.map((brand) => brand.name).join(", ")}
-                </TableCell>
                 <TableCell>
                   <ActionButton
                     className="edit"

@@ -31,7 +31,7 @@ const HeaderComponent = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((state) => state.auth.user);
-  const total_items = useSelector((state) => state.cart.total_items);
+  const cartItems = useSelector((state) => state.cart.items);
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -76,6 +76,8 @@ const HeaderComponent = () => {
     };
   }, []);
 
+  const totalItems = cartItems.length;
+
   return (
     <HeaderContainer>
       <div className="container">
@@ -103,7 +105,7 @@ const HeaderComponent = () => {
                   color: "var(--dark-bg-third)",
                 }}
               />
-              <span className="cart-count">{total_items}</span>
+              <span className="cart-count">{totalItems}</span>
               {/* Dynamic cart item count */}
             </a>
           </ShoppingCart>
@@ -118,11 +120,35 @@ const HeaderComponent = () => {
                   </UserIconWrapper>
                   <DropdownContainer visible={dropdownVisible}>
                     <NavItem>
-                      <Link to="/profile">
+                      <Link to="/profile#my-profile">
                         <i className="icon">
                           <UserOutlined />
                         </i>{" "}
                         My Account
+                      </Link>
+                    </NavItem>
+                    <NavItem>
+                      <Link to="/profile#awaiting_payment">
+                        <i className="icon">
+                          <InboxOutlined />
+                        </i>{" "}
+                        My Order
+                      </Link>
+                    </NavItem>
+                    <NavItem>
+                      <Link to="/profile#cancelled">
+                        <i className="icon">
+                          <CloseCircleOutlined />
+                        </i>{" "}
+                        My Cancellations
+                      </Link>
+                    </NavItem>
+                    <NavItem>
+                      <Link to="/profile#my-wishlist">
+                        <i className="icon">
+                          <StarOutlined />
+                        </i>{" "}
+                        My Wishlist
                       </Link>
                     </NavItem>
                     <NavItem>

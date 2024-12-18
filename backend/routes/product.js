@@ -9,7 +9,6 @@ const {
   deleteProductById,
   getFillteProducts,
   getTopProductsByViews,
-  getAllProductsFullName,
 } = require("../controllers/productControllers");
 const { authentication } = require("../middleware/authenUser");
 const { uploadImages } = require("../controllers/uploadImage");
@@ -19,11 +18,9 @@ router.post("/images", imageType, uploadImages);
 
 router.post("/products", addProduct);
 router.get("/products/all", getAllProducts);
-router.get("/products/fullname", getAllProductsFullName);
 router.get("/products", getFillteProducts);
 router.get("/products/:id", getProductById);
 router.put("/products/:id", authentication, updateProductById);
 router.delete("/products/:id", authentication, deleteProductById);
 router.get("/product/top-views", getTopProductsByViews);
-
 module.exports = router;

@@ -2,7 +2,6 @@ const Order = require("../models/Order");
 const OrderItem = require("../models/OrderItem");
 const Product = require("../models/Product");
 const Payment = require("../models/Payment");
-const Cart = require("../models/Cart");
 
 const createOrder = async (req, res) => {
   try {
@@ -29,10 +28,6 @@ const createOrder = async (req, res) => {
         quantity: item.quantity,
         price: product.price,
       });
-
-      // Cập nhật số lượng sản phẩm trong bảng Product
-      product.stock -= item.quantity;
-      await product.save();
     }
 
     // Tạo đơn hàng mới
@@ -41,11 +36,13 @@ const createOrder = async (req, res) => {
       total_price,
       shipping_address,
       items: orderItems,
+      post_office: "Ho Chi Minh",
     });
 
     // Lưu đơn hàng
     const savedOrder = await newOrder.save();
 
+    // Tạo các OrderItem tương ứng
     // Tạo các OrderItem tương ứng
     for (const orderItem of orderItems) {
       const newOrderItem = new OrderItem({
@@ -56,16 +53,6 @@ const createOrder = async (req, res) => {
       });
       await newOrderItem.save();
     }
-
-    // Xóa các sản phẩm đã mua khỏi giỏ hàng
-    await Cart.updateOne(
-      { user_id: user_id },
-      {
-        $pull: {
-          items: { product_id: { $in: items.map((item) => item.product_id) } },
-        },
-      }
-    );
 
     res.status(201).json(savedOrder);
   } catch (error) {
@@ -105,7 +92,6 @@ const getOrdersByUserId = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
-
 const updateOrderStatus = async (req, res) => {
   try {
     const { id } = req.params;
@@ -118,11 +104,7 @@ const updateOrderStatus = async (req, res) => {
     }
 
     // Cập nhật trạng thái đơn hàng
-    if (["processing", "shipped", "cancelled"].includes(status)) {
-      order.status = status;
-    } else {
-      return res.status(400).json({ message: "Invalid status value" });
-    }
+    order.status = status;
     const updatedOrder = await order.save();
 
     res.status(200).json(updatedOrder);
@@ -131,16 +113,34 @@ const updateOrderStatus = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+const updatePostOffice = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { post_office } = req.body;
 
+    // Tìm đơn hàng theo ID
+    const order = await Order.findById(id);
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    // Cập nhật bưu cục
+    if (post_office) {
+      order.post_office = post_office;
+    }
+
+    const updatedOrder = await order.save();
+
+    res.status(200).json(updatedOrder);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
 const updateOrderItems = async (req, res) => {
   try {
     const { id } = req.params;
-    const { items, shipping_address, payment_status, method } = req.body;
-
-    // Kiểm tra quyền hạn của người dùng (chỉ admin mới được phép cập nhật)
-    if (!req.user || !req.user.isAdmin) {
-      return res.status(403).json({ message: "Access denied" });
-    }
+    const { items, shipping_address, payment_status, method, status } = req.body;
 
     // Tìm đơn hàng theo ID
     const order = await Order.findById(id);
@@ -156,9 +156,7 @@ const updateOrderItems = async (req, res) => {
       for (const item of items) {
         const product = await Product.findById(item.product_id);
         if (!product) {
-          return res
-            .status(404)
-            .json({ message: `Product not found: ${item.product_id}` });
+          return res.status(404).json({ message: `Product not found: ${item.product_id}` });
         }
         const itemTotalPrice = product.price * item.quantity;
         total_price += itemTotalPrice;
@@ -180,13 +178,21 @@ const updateOrderItems = async (req, res) => {
     }
 
     // Cập nhật trạng thái thanh toán nếu có
-    if (payment_status === "completed") {
+    if (payment_status) {
       order.payment_status = payment_status;
       order.status = "processing";
     }
+
+    // Cập nhật phương thức thanh toán nếu có
     if (method) {
       order.method = method;
     }
+
+    // Cập nhật trạng thái đơn hàng nếu có
+    if (status) {
+      order.status = status;
+    }
+
     const updatedOrder = await order.save();
 
     res.status(200).json(updatedOrder);
@@ -275,4 +281,5 @@ module.exports = {
   deleteOrder,
   getAllOrders,
   updatePaymentStatus,
+  updatePostOffice
 };

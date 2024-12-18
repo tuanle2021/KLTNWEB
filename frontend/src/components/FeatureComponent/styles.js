@@ -8,6 +8,7 @@ export const FeaturesContainer = styled.div`
   align-items: center;
   padding: 50px 20px;
   position: relative;
+  background-color: #fff;
 `;
 
 // Card từng tính năng

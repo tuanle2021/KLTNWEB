@@ -55,6 +55,7 @@ export const fetchOrdersByUserId = createAsyncThunk(
     try {
       const state = getState();
       const token = state.auth.user.token;
+      console.log(userId);
 
       const response = await axios.get(
         `${process.env.REACT_APP_BACKEND_URL}/orders/user/${userId}`,

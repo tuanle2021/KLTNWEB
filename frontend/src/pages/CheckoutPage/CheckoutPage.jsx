@@ -20,7 +20,7 @@ import {
   getOrderDetails,
 } from "../../redux/slices/orderSlice";
 import { getCart } from "../../redux/slices/cartSlice";
-import Swl from "sweetalert2";
+import Swal from "sweetalert2";
 import { useNavigate, useParams } from "react-router-dom";
 
 const initialOptions = {
@@ -133,7 +133,7 @@ const CheckoutPage = () => {
         })
       );
       setOrderSuccess(true);
-      Swl.fire({
+      Swal.fire({
         title: "Order Placed Successfully!",
         text: "Your order has been placed and is being processed.",
         icon: "success",
@@ -150,21 +150,11 @@ const CheckoutPage = () => {
 
   return (
     <div>
-      {(!order || loading) && (
+      {!order && (
         <div className="loading">
           <div></div>
         </div>
       )}
-      {error &&
-        Swl.fire({
-          icon: "error",
-          title: "Oops...",
-          text: error?.toString(),
-        }).then((result) => {
-          if (result.isConfirmed) {
-            navigate("/");
-          }
-        })}
       <CheckoutContainer>
         <BillingDetails>
           <h2>Billing Details</h2>

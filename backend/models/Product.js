@@ -45,14 +45,9 @@ const productSchema = new mongoose.Schema(
       type: Date,
     },
     brand: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Brand",
+      type: String,
     },
     views: {
-      type: Number,
-      default: 0,
-    },
-    score: {
       type: Number,
       default: 0,
     },

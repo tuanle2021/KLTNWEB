@@ -1,5 +1,5 @@
 const Category = require("../models/Category");
-const Product = require("../models/Product");
+
 // Controller để thêm danh mục mới
 const addCategory = async (req, res) => {
   try {
@@ -42,17 +42,6 @@ const getAllCategories = async (req, res) => {
 const deleteCategoryById = async (req, res) => {
   try {
     const { id } = req.params;
-
-    // Kiểm tra xem danh mục có sản phẩm nào không
-    const productsInCategory = await Product.find({ category_id: id });
-
-    if (productsInCategory.length > 0) {
-      return res.status(400).json({
-        message: "Cannot delete category. There are products in this category.",
-        products: productsInCategory,
-      });
-    }
-
     const category = await Category.findByIdAndDelete(id);
 
     if (!category) {
@@ -71,12 +60,9 @@ const updateCategoryById = async (req, res) => {
     const { id } = req.params;
     const { name, description, brands } = req.body;
 
-    // Ensure brands is an array of IDs
-    const updatedBrands = Array.isArray(brands) ? brands : [];
-
     const category = await Category.findByIdAndUpdate(
       id,
-      { name, description, brands: updatedBrands },
+      { name, description, brands },
       { new: true, runValidators: true }
     );
 
@@ -89,7 +75,6 @@ const updateCategoryById = async (req, res) => {
     res.status(500).json({ message: "Server error", error });
   }
 };
-
 module.exports = {
   addCategory,
   getAllCategories,

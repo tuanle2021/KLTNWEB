@@ -1,12 +1,7 @@
-const User = require("../models/User");
-const Cart = require("../models/Cart");
-const Order = require("../models/Order");
 const Product = require("../models/Product");
-const mongoose = require("mongoose");
 const { uploadToCloudinary } = require("../controllers/uploadImage");
 const { imageType } = require("../middleware/imageType");
-const natural = require("natural");
-const similarity = require("similarity");
+const mongoose = require("mongoose");
 // Controller để thêm sản phẩm mới
 const addProduct = async (req, res) => {
   try {
@@ -90,7 +85,6 @@ const getAllProducts = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
-
 const getProductById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -193,6 +187,7 @@ const updateProductById = async (req, res) => {
       if (!updatedProduct) {
         return res.status(404).json({ message: "Product not found" });
       }
+      console.log("Updated product: ", updatedProduct);
       res.status(200).json(updatedProduct);
     });
   } catch (error) {
@@ -204,29 +199,13 @@ const updateProductById = async (req, res) => {
 const deleteProductById = async (req, res) => {
   try {
     const { id } = req.params;
+    const product = await Product.findByIdAndDelete(id);
 
     // Kiểm tra quyền hạn của người dùng (chỉ dành cho quản trị viên)
     if (!req.user || !req.user.isAdmin) {
       return res.status(403).json({ message: "Access denied" });
     }
 
-    // Kiểm tra xem sản phẩm có tồn tại trong giỏ hàng
-    const cartWithProduct = await Cart.findOne({ "items.product_id": id });
-    if (cartWithProduct) {
-      return res
-        .status(400)
-        .json({ message: "Cannot delete product. It exists in a cart." });
-    }
-
-    // Kiểm tra xem sản phẩm có tồn tại trong đơn hàng
-    const orderWithProduct = await Order.findOne({ "items.product_id": id });
-    if (orderWithProduct) {
-      return res
-        .status(400)
-        .json({ message: "Cannot delete product. It exists in an order." });
-    }
-
-    const product = await Product.findByIdAndDelete(id);
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
     }
@@ -326,36 +305,6 @@ const getTopProductsByViews = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
-
-const getAllProductsFullName = async (req, res) => {
-  try {
-    const products = await Product.find()
-      .populate("category_id", "name")
-      .populate("brand", "name");
-
-    // Định dạng lại dữ liệu để trả về tên của category và brand
-    const formattedProducts = products.map((product) => ({
-      _id: product._id,
-      name: product.name,
-      description: product.description,
-      price: product.price,
-      stock: product.stock,
-      category: product.category_id
-        ? product.category_id.name
-        : "Unknown Category",
-      brand: product.brand ? product.brand.name : "Unknown Brand",
-      ratings: product.ratings,
-      numberOfReviews: product.numberOfReviews,
-      views: product.views,
-    }));
-
-    res.status(200).json(formattedProducts);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server error" });
-  }
-};
-
 module.exports = {
   addProduct,
   getAllProducts,
@@ -364,5 +313,4 @@ module.exports = {
   deleteProductById,
   getFillteProducts,
   getTopProductsByViews,
-  getAllProductsFullName,
 };

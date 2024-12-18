@@ -20,7 +20,6 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import OrderDetailScreen from "./pages/OrderDetailScreen";
 import UserDetail from "./components/Users/UserDetail";
 import CreateUser from "./components/Users/CreateUser";
-import BrandsScreen from "./pages/BrandsScreen";
 const Layout = ({ children }) => {
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
@@ -65,7 +64,6 @@ const AppRoutes = () => {
           {/* Các route được bảo vệ */}
           <Route element={<ProtectedRoute />}>
             <Route path="/categories" element={<CategoriesScreen />} />
-            <Route path="/brands" element={<BrandsScreen />} />
             <Route path="/products" element={<ProductScreen />} />
             <Route path="/product/edit/:id" element={<ProductEditScreen />} />
             <Route path="/addproduct" element={<AddProduct />} />
@@ -73,7 +71,7 @@ const AppRoutes = () => {
             <Route path="/users/:id" element={<UserDetail />} />
             <Route path="/create-user" element={<CreateUser />} />
             <Route path="/orders" element={<OrderScreen />} />
-            <Route path="/orders/:id" element={<OrderDetailScreen />} />
+            <Route path="/orders/:orderId" element={<OrderDetailScreen />} />
             <Route path="/" element={<HomePage />} />
           </Route>
         </Routes>
