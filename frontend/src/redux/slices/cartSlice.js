@@ -26,8 +26,7 @@ export const addToCart = createAsyncThunk(
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || error.message);
-    }
-  }
+    }}
 );
 
 // Async thunk to get the cart
@@ -48,17 +47,16 @@ export const getCart = createAsyncThunk(
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || error.message);
-    }
-  }
+    }}
 );
 
 export const updateCartItem = createAsyncThunk(
-  "cart/updateCartItem",
-  async ({ id, quantity }, { rejectWithValue, getState }) => {
-    try {
-      const state = getState();
-      const token = state.auth.user.token;
-      console.log("Updating cart item with id:", id, "and quantity:", quantity);
+    "cart/updateCartItem",
+    async ({ id, quantity }, { rejectWithValue, getState }) => {
+      try {
+        const state = getState();
+        const token = state.auth.user.token;
+        console.log("Updating cart item with id:", id, "and quantity:", quantity);
 
       const response = await axios.put(
         `${process.env.REACT_APP_BACKEND_URL}/cart`,
@@ -72,8 +70,7 @@ export const updateCartItem = createAsyncThunk(
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || error.message);
-    }
-  }
+    }}
 );
 
 // Async thunk to delete a product from the cart
@@ -95,8 +92,7 @@ export const deleteCartItem = createAsyncThunk(
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || error.message);
-    }
-  }
+    }}
 );
 
 const cartSlice = createSlice({

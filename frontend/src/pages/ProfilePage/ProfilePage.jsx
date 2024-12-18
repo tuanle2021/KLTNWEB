@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import Roadmap from "../../components/RoadmapComponent/Roadmap";
 import {
   ProfileContainer,
@@ -14,11 +15,11 @@ import {
   WishlistPrice,
 } from "./styles";
 import { MyProfile, AddressBook, PaymentOptions } from "./Account";
-import OrderListComponent from "./Order";
 import { updateProfile } from "../../redux/slices/orderSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchOrdersByUserId } from "../../redux/slices/orderSlice";
 import { getFavorites } from "../../redux/slices/favoriteSlice"; // Import action để lấy danh sách sản phẩm yêu thích
+import OrderListComponent from "../../components/Profile/OrderList";
 
 const ProfilePage = () => {
   const [profile, setProfile] = useState({
@@ -36,6 +37,7 @@ const ProfilePage = () => {
   const { favorites } = useSelector((state) => state.favorites); // Lấy danh sách sản phẩm yêu thích từ state
 
   const [selectedItem, setSelectedItem] = useState("My Profile");
+  const location = useLocation();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -58,30 +60,32 @@ const ProfilePage = () => {
   }, [dispatch, user]);
   console.log(orders);
   const renderForm = () => {
+    const hash = location.hash.replace("#", "");
     const filteredOrders = orders.filter(
-      (order) => order.status === selectedItem.toLowerCase()
+        (order) => order.status === hash.toLowerCase()
     );
-    switch (selectedItem) {
-      case "My Profile":
+
+    switch (hash) {
+      case "my-profile":
         return (
-          <MyProfile
-            profile={profile}
-            handleChange={handleChange}
-            handleSaveChanges={handleSaveChanges}
-          />
+            <MyProfile
+                profile={profile}
+                handleChange={handleChange}
+                handleSaveChanges={handleSaveChanges}
+            />
         );
-      case "Address Book":
+      case "address-book":
         return <AddressBook />;
-      case "My Payment Options":
+      case "my-payment-options":
         return <PaymentOptions />;
       case "Processing":
       case "Shipped":
       case "Cancelled":
       case "awaiting_payment":
         return (
-          <OrderListComponent title={selectedItem} orders={filteredOrders} />
+            <OrderListComponent title={hash} orders={filteredOrders} />
         );
-      case "My WishList":
+      case "my-wishlist":
         return (
           <ProfileForm>
             <h2>My WishList</h2>
@@ -177,21 +181,20 @@ const ProfilePage = () => {
             </SidebarItem>
           </SidebarGroup>
 
-          <SidebarGroup>
-            <h4>My WishList</h4>
-            <SidebarItem
-              className={selectedItem === "My WishList" ? "active" : ""}
-              onClick={() => setSelectedItem("My WishList")}
-            >
-              My WishList
-            </SidebarItem>
-          </SidebarGroup>
-        </Sidebar>
+            <SidebarGroup>
+              <h4>My WishList</h4>
+              <SidebarItem
+                  className={location.hash === "#my-wishlist" ? "active" : ""}
+                  onClick={() => (window.location.hash = "#my-wishlist")}
+              >
+                My WishList
+              </SidebarItem>
+            </SidebarGroup>
+          </Sidebar>
 
-        {/* Form chỉnh sửa thông tin tài khoản */}
-        {renderForm()}
-      </ProfileContainer>
-    </div>
+          {renderForm()}
+        </ProfileContainer>
+      </div>
   );
 };
 

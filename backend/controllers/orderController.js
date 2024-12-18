@@ -2,7 +2,10 @@ const Order = require("../models/Order");
 const OrderItem = require("../models/OrderItem");
 const Product = require("../models/Product");
 const Payment = require("../models/Payment");
+<<<<<<< HEAD
 const Cart = require("../models/Cart");
+=======
+>>>>>>> ab0dc78f956c0940da33b05143456108ae516085
 
 const createOrder = async (req, res) => {
   try {
@@ -41,6 +44,7 @@ const createOrder = async (req, res) => {
       total_price,
       shipping_address,
       items: orderItems,
+      post_office: "Ho Chi Minh",
     });
 
     // Lưu đơn hàng
@@ -131,7 +135,30 @@ const updateOrderStatus = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+const updatePostOffice = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { post_office } = req.body;
 
+    // Tìm đơn hàng theo ID
+    const order = await Order.findById(id);
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    // Cập nhật bưu cục
+    if (post_office) {
+      order.post_office = post_office;
+    }
+
+    const updatedOrder = await order.save();
+
+    res.status(200).json(updatedOrder);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
 const updateOrderItems = async (req, res) => {
   try {
     const { id } = req.params;

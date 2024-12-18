@@ -30,6 +30,8 @@ const ProductCart = ({ product, favorited }) => {
   const dispatch = useDispatch();
 
   const [isFavorited, setIsFavorited] = useState(favorited);
+  const [showAlert, setShowAlert] = useState(false);
+  console.log("favorited", favorited);
   useEffect(() => {
     if (!product) {
       dispatch(fetchProductById(product));
