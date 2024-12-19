@@ -170,7 +170,7 @@ const OrderListComponent = ({ title, orders }) => {
 
       {orders
         .slice()
-        .reverse()
+
         .map((order, index) => (
           <OrderContainer key={order._id}>
             <OrderInfo>

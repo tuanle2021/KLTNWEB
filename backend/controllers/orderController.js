@@ -162,9 +162,9 @@ const updateOrderItems = async (req, res) => {
     const { items, shipping_address, payment_status, method } = req.body;
 
     // Kiểm tra quyền hạn của người dùng (chỉ admin mới được phép cập nhật)
-    if (!req.user || !req.user.isAdmin) {
-      return res.status(403).json({ message: "Access denied" });
-    }
+    // if (!req.user || !req.user.isAdmin) {
+    //   return res.status(403).json({ message: "Access denied" });
+    // }
 
     // Tìm đơn hàng theo ID
     const order = await Order.findById(id);
