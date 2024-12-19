@@ -15,11 +15,11 @@ import {
   WishlistPrice,
 } from "./styles";
 import { MyProfile, AddressBook, PaymentOptions } from "./Account";
+import OrderListComponent from "./Order";
 import { updateProfile } from "../../redux/slices/orderSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchOrdersByUserId } from "../../redux/slices/orderSlice";
 import { getFavorites } from "../../redux/slices/favoriteSlice"; // Import action để lấy danh sách sản phẩm yêu thích
-import OrderListComponent from "../../components/Profile/OrderList";
 
 const ProfilePage = () => {
   const [profile, setProfile] = useState({
@@ -60,32 +60,30 @@ const ProfilePage = () => {
   }, [dispatch, user]);
   console.log(orders);
   const renderForm = () => {
-    const hash = location.hash.replace("#", "");
     const filteredOrders = orders.filter(
-        (order) => order.status === hash.toLowerCase()
+      (order) => order.status === selectedItem.toLowerCase()
     );
-
-    switch (hash) {
-      case "my-profile":
+    switch (selectedItem) {
+      case "My Profile":
         return (
-            <MyProfile
-                profile={profile}
-                handleChange={handleChange}
-                handleSaveChanges={handleSaveChanges}
-            />
+          <MyProfile
+            profile={profile}
+            handleChange={handleChange}
+            handleSaveChanges={handleSaveChanges}
+          />
         );
-      case "address-book":
+      case "Address Book":
         return <AddressBook />;
-      case "my-payment-options":
+      case "My Payment Options":
         return <PaymentOptions />;
       case "Processing":
       case "Shipped":
       case "Cancelled":
       case "awaiting_payment":
         return (
-            <OrderListComponent title={hash} orders={filteredOrders} />
+          <OrderListComponent title={selectedItem} orders={filteredOrders} />
         );
-      case "my-wishlist":
+      case "My WishList":
         return (
           <ProfileForm>
             <h2>My WishList</h2>
@@ -181,20 +179,21 @@ const ProfilePage = () => {
             </SidebarItem>
           </SidebarGroup>
 
-            <SidebarGroup>
-              <h4>My WishList</h4>
-              <SidebarItem
-                  className={location.hash === "#my-wishlist" ? "active" : ""}
-                  onClick={() => (window.location.hash = "#my-wishlist")}
-              >
-                My WishList
-              </SidebarItem>
-            </SidebarGroup>
-          </Sidebar>
+          <SidebarGroup>
+            <h4>My WishList</h4>
+            <SidebarItem
+              className={selectedItem === "My WishList" ? "active" : ""}
+              onClick={() => setSelectedItem("My WishList")}
+            >
+              My WishList
+            </SidebarItem>
+          </SidebarGroup>
+        </Sidebar>
 
-          {renderForm()}
-        </ProfileContainer>
-      </div>
+        {/* Form chỉnh sửa thông tin tài khoản */}
+        {renderForm()}
+      </ProfileContainer>
+    </div>
   );
 };
 

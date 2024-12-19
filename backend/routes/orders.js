@@ -9,6 +9,7 @@ const {
   deleteOrder,
   getAllOrders,
   updatePaymentStatus,
+  updatePostOffice,
 } = require("../controllers/orderController");
 const { authentication } = require("../middleware/authenUser");
 

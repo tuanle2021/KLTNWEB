@@ -31,11 +31,8 @@ const HeaderComponent = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((state) => state.auth.user);
-<<<<<<< HEAD
   const total_items = useSelector((state) => state.cart.total_items);
-=======
   const cartItems = useSelector((state) => state.cart.items);
->>>>>>> ab0dc78f956c0940da33b05143456108ae516085
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -80,11 +77,8 @@ const HeaderComponent = () => {
     };
   }, []);
 
-<<<<<<< HEAD
-=======
   const totalItems = cartItems.length;
 
->>>>>>> ab0dc78f956c0940da33b05143456108ae516085
   return (
     <HeaderContainer>
       <div className="container">
@@ -112,11 +106,8 @@ const HeaderComponent = () => {
                   color: "var(--dark-bg-third)",
                 }}
               />
-<<<<<<< HEAD
               <span className="cart-count">{total_items}</span>
-=======
-              <span className="cart-count">{totalItems}</span>
->>>>>>> ab0dc78f956c0940da33b05143456108ae516085
+              {/* <span className="cart-count">{totalItems}</span> */}
               {/* Dynamic cart item count */}
             </a>
           </ShoppingCart>

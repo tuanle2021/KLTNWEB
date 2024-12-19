@@ -62,12 +62,9 @@ const deleteBrandById = async (req, res) => {
       return res.status(404).json({ message: "Brand not found" });
     }
 
-<<<<<<< HEAD
     // Cập nhật lại các category có chứa brand này
     await Category.updateMany({ brands: id }, { $pull: { brands: id } });
 
-=======
->>>>>>> ab0dc78f956c0940da33b05143456108ae516085
     res.status(200).json({ message: "Brand deleted successfully" });
   } catch (error) {
     res.status(500).json({ message: "Server error", error });

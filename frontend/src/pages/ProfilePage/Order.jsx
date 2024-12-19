@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import Swl from "sweetalert2";
+import Modal from "react-modal";
 import {
   OrderContainer,
   OrderInfo,
@@ -20,6 +21,11 @@ import {
 import { RiArrowDropUpLine, RiArrowDropDownLine } from "react-icons/ri";
 import { updateOrderStatus } from "../../redux/slices/orderSlice"; // Import action để cập nhật trạng thái đơn hàng
 import { addReview } from "../../redux/slices/reviewSlice"; // Import action để thêm review
+import MapComponent from "./MapComponent"; // Import MapComponent
+import axios from "axios";
+
+const MAPBOX_TOKEN =
+  "pk.eyJ1IjoibWFpdGhpaGlldSIsImEiOiJjbTJ4eTU2YjMwYThxMmpvOGhoZW1oaHh2In0.F3GI89PsdNEEjlk9Q2o8TQ";
 
 export const OrderComponent = ({ item }) => {
   const renderStars = (rating) => {
@@ -81,7 +87,46 @@ const OrderListComponent = ({ title, orders }) => {
   const [expandedOrderIndex, setExpandedOrderIndex] = useState(0);
   const [reviewingProduct, setReviewingProduct] = useState(null);
   const [reviewText, setReviewText] = useState("");
+  const [isMapOpen, setIsMapOpen] = useState(false); // State để quản lý popup bản đồ
+  const [mapCoordinates, setMapCoordinates] = useState({ start: [], end: [] }); // State để quản lý tọa độ bản đồ
+  const [orderCoordinates, setOrderCoordinates] = useState([]); // State để quản lý tọa độ đơn hàng
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    const fetchCoordinates = async (address) => {
+      try {
+        const response = await axios.get(
+          `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
+            address
+          )}.json?access_token=${MAPBOX_TOKEN}`
+        );
+        return response.data.features[0]?.center || [105.8542, 21.0285]; // Default to Hanoi if not found
+      } catch (error) {
+        console.error("Error fetching coordinates:", error);
+        return [105.8542, 21.0285]; // Default to Hanoi on error
+      }
+    };
+
+    const updateCoordinates = async () => {
+      const updatedOrders = await Promise.all(
+        orders.map(async (order) => {
+          const updatedOrder = { ...order };
+          if (order.shipping_address) {
+            const endCoords = await fetchCoordinates(order.shipping_address);
+            updatedOrder.endCoordinates = endCoords;
+          }
+          if (order.post_office) {
+            const startCoords = await fetchCoordinates(order.post_office);
+            updatedOrder.startCoordinates = startCoords;
+          }
+          return updatedOrder;
+        })
+      );
+      setOrderCoordinates(updatedOrders);
+    };
+
+    updateCoordinates();
+  }, [orders]);
 
   const toggleOrderDetails = (index) => {
     setExpandedOrderIndex(expandedOrderIndex === index ? null : index);
@@ -109,6 +154,16 @@ const OrderListComponent = ({ title, orders }) => {
       Swl.fire("Error", "Failed to submit review. Please try again.", "error");
     }
   };
+
+  const handleOpenMap = (startCoordinates, endCoordinates) => {
+    setMapCoordinates({ start: startCoordinates, end: endCoordinates });
+    setIsMapOpen(true);
+  };
+
+  const handleCloseMap = () => {
+    setIsMapOpen(false);
+  };
+
   return (
     <ProfileForm>
       <h2>{title}</h2>
@@ -129,7 +184,19 @@ const OrderListComponent = ({ title, orders }) => {
                 <StatusBadge status={order.status}>{order.status}</StatusBadge>
               </div>
 
-              <div className="flex"></div>
+              <div className="flex">
+                <Button
+                  className="map-btn"
+                  onClick={() =>
+                    handleOpenMap(
+                      orderCoordinates[index]?.startCoordinates,
+                      orderCoordinates[index]?.endCoordinates
+                    )
+                  }
+                >
+                  Show Map
+                </Button>
+              </div>
             </OrderInfo>
 
             <>
@@ -186,6 +253,50 @@ const OrderListComponent = ({ title, orders }) => {
             </>
           </OrderContainer>
         ))}
+
+      {/* Popup bản đồ */}
+      <Modal
+        isOpen={isMapOpen}
+        onRequestClose={handleCloseMap}
+        contentLabel="Map Modal"
+        style={{
+          content: {
+            top: "50%",
+            left: "50%",
+            right: "auto",
+            bottom: "auto",
+            marginRight: "-50%",
+            transform: "translate(-50%, -50%)",
+            width: "80%",
+            height: "80%",
+            // padding: 0,
+          },
+        }}
+      >
+        <button
+          onClick={handleCloseMap}
+          style={{
+            position: "absolute",
+            top: "10px",
+            right: "10px",
+            background: "red",
+            color: "white",
+            border: "none",
+            borderRadius: "50%",
+            width: "30px",
+            height: "30px",
+            cursor: "pointer",
+          }}
+        >
+          X
+        </button>
+        <div style={{ width: "100%", height: "100%" }}>
+          <MapComponent
+            startCoordinates={mapCoordinates.start}
+            endCoordinates={mapCoordinates.end}
+          />
+        </div>
+      </Modal>
     </ProfileForm>
   );
 };

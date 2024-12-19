@@ -310,3 +310,34 @@ export const WishlistPrice = styled.div`
   font-weight: bold;
   color: #333;
 `;
+export const Table = styled.table`
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 18px;
+  text-align: left;
+`;
+
+export const TableHead = styled.thead`
+  background-color: #f2f2f2;
+`;
+
+export const TableRow = styled.tr`
+  border-bottom: 1px solid #ddd;
+  &:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+`;
+
+export const TableHeader = styled.th`
+  padding: 12px 15px;
+`;
+
+export const TableCell = styled.td`
+  padding: 12px 15px;
+`;
+
+export const ActionsCell = styled(TableCell)`
+  display: flex;
+  gap: 10px;
+`;

@@ -31,10 +31,7 @@ import {
 } from "./styles";
 import CartItem from "./CartItem";
 import Loading from "../../components/LoadingError/Loading";
-<<<<<<< HEAD
 import Swl from "sweetalert2";
-=======
->>>>>>> ab0dc78f956c0940da33b05143456108ae516085
 
 const CartPage = () => {
   const dispatch = useDispatch();
@@ -173,18 +170,12 @@ const CartPage = () => {
 
   return (
     <CartContainer>
-<<<<<<< HEAD
       {(loading || ordersLoading) && (
-=======
-      {loading && (
->>>>>>> ab0dc78f956c0940da33b05143456108ae516085
         <div className="loading">
           <div></div>
         </div>
       )}
-<<<<<<< HEAD
 
-=======
       {error && (
         <p>
           Error:{" "}
@@ -194,7 +185,6 @@ const CartPage = () => {
             ordersError?.toString()}
         </p>
       )}
->>>>>>> ab0dc78f956c0940da33b05143456108ae516085
       <CartHeader>
         <span>Image</span>
         <span>Product</span>

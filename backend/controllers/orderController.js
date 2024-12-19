@@ -2,10 +2,7 @@ const Order = require("../models/Order");
 const OrderItem = require("../models/OrderItem");
 const Product = require("../models/Product");
 const Payment = require("../models/Payment");
-<<<<<<< HEAD
 const Cart = require("../models/Cart");
-=======
->>>>>>> ab0dc78f956c0940da33b05143456108ae516085
 
 const createOrder = async (req, res) => {
   try {
@@ -302,4 +299,5 @@ module.exports = {
   deleteOrder,
   getAllOrders,
   updatePaymentStatus,
+  updatePostOffice,
 };
